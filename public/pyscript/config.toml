@@ -1,0 +1,3 @@
+packages = ["pillow" ] # "opencv-contrib-python-headless"
+experimental_create_proxy = "auto"
+sync_main_only = true
