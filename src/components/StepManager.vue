@@ -8,23 +8,21 @@
       <slot :activeStep="activeStep" />
     </div>
 
-    <Teleport to=".step-content">
-      <div class="navigation-buttons">
-        <wired-button 
-          v-if="activeStep > 0" 
-          @click="prevStep"
-        >
-          Previous
-        </wired-button>
-        <wired-button 
-          v-if="activeStep < steps.length - 1" 
-          @click="nextStep"
-          :disabled="isNextDisabled"
-        >
-          Next
-        </wired-button>
-      </div>
-    </Teleport>
+    <div class="navigation-buttons">
+      <wired-button 
+        v-show="activeStep > 0" 
+        @click="prevStep"
+      >
+        Previous
+      </wired-button>
+      <wired-button 
+        v-show="activeStep < steps.length - 1" 
+        @click="nextStep"
+        :disabled="isNextDisabled"
+      >
+        Next
+      </wired-button>
+    </div>
   </div>
 </template>
 
@@ -93,11 +91,14 @@ export default {
 .navigation-buttons {
   display: flex;
   justify-content: center;
-  gap: 10px;
+  gap: 20px;
   margin-top: 20px;
+  padding: 10px;
+  position: relative;
+  z-index: 1;
 }
 
 .navigation-buttons wired-button {
-  margin: 0 10px;
+  min-width: 100px;
 }
 </style>

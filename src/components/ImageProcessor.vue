@@ -130,15 +130,6 @@ function saveAsZip() {
   padding: 20px;
 }
 
-.navigation-buttons {
-  display: flex;
-  justify-content: center;
-  margin-top: 20px;
-}
-
-.navigation-buttons wired-button {
-  margin: 0 10px;
-}
 
 .image-gallery {
   display: flex;
