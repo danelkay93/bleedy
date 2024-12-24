@@ -121,13 +121,13 @@ onMounted(() => {
     --el-header-height: 5em;  /* Set header height */
 }
 /* Header styles */
-el-header {
+.el-header {
   height: var(--el-header-height);  /* Use custom header height */
   width: 100%;
   display: flex;
   flex-direction: column;  /* Use flexbox to control layout */
   background-color: var(--primary-dark);
-padding: 0;
+  padding: 0;
 }
 
 .header-content {
@@ -170,7 +170,7 @@ padding: 0;
 }
 
 /* Main content styles */
-el-main {
+.el-main {
   flex: 1;
   display: flex;
   justify-content: center;
@@ -179,7 +179,7 @@ el-main {
 }
 
 /* Footer styles */
-el-footer {
+.el-footer {
   background-color: var(--primary-dark);
   padding: 10px 20px;
 }
