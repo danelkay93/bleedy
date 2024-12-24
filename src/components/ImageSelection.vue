@@ -41,7 +41,12 @@
         :class="{ 'selected-card': selectedImages.includes(image.id) }"
         @click="toggleSelection(image.id)"
       >
-        <img :src="image.preview" :alt="image.name" class="image-thumbnail" />
+        <img 
+          :src="image.preview" 
+          :alt="image.name" 
+          :title="image.name"
+          class="image-thumbnail" 
+        />
 
         <div class="file-info">
           <div v-for="(value, key) in fileInfo(image)" :key="key">
@@ -160,14 +165,31 @@ export default {
                 this.images[index].dimensions = `${img.width}x${img.height}`;
               }
             };
+            const imageId = Date.now() + Math.random();
+            const preview = URL.createObjectURL(file);
             return {
-              id: Date.now() + Math.random(),
+              id: imageId,
               name: file.name,
-              preview: URL.createObjectURL(file),
+              preview,
               size: file.size,
               modifiedDate: file.lastModifiedDate || file.lastModified,
-              dimensions: `${img.width}x${img.height}`,
+              dimensions: 'Loading...',
+              file // Keep reference to original file
             };
+          });
+        })
+        .then(() => {
+          // Load dimensions for each image after they're added
+          this.images.forEach(imageData => {
+            const img = new Image();
+            img.onload = () => {
+              const index = this.images.findIndex(i => i.id === imageData.id);
+              if (index !== -1) {
+                this.images[index].dimensions = `${img.naturalWidth}x${img.naturalHeight}`;
+              }
+              URL.revokeObjectURL(imageData.preview); // Clean up the URL
+            };
+            img.src = imageData.preview;
           });
         })
         .catch((err) => console.error('Error selecting files:', err));
