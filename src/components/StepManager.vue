@@ -1,7 +1,18 @@
 <template>
   <div class="step-manager">
     <el-steps :active="activeStep" finish-status="success" simple>
-      <el-step v-for="step in steps" :key="step.title" :title="step.title" />
+      <el-step 
+        v-for="(step, index) in steps" 
+        :key="step.title" 
+        :title="step.title"
+      >
+        <template #icon>
+          <div class="step-icon">
+            <span v-if="index > activeStep">{{ index + 1 }}</span>
+            <SketchyCheckmark v-else-if="index <= activeStep" />
+          </div>
+        </template>
+      </el-step>
     </el-steps>
     
     <div class="step-content">
@@ -33,6 +44,7 @@
 <script>
 import { ref, watch } from 'vue'
 import 'wired-elements'
+import SketchyCheckmark from './icons/SketchyCheckmark.vue'
 
 export default {
   props: {
@@ -104,5 +116,13 @@ export default {
 
 .navigation-buttons wired-button {
   min-width: 100px;
+}
+
+.step-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
 }
 </style>
