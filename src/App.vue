@@ -13,7 +13,7 @@
       <el-main>
         <el-row justify="center">
           <el-col :span="24">
-            <ImageProcessor />
+            <router-view></router-view>
           </el-col>
         </el-row>
       </el-main>
