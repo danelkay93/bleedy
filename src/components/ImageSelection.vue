@@ -81,35 +81,42 @@ export default {
   },
   computed: {
     filteredFiles() {
-      let images = this.images;
+      let images = [...this.images];
 
       // Search filter
-      if (this.searchQuery) {
-        const query = this.searchQuery.toLowerCase();
-        images = images.filter((file) => file.name.toLowerCase().includes(query));
+      if (this.searchQuery.trim()) {
+        const query = this.searchQuery.toLowerCase().trim();
+        images = images.filter((file) => 
+          file.name.toLowerCase().includes(query) ||
+          this.splitImageFilename(file.name).ext.toLowerCase().includes(query)
+        );
       }
 
       // Sorting
       if (this.sortOption === 'name') {
         images = images.sort((a, b) => a.name.localeCompare(b.name));
       } else if (this.sortOption === 'date') {
-        images = images.sort((a, b) => a.modifiedDate - b.modifiedDate);
+        images = images.sort((a, b) => new Date(b.modifiedDate) - new Date(a.modifiedDate));
       } else if (this.sortOption === 'size') {
-        images = images.sort((a, b) => a.size - b.size);
+        images = images.sort((a, b) => b.size - a.size);
       }
 
       return images;
     },
   },
   methods: {
+    truncateText(text, maxLength) {
+      if (text.length <= maxLength) return text;
+      return text.substring(0, maxLength) + '...';
+    },
     fileInfo(image) {
       const { name, ext } = this.splitImageFilename(image.name);
       return {
-        Filename: name,
+        Filename: this.truncateText(name, 30),
         Type: ext,
         Modified: new Date(image.modifiedDate).toLocaleString(),
         Size: this.formatSize(image.size),
-        Dimensions: image.dimensions,
+        Dimensions: image.dimensions || 'Loading...',
       };
     },
     highlightMatch(text, query) {
@@ -143,10 +150,15 @@ export default {
         .then((fileHandles) => Promise.all(fileHandles.map((handle) => handle.getFile())))
         .then((files) => {
           this.images = files.map((file) => {
+            const id = Date.now() + Math.random();
+            const preview = URL.createObjectURL(file);
             const img = new Image();
-            img.src = URL.createObjectURL(file);
+            img.src = preview;
             img.onload = () => {
-              file.dimensions = `${img.width}x${img.height}`;
+              const index = this.images.findIndex(image => image.id === id);
+              if (index !== -1) {
+                this.images[index].dimensions = `${img.width}x${img.height}`;
+              }
             };
             return {
               id: Date.now() + Math.random(),
@@ -197,6 +209,7 @@ export default {
 
 .search-input {
   width: 200px;
+  background: transparent !important;
 }
 
 .sort-select {
@@ -206,6 +219,16 @@ export default {
 
 .sort-select label {
   margin-right: 0.5rem;
+}
+
+wired-combo {
+  --wired-combo-popup-bg: var(--background-color, #fff);
+  background: transparent;
+}
+
+wired-item {
+  padding: 8px;
+  background: transparent;
 }
 
 .no-images {
