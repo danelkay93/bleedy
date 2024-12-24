@@ -5,6 +5,8 @@
         v-for="(step, index) in steps" 
         :key="step.title" 
         :title="step.title"
+        @click="handleStepClick(index)"
+        :class="{ 'clickable': canNavigateToStep(index) }"
       >
         <template #icon>
           <div class="step-icon">
@@ -27,7 +29,7 @@
 
     <div class="navigation-buttons">
       <wired-button 
-        v-show="activeStep > 0 || activeStep === 2" 
+        v-show="activeStep > 0" 
         @click="prevStep"
       >
         Previous
@@ -81,6 +83,17 @@ export default {
       }
     }
 
+    function canNavigateToStep(stepIndex) {
+      return stepIndex <= activeStep.value + 1 && stepIndex <= Math.max(...completedSteps.value)
+    }
+
+    function handleStepClick(stepIndex) {
+      if (canNavigateToStep(stepIndex)) {
+        activeStep.value = stepIndex
+        emit('update:modelValue', stepIndex)
+      }
+    }
+
     function prevStep() {
       if (activeStep.value > 0) {
         activeStep.value--
@@ -91,7 +104,9 @@ export default {
     return {
       activeStep,
       nextStep,
-      prevStep
+      prevStep,
+      handleStepClick,
+      canNavigateToStep
     }
   }
 }
@@ -121,6 +136,15 @@ export default {
 
 .navigation-buttons wired-button {
   min-width: 100px;
+}
+
+.clickable {
+  cursor: pointer;
+}
+
+.el-step:not(.clickable) {
+  opacity: 0.5;
+  pointer-events: none;
 }
 
 .step-icon {
