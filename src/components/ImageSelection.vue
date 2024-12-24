@@ -70,6 +70,7 @@ export default {
   props: {
     activeStep: Number,
   },
+  emits: ['update:selectedImages'],
   data() {
     return {
       selectedImages: [],
@@ -123,6 +124,7 @@ export default {
       } else {
         this.selectedImages.push(imageId);
       }
+      this.$emit('update:selectedImages', this.selectedImages);
     },
     openFilePicker() {
       const options = {

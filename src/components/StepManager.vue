@@ -8,14 +8,6 @@
       <slot :activeStep="activeStep" />
     </div>
     
-    <div class="step-navigation">
-      <el-button @click="prevStep" :disabled="activeStep === 0">
-        Previous
-      </el-button>
-      <el-button @click="nextStep" :disabled="activeStep === steps.length - 1" type="primary">
-        Next
-      </el-button>
-    </div>
   </div>
 </template>
 

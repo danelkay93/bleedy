@@ -8,7 +8,10 @@
             <div class="step-content-inner">
               <!-- Step-specific content -->
               <div v-if="activeStep === 0">
-                <ImageSelection :activeStep="activeStep" />
+                <ImageSelection 
+                  :activeStep="activeStep" 
+                  @update:selected-images="updateSelectedImages"
+                />
               </div>
               <div v-else-if="activeStep === 1">
                 <label>Adjust Bleed Amount:</label>
@@ -34,7 +37,13 @@
           <!-- Navigation buttons -->
           <div class="navigation-buttons">
             <wired-button v-if="activeStep > 0" @click="prevStep">Previous</wired-button>
-            <wired-button v-if="activeStep < steps.length - 1" @click="nextStep">Next</wired-button>
+            <wired-button 
+              v-if="activeStep < steps.length - 1" 
+              @click="nextStep"
+              :disabled="activeStep === 0 && selectedImages.length === 0"
+            >
+              Next
+            </wired-button>
           </div>
         </div>
       </template>
@@ -74,6 +83,11 @@ const steps = [
 const activeStep = ref(0)
 const bleedAmount = ref(50)
 const processedImages = ref([])
+const selectedImages = ref([])
+
+const updateSelectedImages = (images) => {
+  selectedImages.value = images
+}
 
 // Methods
 function processImages() {
