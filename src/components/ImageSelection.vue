@@ -1,6 +1,8 @@
 <!-- ImageSelection.vue -->
 <template>
-  <div class="image-selection">
+  <el-row justify="center">
+    <el-col :span="20">
+      <div class="image-selection">
     <SearchToolbar
       v-model:searchQuery="searchQuery"
       @browse="openFilePicker"
@@ -37,7 +39,9 @@
         @remove="removeImage(image.id)"
       />
     </div>
-  </div>
+      </div>
+    </el-col>
+  </el-row>
 </template>
 
 <script>

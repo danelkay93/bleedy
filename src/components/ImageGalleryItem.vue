@@ -92,20 +92,23 @@ export default {
   width: 200px;
   border: 2px dashed #000;
   padding: 10px;
-  cursor: pointer;
   background-color: #fff;
+  position: relative;
+  display: flex;
+  flex-direction: column;
 }
 
 .remove-button {
   position: absolute;
-  bottom: 5px;
-  right: 5px;
+  top: 15px;
+  right: 15px;
   --wired-button-background-color: #ff4444;
   --wired-button-color: white;
   font-size: 12px;
   padding: 2px;
   min-width: 24px;
   min-height: 24px;
+  z-index: 1;
 }
 
 .remove-button:hover {
