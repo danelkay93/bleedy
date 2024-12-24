@@ -16,10 +16,13 @@
         Previous
       </wired-button>
       <wired-button 
-        v-show="activeStep < steps.length - 1" 
-        @click="isNextDisabled ? null : nextStep"
+        v-if="activeStep < steps.length - 1" 
+        @click="nextStep"
         :class="{ 'disabled': isNextDisabled }"
-        :style="isNextDisabled ? 'opacity: 0.5; cursor: not-allowed;' : ''"
+        :style="{ 
+          opacity: isNextDisabled ? '0.5' : '1',
+          pointerEvents: isNextDisabled ? 'none' : 'auto'
+        }"
       >
         Next
       </wired-button>
