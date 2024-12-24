@@ -7,10 +7,16 @@
       @browse="openFilePicker"
     />
 
-    <!-- No Images Selected -->
-    <div v-if="activeStep === 0 && filteredFiles.length === 0" class="no-images">
-      <p>No images selected.</p>
-      <p>Click the "Browse" button to select images.</p>
+    <!-- Status Messages -->
+    <div v-if="activeStep === 0" class="status-messages">
+      <div v-if="images.length === 0" class="no-images">
+        <p>No images selected.</p>
+        <p>Click the "Browse" button to select images.</p>
+      </div>
+      <div v-else>
+        <p v-if="filteredFiles.length === 0">No images match the current search filter.</p>
+        <p class="selection-counter">{{ selectedImages.length }}/{{ images.length }} images selected</p>
+      </div>
     </div>
 
     <!-- Image Grid -->
@@ -125,7 +131,6 @@ export default {
               if (index !== -1) {
                 this.images[index].dimensions = `${img.naturalWidth}x${img.naturalHeight}`;
               }
-              URL.revokeObjectURL(imageData.preview); // Clean up the URL
             };
             img.src = imageData.preview;
           });
@@ -147,6 +152,14 @@ export default {
       return { name: name, ext: ext };
     },
   },
+  beforeUnmount() {
+    // Clean up object URLs
+    this.images.forEach(image => {
+      if (image.preview) {
+        URL.revokeObjectURL(image.preview);
+      }
+    });
+  }
 };
 </script>
 
@@ -160,9 +173,19 @@ export default {
 }
 
 
-.no-images {
+.status-messages {
   text-align: center;
   font-family: 'Doodle', sans-serif;
+  margin: 1rem 0;
+}
+
+.no-images {
+  margin: 1rem 0;
+}
+
+.selection-counter {
+  font-weight: bold;
+  color: #666;
 }
 
 .image-grid {
