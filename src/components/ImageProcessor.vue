@@ -109,7 +109,7 @@ function saveAsZip() {
 
 .step-content {
   width: 100%;
-  max-width: 800px;
+  max-width: 1000px;
   margin: 0 auto;
 }
 
@@ -124,7 +124,7 @@ function saveAsZip() {
 }
 
 .wired-card {
-  max-width: 800px;
+  max-width: 1000px;
   width: 100%;
   margin: 0 auto 20px;
   padding: 20px;
