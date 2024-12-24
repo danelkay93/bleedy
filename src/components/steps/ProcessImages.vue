@@ -47,26 +47,33 @@ const imageCount = computed(() => props.images.length)
 async function handleProcess() {
   processing.value = true
   
-  // Create custom event for PyScript
-  const event = new CustomEvent('process-images', {
-    detail: {
-      files: props.images,
-      bleedAmount: props.bleedAmount
-    }
-  })
-  
-  document.querySelector('div[class="image-processor-wrapper"]')?.dispatchEvent(event)
-  
-  // Wait for PyScript to process images
-  // TODO: Implement proper completion detection
-  await new Promise(resolve => setTimeout(resolve, 1000))
-  
-  // Get processed images from output container
-  processedImages.value = Array.from(
-    document.getElementById('bleedy-output')?.getElementsByTagName('img') || []
-  ).map(img => img.src)
-  
-  processing.value = false
+  try {
+    // Create custom event for PyScript
+    const event = new CustomEvent('process-images', {
+      detail: {
+        files: props.images,
+        bleedAmount: props.bleedAmount
+      }
+    })
+    
+    document.querySelector('.image-bleed-processor')?.dispatchEvent(event)
+    
+    // Wait for PyScript to process images
+    // TODO: Implement proper completion detection
+    await new Promise(resolve => setTimeout(resolve, 1000))
+    
+    // Get processed images from output container
+    const images = Array.from(
+      document.getElementById('bleedy-output')?.getElementsByTagName('img') || []
+    ).map(img => img.src)
+    
+    processedImages.value = images
+    emit('process-complete', images)
+  } catch (error) {
+    console.error('Error processing images:', error)
+  } finally {
+    processing.value = false
+  }
 }
 
 async function downloadImage(imageUrl: string, index: number) {

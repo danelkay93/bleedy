@@ -21,7 +21,9 @@
               />
               <ProcessImages
                 v-else-if="activeStep === 2"
-                @process="processImages"
+                :images="selectedImages"
+                :bleed-amount="bleedAmount"
+                @process-complete="handleProcessComplete"
               />
               <ReviewResults
                 v-else-if="activeStep === 3"
@@ -55,9 +57,8 @@ const updateSelectedImages = (images: File[]) => {
   selectedImages.value = images
 }
 
-const processImages = () => {
-  console.log('Processing images with bleed amount:', bleedAmount.value)
-  // Implement your image processing logic here
+const handleProcessComplete = (images: string[]) => {
+  processedImages.value = images
 }
 
 const saveAsZip = () => {
