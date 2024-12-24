@@ -50,20 +50,22 @@ async def display_image_file(img_file: File):
     document.getElementById("bleedy-output").appendChild(new_image)
 
 
-@when("process-images", "div[class='image-processor-wrapper']")
+@when("process-images", "div[class='image-bleed-processor']")
 async def process_files(event):
-    console.log("Processing images in PyScript!")
-    files = event.detail.files.to_py()  # Convert JS objects to Python
-    bleed_amount = event.detail.bleedAmount
-    console.log(f"Bleed amount: {bleed_amount}")
+    console.log("🚀 Starting image processing in PyScript!")
+    try:
+        files = event.detail.files.to_py()  # Convert JS objects to Python
+        bleed_amount = event.detail.bleedAmount
+        console.log(f"📏 Bleed amount set to: {bleed_amount}px")
+        console.log(f"🖼️ Number of images to process: {len(files)}")
 
     for i, file in enumerate(files):
-        console.log(f"Processing file: {file.name}")
+        console.log(f"⚙️ Processing file {i + 1}/{len(files)}: {file.name}")
         array_buf = Uint8Array.new(await file.arrayBuffer())
         bytes_list = bytearray(array_buf)
         image_bytes = BytesIO(bytes_list)
         img = Image.open(image_bytes)
-        console.log(f"Image {i + 1}: {file.name} opened. Format: {img.format}, Width: {img.width}, Height: {img.height}")
+        console.log(f"📄 Image details - Name: {file.name}, Format: {img.format}, Size: {img.width}x{img.height}")
         modified_image = await process_image(img, bleed_amount)
         modified_img_file = await create_image_file(modified_image, file.name, img.format)
         await display_image_file(modified_img_file)
@@ -72,4 +74,7 @@ async def process_files(event):
         # img = Image.open(BytesIO(file_data))
         # img_with_border = ImageOps.expand(img, border=bleed_amount, fill="red")
         # img_with_border.show()
-        console.log(f"File {i + 1}: {file.name} processed.")
+        console.log(f"✅ File {i + 1}/{len(files)}: {file.name} processed successfully")
+    console.log("🎉 All images processed successfully!")
+    except Exception as e:
+        console.error(f"❌ Error processing images: {str(e)}")

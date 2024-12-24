@@ -63,8 +63,28 @@ async function handleProcess() {
     document.querySelector('.image-bleed-processor')?.dispatchEvent(event)
     
     // Wait for PyScript to process images
-    // TODO: Implement proper completion detection
-    await new Promise(resolve => setTimeout(resolve, 1000))
+    const maxWaitTime = 10000 // 10 seconds
+    const checkInterval = 100 // 100ms
+    let waitTime = 0
+    
+    while (waitTime < maxWaitTime) {
+      const images = Array.from(
+        document.getElementById('bleedy-output')?.getElementsByTagName('img') || []
+      )
+      if (images.length === props.images.length) {
+        console.log('✨ All images processed and ready')
+        const imageUrls = images.map(img => img.src)
+        processedImages.value = imageUrls
+        emit('process-complete', imageUrls)
+        break
+      }
+      await new Promise(resolve => setTimeout(resolve, checkInterval))
+      waitTime += checkInterval
+    }
+
+    if (waitTime >= maxWaitTime) {
+      throw new Error('Timeout waiting for images to process')
+    }
     
     // Get processed images from output container
     const images = Array.from(
@@ -123,7 +143,8 @@ async function downloadZip() {
 }
 
 .output-container {
-  display: none;
+  position: absolute;
+  left: -9999px;
 }
 
 .process-actions,
