@@ -17,7 +17,7 @@
       </wired-button>
       <wired-button 
         v-show="activeStep < steps.length - 1" 
-        @click="nextStep"
+        @click="isNextDisabled ? null : nextStep"
         :disabled="isNextDisabled"
       >
         Next
@@ -54,7 +54,7 @@ export default {
     })
 
     function nextStep() {
-      if (activeStep.value < props.steps.length - 1) {
+      if (activeStep.value < props.steps.length - 1 && !props.isNextDisabled) {
         activeStep.value++
         emit('update:modelValue', activeStep.value)
       }
