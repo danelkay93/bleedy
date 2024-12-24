@@ -142,7 +142,11 @@ export default {
           
           // Add new images and their IDs to selected images
           this.images = [...this.images, ...newImages];
-          this.selectedImages = [...this.selectedImages, ...newImages.map(img => img.id)];
+          const newSelectedImages = [...this.selectedImages, ...newImages.map(img => img.id)];
+          this.selectedImages = newSelectedImages;
+          this.$emit('update:selectedImages', newSelectedImages.map(id => 
+            this.images.find(img => img.id === id).file
+          ));
         })
         .then(() => {
           // Load dimensions for each image after they're added

@@ -18,7 +18,8 @@
       <wired-button 
         v-show="activeStep < steps.length - 1" 
         @click="isNextDisabled ? null : nextStep"
-        :disabled="isNextDisabled"
+        :class="{ 'disabled': isNextDisabled }"
+        :style="isNextDisabled ? 'opacity: 0.5; cursor: not-allowed;' : ''"
       >
         Next
       </wired-button>
