@@ -9,8 +9,12 @@
         <template #icon>
           <div class="step-icon">
             <wired-checkbox 
-              :checked="index <= activeStep"
+              :checked="index < activeStep"
               disabled
+              :class="{
+                'current-step': index === activeStep,
+                'completed-step': index < activeStep
+              }"
             />
           </div>
         </template>
@@ -125,5 +129,29 @@ export default {
   justify-content: center;
   width: 24px;
   height: 24px;
+}
+
+/* Override disabled checkbox appearance */
+:deep(wired-checkbox[disabled]) {
+  opacity: 1;
+}
+
+:deep(.current-step) {
+  transform: scale(1.2);
+  filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.2));
+}
+
+:deep(.current-step)::before {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border: 2px solid #000;
+  border-radius: 4px;
+  opacity: 0.3;
+  transform: rotate(-2deg);
+}
+
+:deep(.completed-step) {
+  --wired-checkbox-color: var(--el-color-success);
 }
 </style>
