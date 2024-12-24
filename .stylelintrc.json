@@ -1,8 +1,11 @@
 {
   "extends": [
-    "stylelint-config-standard-scss",
     "stylelint-config-recommended",
-    "stylelint-config-tailwindcss",
-    "stylelint-config-tailwindcss/scss"
-  ]
+    "stylelint-config-standard-scss"
+  ],
+  "rules": {
+    "scss/no-global-function-names": {
+      "ignoreFunctions": ["darken"]
+    }
+  }
 }

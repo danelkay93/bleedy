@@ -25,6 +25,12 @@
   --color-heading: var(--vt-c-text-light-1);
   --color-text: var(--vt-c-text-light-1);
   --section-gap: 160px;
+  --primary-color: #607d8b; /* Muted blue */
+  --secondary-color: #e53935; /* Blood red for the logo */
+  --background-light: #fdfdfd; /* Light background */
+  --background-dark: #212121; /* Dark background */
+  --text-dark: #333; /* Dark text */
+  --text-light: #fdfdfd; /* Light text */
 }
 
 @media (prefers-color-scheme: dark) {
@@ -39,16 +45,8 @@
   }
 }
 
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-  margin: 0;
-  font-weight: normal;
-}
 
 body {
-  min-height: 100vh;
   color: var(--color-text);
   background: var(--color-background);
   transition:

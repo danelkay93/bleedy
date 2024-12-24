@@ -1,204 +1,162 @@
 <template>
-  <el-container class="image-processor container mx-auto" id="image-processor-component">
-    <el-row>
-      <el-col :span="24">
-        <el-steps :active="activeStep" finish-status="success">
-          <el-step title="Select Files"></el-step>
-          <el-step title="Configure Settings"></el-step>
-          <el-step title="Process Images"></el-step>
-          <el-step title="Processing Results"></el-step>
-        </el-steps>
-      </el-col>
-    </el-row>
+  <div class="image-processor-wrapper">
+    <StepManager :steps="steps" v-model="activeStep">
+      <el-row justify="center">
+        <!-- Slot for progress bar -->
+        <template #progress="{ activeStep }"></template>
+      </el-row>
+      <el-row justify-center>
+        <!-- Slot for title -->
+        <template #title="{ activeStep }">
+          <h1 class="step-title">{{ steps[activeStep].title }}</h1>
+        </template>
+      </el-row>
 
-    <!-- Step 1: Select Files -->
-    <el-row v-if="activeStep === 0">
-      <el-col :span="24">
-        <h2 class="text-xl font-bold mb-4">Step 1: Select Image Files</h2>
-        <el-button @click="openFilePicker" type="primary" class="mb-4">Open File Picker</el-button>
-        <el-input v-model="searchQuery" placeholder="Search files..." class="mb-4" clearable>
-          <template #prepend>
-            <el-icon><i class="el-icon-search"></i></el-icon>
-          </template>
-        </el-input>
-        <el-scrollbar class="mb-4" style="height: 200px; overflow-y: auto">
-          <div v-if="filteredFiles.length > 0">
-            <el-card
-              v-for="(file, index) in filteredFiles"
-              :key="index"
-              class="mb-2"
-              shadow="hover"
-            >
-              <div class="flex justify-between items-center">
-                <span>{{ file.name }}</span>
-                <el-button
-                  type="danger"
-                  icon="el-icon-delete"
-                  size="small"
-                  @click="removeFile(index)"
-                ></el-button>
+
+        <!-- Slot for content -->
+        <template #content="{ activeStep }">
+          <wired-card>
+                  <el-row justify="center">
+        <el-col :span="24">
+            <!-- Step-specific content -->
+            <div v-if="activeStep === 0">
+              <!-- Include ImageSelection component -->
+              <ImageSelection :activeStep="activeStep" />
+            </div>
+            <div v-else-if="activeStep === 1">
+              <!-- Step 2: Wired Slider -->
+              <label>Adjust Bleed Amount:</label>
+              <wired-slider min="0" max="100" v-model="bleedAmount"></wired-slider>
+            </div>
+            <div v-else-if="activeStep === 2">
+              <!-- Step 3: Wired Button for Actions -->
+              <wired-button @click="processImages">Process Images</wired-button>
+            </div>
+            <div v-else-if="activeStep === 3">
+              <!-- Step 4: Review Results -->
+              <p>Review your processed images below:</p>
+              <div class="image-gallery">
+                <img
+                  v-for="(img, index) in processedImages"
+                  :key="index"
+                  :src="img"
+                  alt="Processed Image" />
               </div>
-            </el-card>
+              <wired-button @click="saveAsZip">Save as ZIP</wired-button>
+            </div>
+                    </el-col>
+      </el-row>
+          </wired-card>
+        </template>
+
+      <el-row justify-center>
+        <!-- Slot for navigation buttons -->
+        <template #navigation="{ prevStep, nextStep, activeStep }">
+          <!-- Custom navigation buttons -->
+          <div class="navigation-buttons">
+            <wired-button v-if="activeStep > 0" @click="prevStep">Previous</wired-button>
+            <wired-button v-if="activeStep < steps.length - 1" @click="nextStep">Next</wired-button>
           </div>
-          <p v-else class="text-gray-500">No files selected.</p>
-        </el-scrollbar>
-        <el-button v-if="selectedFiles.length > 0" type="warning" @click="clearFiles"
-          >Clear All Files</el-button
-        >
-      </el-col>
-    </el-row>
-
-    <!-- Step 2: Configure Settings -->
-    <el-row v-if="activeStep === 1">
-      <el-col :span="24">
-        <h2 class="text-xl font-bold mb-4">Step 2: Configure Settings</h2>
-        <label for="bleed-amount" class="block mb-2">Bleed Amount (px):</label>
-        <input
-          type="number"
-          v-model="bleedAmount"
-          id="bleed-amount"
-          min="0"
-          class="p-2 border rounded w-full"
-        />
-      </el-col>
-    </el-row>
-
-    <!-- Step 3: Process Images -->
-    <el-row v-if="activeStep === 2">
-      <el-col :span="24">
-        <h2 class="text-xl font-bold mb-4">Step 3: Process Images</h2>
-        <button @click="emitProcessEvent" class="p-2 bg-green-500 text-white rounded">
-          Process Images
-        </button>
-      </el-col>
-    </el-row>
-
-    <!-- Step 4: Processing Results -->
-    <el-row v-if="activeStep === 3">
-      <el-col :span="24">
-        <h2 class="text-xl font-bold mb-4">Step 4: Processing Results</h2>
-        <el-scrollbar class="mt-4" style="height: 400px; overflow-y: auto">
-          <div v-if="processedImages.length > 0">
-            <el-card
-              v-for="(image, index) in processedImages"
-              :key="index"
-              class="mb-4"
-              shadow="hover"
-            >
-              <img :src="image" :style="getThumbnailStyle(image)" alt="Processed Image" />
-            </el-card>
-          </div>
-          <p v-else class="text-gray-500">No processed images available.</p>
-        </el-scrollbar>
-        <el-button v-if="processedImages.length > 0" type="primary" @click="saveAsZip"
-          >Save All as ZIP</el-button
-        >
-      </el-col>
-    </el-row>
-
-    <!-- Navigation Buttons -->
-    <el-row class="flex justify-between mt-6">
-      <el-col :span="12">
-        <el-button @click="prevStep" :disabled="activeStep === 0">Previous</el-button>
-      </el-col>
-      <el-col :span="12" class="text-right">
-        <el-button @click="nextStep" :disabled="activeStep === 3">Next</el-button>
-      </el-col>
-    </el-row>
-  </el-container>
+        </template>
+      </el-row>
+    </StepManager>
+  </div>
 </template>
 
-<script>
-import * as zip from '@zip.js/zip.js'
+<script setup>
+import { ref } from 'vue'
+import StepManager from './StepManager.vue'
+import ImageSelection from './ImageSelection.vue' // Import the ImageSelection component
+import 'wired-elements'
 
-export default {
-  data() {
-    return {
-      activeStep: 0,
-      selectedFiles: [],
-      searchQuery: '',
-      bleedAmount: 10,
-      processedImages: []
-    }
+const steps = [
+  {
+    name: 'Select Images',
+    title: 'Select',
+    iconName: 'image-selection-icon'
   },
-  computed: {
-    filteredFiles() {
-      if (!this.searchQuery) return this.selectedFiles
-      return this.selectedFiles.filter((file) =>
-        file.name.toLowerCase().includes(this.searchQuery.toLowerCase())
-      )
-    }
+  {
+    name: 'Adjust Bleed',
+    title: 'Settings',
+    iconName: 'bleed-settings-icon'
   },
-  methods: {
-    nextStep() {
-      if (this.activeStep < 3) this.activeStep++
-    },
-    prevStep() {
-      if (this.activeStep > 0) this.activeStep--
-    },
-    openFilePicker() {
-      const options = {
-        types: [
-          {
-            description: 'Image Files',
-            accept: {
-              'image/*': ['.png', '.jpg', '.jpeg', '.gif', '.webp']
-            }
-          }
-        ],
-        multiple: true
-      }
-      window
-        .showOpenFilePicker(options)
-        .then((fileHandles) => Promise.all(fileHandles.map((handle) => handle.getFile())))
-        .then((files) => {
-          this.selectedFiles = files
-        })
-        .catch((err) => console.error('Error selecting files:', err))
-    },
-    removeFile(index) {
-      this.selectedFiles.splice(index, 1)
-    },
-    clearFiles() {
-      this.selectedFiles = []
-    },
-    emitProcessEvent() {
-      this.$emit('process-images', {
-        files: this.selectedFiles,
-        bleedAmount: this.bleedAmount
-      })
-    },
-    getThumbnailStyle(image) {
-      const img = new Image()
-      img.src = image
-
-      return new Promise((resolve) => {
-        img.onload = () => {
-          let width = img.width
-          let height = img.height
-
-          if (width > height) {
-            if (width > this.maxThumbnailSize) {
-              height *= this.maxThumbnailSize / width
-              width = this.maxThumbnailSize
-            }
-          } else {
-            if (height > this.maxThumbnailSize) {
-              width *= this.maxThumbnailSize / height
-              height = this.maxThumbnailSize
-            }
-          }
-
-          resolve({
-            width: `${width}px`,
-            height: `${height}px`
-          })
-        }
-      })
-    },
-    saveAsZip() {
-      // Logic to save all processed images as a ZIP file
-    }
+  {
+    name: 'Process Images',
+    title: 'Bleed!',
+    iconName: 'blood-droplet-icon'
+  },
+  {
+    name: 'Review Results',
+    title: 'Results',
+    iconName: 'stars-icon'
   }
+]
+
+const activeStep = ref(0)
+const bleedAmount = ref(50)
+const processedImages = ref([])
+
+// Methods
+function processImages() {
+  console.log('Processing images with bleed amount:', bleedAmount.value)
+  // Implement your image processing logic here
+}
+
+function saveAsZip() {
+  console.log('Saving processed images as ZIP')
+  // Implement ZIP saving logic here
 }
 </script>
+
+<style scoped>
+@import '../../node_modules/doodle.css/doodle.css';
+@import '../assets/handdrawn.css';
+@import 'papercss/dist/paper.min.css';
+
+.image-processor-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+}
+
+.step-title {
+  font-size: 2em;
+  color: #333;
+  margin: 20px 0;
+}
+
+.wired-card {
+  max-width: 800px;
+  width: 100%;
+  margin: 0 auto 20px;
+  padding: 20px;
+}
+
+.navigation-buttons {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.navigation-buttons wired-button {
+  margin: 0 10px;
+}
+
+.image-gallery {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.image-gallery img {
+  max-width: 100%;
+  height: auto;
+  border: 2px dashed #000;
+}
+
+body {
+  font-family: 'Doodle', sans-serif;
+  background-color: #fafafa;
+}
+</style>

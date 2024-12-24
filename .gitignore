@@ -28,3 +28,6 @@ coverage
 *.sw?
 
 *.tsbuildinfo
+.aider*
+.env
+*.env!/vueform-project/

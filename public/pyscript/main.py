@@ -50,7 +50,7 @@ async def display_image_file(img_file: File):
     document.getElementById("bleedy-output").appendChild(new_image)
 
 
-@when("process-images", "div[id='image-processor-component']")
+@when("process-images", "div[class='image-processor-wrapper']")
 async def process_files(event):
     console.log("Processing images in PyScript!")
     files = event.detail.files.to_py()  # Convert JS objects to Python
