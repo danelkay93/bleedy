@@ -1,6 +1,10 @@
 <template>
   <div class="image-processor-wrapper">
-    <StepManager :steps="steps" v-model="activeStep">
+    <StepManager 
+      :steps="steps" 
+      v-model="activeStep"
+      :is-next-disabled="activeStep === 0 && selectedImages.length === 0"
+    >
       <template #default="{ activeStep }">
         <div class="step-content">
           <h2 class="step-title">{{ steps[activeStep].title }}</h2>
@@ -34,17 +38,6 @@
             </div>
           </wired-card>
           
-          <!-- Navigation buttons -->
-          <div class="navigation-buttons">
-            <wired-button v-if="activeStep > 0" @click="prevStep">Previous</wired-button>
-            <wired-button 
-              v-if="activeStep < steps.length - 1" 
-              @click="nextStep"
-              :disabled="activeStep === 0 && selectedImages.length === 0"
-            >
-              Next
-            </wired-button>
-          </div>
         </div>
       </template>
     </StepManager>

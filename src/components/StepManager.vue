@@ -7,12 +7,30 @@
     <div class="step-content">
       <slot :activeStep="activeStep" />
     </div>
-    
+
+    <Teleport to=".step-content">
+      <div class="navigation-buttons">
+        <wired-button 
+          v-if="activeStep > 0" 
+          @click="prevStep"
+        >
+          Previous
+        </wired-button>
+        <wired-button 
+          v-if="activeStep < steps.length - 1" 
+          @click="nextStep"
+          :disabled="isNextDisabled"
+        >
+          Next
+        </wired-button>
+      </div>
+    </Teleport>
   </div>
 </template>
 
 <script>
 import { ref, watch } from 'vue'
+import 'wired-elements'
 
 export default {
   props: {
@@ -23,6 +41,10 @@ export default {
     modelValue: {
       type: Number,
       default: 0
+    },
+    isNextDisabled: {
+      type: Boolean,
+      default: false
     }
   },
   emits: ['update:modelValue'],
@@ -68,9 +90,14 @@ export default {
   margin: 20px 0;
 }
 
-.step-navigation {
+.navigation-buttons {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
+  gap: 10px;
   margin-top: 20px;
+}
+
+.navigation-buttons wired-button {
+  margin: 0 10px;
 }
 </style>
