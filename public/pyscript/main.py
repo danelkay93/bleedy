@@ -50,7 +50,7 @@ async def display_image_file(img_file: File):
     document.getElementById("bleedy-output").appendChild(new_image)
 
 
-@when("process-images", "div[class='image-bleed-processor']")
+@when("process-images", ".process-and-review")
 async def process_files(event):
     console.log("🚀 Starting image processing in PyScript!")
     try:
