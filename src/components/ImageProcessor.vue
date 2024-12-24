@@ -1,105 +1,73 @@
 <template>
-  <div class="image-processor-wrapper">
+  <div class="image-bleed-processor">
     <StepManager 
-      :steps="steps" 
+      :steps="processorSteps" 
       v-model="activeStep"
       :is-next-disabled="activeStep === 0 && selectedImages.length === 0"
     >
       <template #default="{ activeStep }">
         <div class="step-content">
-          <h2 class="step-title">{{ steps[activeStep].title }}</h2>
+          <h2 class="step-title">{{ processorSteps[activeStep].title }}</h2>
           <wired-card elevation="2">
             <div class="step-content-inner">
-              <!-- Step-specific content -->
-              <div v-if="activeStep === 0">
-                <ImageSelection 
-                  :activeStep="activeStep" 
-                  @update:selected-images="updateSelectedImages"
-                />
-              </div>
-              <div v-else-if="activeStep === 1">
-                <label>Adjust Bleed Amount:</label>
-                <wired-slider min="0" max="100" v-model="bleedAmount"></wired-slider>
-              </div>
-              <div v-else-if="activeStep === 2">
-                <wired-button @click="processImages">Process Images</wired-button>
-              </div>
-              <div v-else-if="activeStep === 3">
-                <p>Review your processed images below:</p>
-                <div class="image-gallery">
-                  <img
-                    v-for="(img, index) in processedImages"
-                    :key="index"
-                    :src="img"
-                    alt="Processed Image" />
-                </div>
-                <wired-button @click="saveAsZip">Save as ZIP</wired-button>
-              </div>
+              <ImageSelection 
+                v-if="activeStep === 0"
+                :activeStep="activeStep" 
+                @update:selected-images="updateSelectedImages"
+              />
+              <BleedAdjustment
+                v-else-if="activeStep === 1"
+                v-model="bleedAmount"
+              />
+              <ProcessImages
+                v-else-if="activeStep === 2"
+                @process="processImages"
+              />
+              <ReviewResults
+                v-else-if="activeStep === 3"
+                :images="processedImages"
+                @save="saveAsZip"
+              />
             </div>
           </wired-card>
-          
         </div>
       </template>
     </StepManager>
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref } from 'vue'
 import StepManager from './StepManager.vue'
-import ImageSelection from './ImageSelection.vue' // Import the ImageSelection component
+import ImageSelection from './ImageSelection.vue'
+import BleedAdjustment from './steps/BleedAdjustment.vue'
+import ProcessImages from './steps/ProcessImages.vue'
+import ReviewResults from './steps/ReviewResults.vue'
+import { processorSteps } from '../config/processorSteps'
 import 'wired-elements'
-
-const steps = [
-  {
-    name: 'Select Images',
-    title: 'Select',
-    iconName: 'image-selection-icon'
-  },
-  {
-    name: 'Adjust Bleed',
-    title: 'Settings',
-    iconName: 'bleed-settings-icon'
-  },
-  {
-    name: 'Process Images',
-    title: 'Bleed!',
-    iconName: 'blood-droplet-icon'
-  },
-  {
-    name: 'Review Results',
-    title: 'Results',
-    iconName: 'stars-icon'
-  }
-]
 
 const activeStep = ref(0)
 const bleedAmount = ref(50)
-const processedImages = ref([])
-const selectedImages = ref([])
+const processedImages = ref<string[]>([])
+const selectedImages = ref<File[]>([])
 
-const updateSelectedImages = (images) => {
+const updateSelectedImages = (images: File[]) => {
   selectedImages.value = images
 }
 
-// Methods
-function processImages() {
+const processImages = () => {
   console.log('Processing images with bleed amount:', bleedAmount.value)
   // Implement your image processing logic here
 }
 
-function saveAsZip() {
+const saveAsZip = () => {
   console.log('Saving processed images as ZIP')
   // Implement ZIP saving logic here
 }
 </script>
 
 <style scoped>
-@import '../../node_modules/doodle.css/doodle.css';
-@import '../assets/handdrawn.css';
-@import 'papercss/dist/paper.min.css';
-
-.image-processor-wrapper {
+.image-bleed-processor {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -128,23 +96,5 @@ function saveAsZip() {
   width: 100%;
   margin: 0 auto 20px;
   padding: 20px;
-}
-
-
-.image-gallery {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-}
-
-.image-gallery img {
-  max-width: 100%;
-  height: auto;
-  border: 2px dashed #000;
-}
-
-body {
-  font-family: 'Doodle', sans-serif;
-  background-color: #fafafa;
 }
 </style>
