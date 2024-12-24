@@ -60,7 +60,7 @@ async function handleProcess() {
       }
     })
     
-    document.querySelector('.process-and-review')?.dispatchEvent(event)
+    document.querySelector('.image-bleed-processor')?.dispatchEvent(event)
     
     // Wait for PyScript to process images
     const maxWaitTime = 10000 // 10 seconds
