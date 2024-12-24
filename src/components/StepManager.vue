@@ -8,8 +8,10 @@
       >
         <template #icon>
           <div class="step-icon">
-            <span v-if="index > activeStep">{{ index + 1 }}</span>
-            <SketchyCheckmark v-else-if="index <= activeStep" />
+            <wired-checkbox 
+              :checked="index <= activeStep"
+              disabled
+            />
           </div>
         </template>
       </el-step>
@@ -44,7 +46,6 @@
 <script>
 import { ref, watch } from 'vue'
 import 'wired-elements'
-import SketchyCheckmark from './icons/SketchyCheckmark.vue'
 
 export default {
   props: {
