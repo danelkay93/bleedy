@@ -3,7 +3,6 @@
   <div class="image-selection">
     <SearchToolbar
       v-model:searchQuery="searchQuery"
-      v-model:sortOption="sortOption"
       @browse="openFilePicker"
     />
 
@@ -15,7 +14,12 @@
       </div>
       <div v-else>
         <p v-if="filteredFiles.length === 0">No images match the current search filter.</p>
-        <p class="selection-counter">{{ selectedImages.length }}/{{ images.length }} images selected</p>
+        <p class="selection-counter">
+          {{ searchQuery.trim() ? 
+            `${filteredFiles.length}/${images.length} images displayed` : 
+            `${selectedImages.length}/${images.length} images selected` 
+          }}
+        </p>
       </div>
     </div>
 
@@ -108,7 +112,7 @@ export default {
         .showOpenFilePicker(options)
         .then((fileHandles) => Promise.all(fileHandles.map((handle) => handle.getFile())))
         .then((files) => {
-          this.images = files.map((file) => {
+          const newImages = files.map((file) => {
             const imageId = Date.now() + Math.random();
             const preview = URL.createObjectURL(file);
             return {
@@ -121,6 +125,10 @@ export default {
               file // Keep reference to original file
             };
           });
+          
+          // Add new images and their IDs to selected images
+          this.images = newImages;
+          this.selectedImages = [...this.selectedImages, ...newImages.map(img => img.id)];
         })
         .then(() => {
           // Load dimensions for each image after they're added

@@ -2,7 +2,6 @@
   <div
     class="image-card"
     :class="{ 'selected-card': selected }"
-    @click="$emit('toggle')"
   >
     <img 
       :src="image.preview" 
@@ -23,6 +22,13 @@
         </small>
       </div>
     </div>
+    <button 
+      v-if="selected" 
+      class="unselect-button"
+      @click.stop="$emit('toggle')"
+    >
+      ✕
+    </button>
   </div>
 </template>
 
@@ -89,8 +95,26 @@ export default {
   background-color: #fff;
 }
 
-.image-card.selected-card {
-  background-color: #ffd54f;
+.unselect-button {
+  position: absolute;
+  bottom: 5px;
+  right: 5px;
+  width: 20px;
+  height: 20px;
+  border: none;
+  background: #ff4444;
+  color: white;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  padding: 0;
+}
+
+.unselect-button:hover {
+  background: #ff0000;
 }
 
 .image-thumbnail {

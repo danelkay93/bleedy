@@ -11,18 +11,6 @@
       class="search-input"
     ></wired-search-input>
 
-    <div class="sort-select">
-      <label for="sort">Sort By:</label>
-      <wired-combo 
-        id="sort" 
-        :selected="sortOption"
-        @selected="$emit('update:sortOption', $event.detail.selected)"
-      >
-        <wired-item value="name">Name</wired-item>
-        <wired-item value="date">Date Modified</wired-item>
-        <wired-item value="size">Size</wired-item>
-      </wired-combo>
-    </div>
   </div>
 </template>
 
@@ -35,13 +23,9 @@ export default {
     searchQuery: {
       type: String,
       required: true
-    },
-    sortOption: {
-      type: String,
-      required: true
     }
   },
-  emits: ['browse', 'update:searchQuery', 'update:sortOption']
+  emits: ['browse', 'update:searchQuery']
 }
 </script>
 
