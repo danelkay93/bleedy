@@ -118,16 +118,6 @@ export default {
         .then((fileHandles) => Promise.all(fileHandles.map((handle) => handle.getFile())))
         .then((files) => {
           this.images = files.map((file) => {
-            const id = Date.now() + Math.random();
-            const preview = URL.createObjectURL(file);
-            const img = new Image();
-            img.src = preview;
-            img.onload = () => {
-              const index = this.images.findIndex(image => image.id === id);
-              if (index !== -1) {
-                this.images[index].dimensions = `${img.width}x${img.height}`;
-              }
-            };
             const imageId = Date.now() + Math.random();
             const preview = URL.createObjectURL(file);
             return {
