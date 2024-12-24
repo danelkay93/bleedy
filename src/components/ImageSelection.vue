@@ -1,27 +1,11 @@
 <!-- ImageSelection.vue -->
 <template>
   <div class="image-selection">
-    <!-- Toolbar -->
-    <div class="toolbar">
-      <wired-button elevation="2" @click="openFilePicker">
-        Browse
-      </wired-button>
-
-      <wired-search-input
-        placeholder="Search Images..."
-        v-model="searchQuery"
-        class="search-input"
-      ></wired-search-input>
-
-      <div class="sort-select">
-        <label for="sort">Sort By:</label>
-        <wired-combo id="sort" v-model="sortOption" @change="sortFiles">
-          <wired-item value="name">Name</wired-item>
-          <wired-item value="date">Date Modified</wired-item>
-          <wired-item value="size">Size</wired-item>
-        </wired-combo>
-      </div>
-    </div>
+    <SearchToolbar
+      v-model:searchQuery="searchQuery"
+      v-model:sortOption="sortOption"
+      @browse="openFilePicker"
+    />
 
     <!-- No Images Selected -->
     <div v-if="activeStep === 0 && filteredFiles.length === 0" class="no-images">
@@ -53,6 +37,7 @@ import 'wired-elements';
 export default {
   components: {
     ImageGalleryItem: () => import('./ImageGalleryItem.vue'),
+    SearchToolbar: () => import('./SearchToolbar.vue'),
   },
   props: {
     activeStep: Number,
@@ -174,37 +159,6 @@ export default {
   width: 100%;
 }
 
-.toolbar {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 1rem;
-  margin-bottom: 1rem;
-}
-
-.search-input {
-  width: 200px;
-  background: transparent !important;
-}
-
-.sort-select {
-  display: flex;
-  align-items: center;
-}
-
-.sort-select label {
-  margin-right: 0.5rem;
-}
-
-wired-combo {
-  --wired-combo-popup-bg: var(--background-color, #fff);
-  background: transparent;
-}
-
-wired-item {
-  padding: 8px;
-  background: transparent;
-}
 
 .no-images {
   text-align: center;
