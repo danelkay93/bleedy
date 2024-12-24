@@ -30,19 +30,14 @@
               </div>
             </div>
           </wired-card>
-        </div>
-      </template>
-
-      <el-row justify-center>
-        <!-- Slot for navigation buttons -->
-        <template #navigation="{ prevStep, nextStep, activeStep }">
-          <!-- Custom navigation buttons -->
+          
+          <!-- Navigation buttons -->
           <div class="navigation-buttons">
             <wired-button v-if="activeStep > 0" @click="prevStep">Previous</wired-button>
             <wired-button v-if="activeStep < steps.length - 1" @click="nextStep">Next</wired-button>
           </div>
-        </template>
-      </el-row>
+        </div>
+      </template>
     </StepManager>
   </div>
 </template>
