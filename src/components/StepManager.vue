@@ -27,7 +27,7 @@
 
     <div class="navigation-buttons">
       <wired-button 
-        v-show="activeStep > 0" 
+        v-show="activeStep > 0 || activeStep === 2" 
         @click="prevStep"
       >
         Previous
