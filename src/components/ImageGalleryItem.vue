@@ -100,8 +100,8 @@ export default {
 
 .remove-button {
   position: absolute;
-  top: 15px;
-  right: 15px;
+  bottom: 10px;
+  right: 10px;
   --wired-button-background-color: #ff4444;
   --wired-button-color: white;
   font-size: 12px;
