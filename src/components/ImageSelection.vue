@@ -34,33 +34,14 @@
       v-if="activeStep === 0 && filteredFiles.length > 0"
       class="image-grid"
     >
-      <div
-        class="image-card"
+      <ImageGalleryItem
         v-for="image in filteredFiles"
         :key="image.id"
-        :class="{ 'selected-card': selectedImages.includes(image.id) }"
-        @click="toggleSelection(image.id)"
-      >
-        <img 
-          :src="image.preview" 
-          :alt="image.name" 
-          :title="image.name"
-          class="image-thumbnail" 
-        />
-
-        <div class="file-info">
-          <div v-for="(value, key) in fileInfo(image)" :key="key">
-            <small>
-              {{ key }}:
-              <span
-                v-if="key === 'Filename' || key === 'Type'"
-                v-html="highlightMatch(value, searchQuery)"
-              ></span>
-              <span v-else>{{ value }}</span>
-            </small>
-          </div>
-        </div>
-      </div>
+        :image="image"
+        :selected="selectedImages.includes(image.id)"
+        :searchQuery="searchQuery"
+        @toggle="toggleSelection(image.id)"
+      />
     </div>
   </div>
 </template>
@@ -71,6 +52,7 @@ import 'wired-elements';
 
 export default {
   components: {
+    ImageGalleryItem: () => import('./ImageGalleryItem.vue'),
   },
   props: {
     activeStep: Number,
@@ -110,25 +92,6 @@ export default {
     },
   },
   methods: {
-    truncateText(text, maxLength) {
-      if (text.length <= maxLength) return text;
-      return text.substring(0, maxLength) + '...';
-    },
-    fileInfo(image) {
-      const { name, ext } = this.splitImageFilename(image.name);
-      return {
-        Filename: this.truncateText(name, 30),
-        Type: ext,
-        Modified: new Date(image.modifiedDate).toLocaleString(),
-        Size: this.formatSize(image.size),
-        Dimensions: image.dimensions || 'Loading...',
-      };
-    },
-    highlightMatch(text, query) {
-      if (!query) return text;
-      const regex = new RegExp(`(${query})`, 'gi');
-      return text.replace(regex, '<mark>$1</mark>');
-    },
     toggleSelection(imageId) {
       const index = this.selectedImages.indexOf(imageId);
       if (index > -1) {
@@ -265,33 +228,4 @@ wired-item {
   justify-content: center;
 }
 
-.image-card {
-  width: 200px;
-  border: 2px dashed #000;
-  padding: 10px;
-  cursor: pointer;
-  background-color: #fff;
-}
-
-.image-card.selected-card {
-  background-color: #ffd54f;
-}
-
-.image-thumbnail {
-  width: 100%;
-  height: auto;
-  border: 1px solid #ccc;
-}
-
-.file-info {
-  font-size: 12px;
-  margin-top: 0.5rem;
-}
-
-mark {
-  background-color: #ffff00;
-  color: #000;
-  padding: 0 2px;
-  border-radius: 2px;
-}
 </style>
