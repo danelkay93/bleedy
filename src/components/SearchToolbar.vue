@@ -1,6 +1,10 @@
 <template>
   <div class="toolbar">
-    <wired-button elevation="2" @click="$emit('browse')">
+    <wired-button 
+      class="browse-button"
+      elevation="3" 
+      @click="$emit('browse')"
+    >
       Browse
     </wired-button>
 

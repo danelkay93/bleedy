@@ -34,7 +34,7 @@
         :image="image"
         :selected="selectedImages.includes(image.id)"
         :searchQuery="searchQuery"
-        @toggle="toggleSelection(image.id)"
+        @remove="removeImage(image.id)"
       />
     </div>
   </div>
@@ -87,13 +87,23 @@ export default {
     },
   },
   methods: {
-    toggleSelection(imageId) {
-      const index = this.selectedImages.indexOf(imageId);
-      if (index > -1) {
-        this.selectedImages.splice(index, 1);
-      } else {
-        this.selectedImages.push(imageId);
+    removeImage(imageId) {
+      // Remove from selected images
+      const selectedIndex = this.selectedImages.indexOf(imageId);
+      if (selectedIndex > -1) {
+        this.selectedImages.splice(selectedIndex, 1);
       }
+      
+      // Remove from images array and revoke URL
+      const imageIndex = this.images.findIndex(img => img.id === imageId);
+      if (imageIndex > -1) {
+        const image = this.images[imageIndex];
+        if (image.preview) {
+          URL.revokeObjectURL(image.preview);
+        }
+        this.images.splice(imageIndex, 1);
+      }
+      
       this.$emit('update:selectedImages', this.selectedImages);
     },
     openFilePicker() {

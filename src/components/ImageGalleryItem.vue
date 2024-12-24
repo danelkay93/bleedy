@@ -22,13 +22,14 @@
         </small>
       </div>
     </div>
-    <button 
-      v-if="selected" 
-      class="unselect-button"
-      @click.stop="$emit('toggle')"
+    <wired-button
+      v-if="selected"
+      class="remove-button"
+      elevation="2"
+      @click.stop="$emit('remove')"
     >
       ✕
-    </button>
+    </wired-button>
   </div>
 </template>
 
@@ -95,26 +96,20 @@ export default {
   background-color: #fff;
 }
 
-.unselect-button {
+.remove-button {
   position: absolute;
   bottom: 5px;
   right: 5px;
-  width: 20px;
-  height: 20px;
-  border: none;
-  background: #ff4444;
-  color: white;
-  border-radius: 50%;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  --wired-button-background-color: #ff4444;
+  --wired-button-color: white;
   font-size: 12px;
-  padding: 0;
+  padding: 2px;
+  min-width: 24px;
+  min-height: 24px;
 }
 
-.unselect-button:hover {
-  background: #ff0000;
+.remove-button:hover {
+  --wired-button-background-color: #ff0000;
 }
 
 .image-thumbnail {
