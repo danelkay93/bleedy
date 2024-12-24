@@ -40,6 +40,10 @@ const props = defineProps<{
   bleedAmount: number
 }>()
 
+const emit = defineEmits<{
+  (e: 'process-complete', images: string[]): void
+}>()
+
 const processing = ref(false)
 const processedImages = ref<string[]>([])
 const imageCount = computed(() => props.images.length)
