@@ -18,8 +18,6 @@ import 'paper-css/paper.css'
 
 const app = createApp(App)
 
-// Tell Vue to ignore custom elements starting with 'wired-'
-app.config.compilerOptions.isCustomElement = (tag) => tag.startsWith('wired-');
 
 app.use(createPinia())
 app.use(router)

@@ -83,9 +83,19 @@ export default {
       }
     }
 
+    const completedSteps = ref([0])
+
     function canNavigateToStep(stepIndex) {
-      return stepIndex <= activeStep.value + 1 && stepIndex <= Math.max(...completedSteps.value)
+      // Allow navigation to next step or any completed step
+      return stepIndex <= activeStep.value + 1 && (stepIndex <= Math.max(...completedSteps.value) || stepIndex === activeStep.value + 1)
     }
+
+    // Update completedSteps when activeStep changes
+    watch(activeStep, (newStep) => {
+      if (!completedSteps.value.includes(newStep)) {
+        completedSteps.value.push(newStep)
+      }
+    })
 
     function handleStepClick(stepIndex) {
       if (canNavigateToStep(stepIndex)) {
