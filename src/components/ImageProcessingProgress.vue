@@ -24,7 +24,7 @@
 </template>
 
 <script setup lang="ts">
-import 'wired-elements'
+import {WiredProgress} from 'wired-elements'
 
 const props = defineProps<{
   progress: number

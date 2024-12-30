@@ -42,6 +42,5 @@ declare module 'vue' {
     SelectionTools: typeof import('./src/components/SelectionTools.vue')['default']
     SketchyCheckmark: typeof import('./src/components/icons/SketchyCheckmark.vue')['default']
     StepManager: typeof import('./src/components/StepManager.vue')['default']
-    WiredProgress: typeof import('./src/components/WiredProgress.vue')['default']
   }
 }

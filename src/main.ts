@@ -7,8 +7,7 @@ import 'doodle.css/doodle.css'
 import App from './App.vue'
 import router from './router'
 
-import { register } from 'wired-elements'
-register()
+// import { register } from 'wired-elements'
 import './assets/handdrawn.css'
 import 'paper-css/paper.css'
 

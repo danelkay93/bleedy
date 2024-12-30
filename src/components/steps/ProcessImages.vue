@@ -1,6 +1,5 @@
 <template>
   <div class="process-and-review">
-    <div v-if="!processedImages.length" class="process-section">
       <div class="process-header">
         <h3>Ready to add bleed to {{ imageCount }} images</h3>
         <p>Using {{ bleedAmount }}px bleed margin</p>
@@ -20,29 +19,12 @@
           {{ processing ? 'Processing...' : 'Add Bleed!' }}
         </wired-button>
       </div>
-    </div>
-
-    <div v-else class="review-section">
-      <p>Review your processed images below:</p>
-      <ImageGalleryBase :images="processedImages">
-        <template #actions="{ image, index }">
-          <wired-button @click="downloadImage(image, index)">
-            Download
-          </wired-button>
-        </template>
-      </ImageGalleryBase>
-      <div class="download-all">
-        <wired-button @click="downloadZip">Download All as ZIP</wired-button>
-      </div>
-    </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 import ImageProcessingProgress from '../ImageProcessingProgress.vue'
-import { useImageDownload } from '../../composables/useImageDownload'
-import ImageGalleryBase from '../ImageGalleryBase.vue'
 
 const props = defineProps<{
   images: File[]
