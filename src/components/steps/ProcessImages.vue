@@ -6,6 +6,14 @@
         <p>Using {{ bleedAmount }}px bleed margin</p>
       </div>
       <div id="bleedy-output" class="output-container"></div>
+      <div class="process-status" v-if="processing">
+        <WiredProgress :progress="progress" />
+        <div class="status-text">
+          <p>Processed {{ processedCount }} of {{ totalFiles }} files</p>
+          <p>Elapsed: {{ formatTime(elapsedTime) }}</p>
+          <p>Estimated remaining: {{ formatTime(remainingTime) }}</p>
+        </div>
+      </div>
       <div class="process-actions">
         <wired-button @click="handleProcess" :disabled="processing">
           {{ processing ? 'Processing...' : 'Add Bleed!' }}
@@ -30,7 +38,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
+import WiredProgress from '../WiredProgress.vue'
 import { useImageDownload } from '@/composables/useImageDownload'
 import ImageGalleryBase from '../ImageGalleryBase.vue'
 
@@ -44,6 +53,35 @@ const emit = defineEmits<{
 }>()
 
 const processing = ref(false)
+const progress = ref(0)
+const processedCount = ref(0)
+const totalFiles = ref(0)
+const elapsedTime = ref(0)
+const remainingTime = ref(0)
+
+function formatTime(seconds: number): string {
+  if (!seconds || isNaN(seconds)) return '...'
+  const mins = Math.floor(seconds / 60)
+  const secs = Math.round(seconds % 60)
+  return `${mins}:${secs.toString().padStart(2, '0')}`
+}
+
+function handleProgressEvent(event: CustomEvent) {
+  const detail = event.detail
+  progress.value = detail.progress
+  processedCount.value = detail.processed
+  totalFiles.value = detail.total
+  elapsedTime.value = detail.elapsed
+  remainingTime.value = detail.remaining
+}
+
+onMounted(() => {
+  window.addEventListener('processing-progress', handleProgressEvent as EventListener)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('processing-progress', handleProgressEvent as EventListener)
+})
 const processedImages = ref<string[]>([])
 const imageCount = computed(() => props.images.length)
 
@@ -124,6 +162,22 @@ const { downloadImage, downloadZip } = useImageDownload()
 .output-container {
   position: absolute;
   left: -9999px;
+}
+
+.process-status {
+  width: 100%;
+  max-width: 400px;
+  margin: 1rem 0;
+}
+
+.status-text {
+  font-family: 'Architects Daughter', cursive;
+  text-align: center;
+  margin-top: 0.5rem;
+}
+
+.status-text p {
+  margin: 0.25rem 0;
 }
 
 .process-actions,

@@ -59,8 +59,29 @@ async def process_files(event):
         console.log(f"📏 Bleed amount set to: {bleed_amount}px")
         console.log(f"🖼️ Number of images to process: {len(files)}")
 
+        start_time = window.performance.now()
+        processed_count = 0
+        
+        def update_progress():
+            elapsed = (window.performance.now() - start_time) / 1000  # in seconds
+            progress = (processed_count / len(files)) * 100
+            rate = processed_count / elapsed if elapsed > 0 else 0
+            remaining = (len(files) - processed_count) / rate if rate > 0 else 0
+            
+            window.dispatchEvent(window.CustomEvent.new("processing-progress", {
+                "detail": {
+                    "progress": progress,
+                    "processed": processed_count,
+                    "total": len(files),
+                    "elapsed": elapsed,
+                    "remaining": remaining
+                }
+            }))
+        
         for i, file in enumerate(files):
             console.log(f"⚙️ Processing file {i + 1}/{len(files)}: {file.name}")
+            processed_count = i + 1
+            update_progress()
             array_buf = Uint8Array.new(await file.arrayBuffer())
             bytes_list = bytearray(array_buf)
             image_bytes = BytesIO(bytes_list)
