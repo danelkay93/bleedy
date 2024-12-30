@@ -21,6 +21,7 @@
     "file-saver": "^2.0.5",
     "jszip": "^3.10.1",
     "doodle.css": "^0.0.2",
+    "paper-css": "^0.4.1",
     "pinia": "^2.3.0",
     "roughjs": "^4.6.6",
     "unplugin-icons": "^0.22.0",
