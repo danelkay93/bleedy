@@ -3,7 +3,7 @@
 
   <div class="step-manager">
 <el-row justify="center">
-  <el-col class="col" span="14">
+  <el-col class="col" span=14>
     <el-steps :simple="true" :active="activeStep" finish-status="success" simple>
       <el-step
         v-for="(step, index) in steps"
