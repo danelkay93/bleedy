@@ -41,7 +41,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 import ImageProcessingProgress from '../ImageProcessingProgress.vue'
-import { useImageDownload } from '@/composables/useImageDownload'
+import { useImageDownload } from '../../composables/useImageDownload'
 import ImageGalleryBase from '../ImageGalleryBase.vue'
 
 const props = defineProps<{
