@@ -46,7 +46,9 @@ function drawProgress() {
     const fill = rc.rectangle(0, 0, fillWidth, height, {
       stroke: 'none',
       fill: '#000',
-      fillStyle: 'zigzag'
+      fillStyle: 'hachure',
+      hachureAngle: 45,
+      hachureGap: 4
     })
     svg.appendChild(fill)
   }
