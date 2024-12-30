@@ -24,9 +24,6 @@ const props = defineProps<{
 
 const { downloadImage, downloadZip } = useImageDownload()
 
-function handleDownloadZip() {
-  downloadZip(props.images)
-}
 </script>
 
 <style scoped>

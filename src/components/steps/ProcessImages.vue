@@ -61,8 +61,18 @@ const elapsedTime = ref(0)
 const remainingTime = ref(0)
 
 
-function handleProgressEvent(event: CustomEvent) {
-  const detail = event.detail
+interface ProgressEvent extends CustomEvent {
+  detail: {
+    progress: number
+    processed: number
+    total: number
+    elapsed: number
+    remaining: number
+  }
+}
+
+function handleProgressEvent(event: ProgressEvent) {
+  const { detail } = event
   progress.value = detail.progress
   processedCount.value = detail.processed
   totalFiles.value = detail.total

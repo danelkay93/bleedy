@@ -9,7 +9,8 @@
     </el-button>
 
     <el-input
-      v-model="localSearchQuery"
+      :model-value="searchQuery"
+      @update:model-value="$emit('update:searchQuery', $event)"
       placeholder="Search Images..."
       class="search-input"
       clearable
@@ -34,15 +35,6 @@ const emit = defineEmits<{
   (e: 'update:searchQuery', value: string): void
 }>()
 
-const localSearchQuery = ref(props.searchQuery)
-
-watch(localSearchQuery, (newValue) => {
-  emit('update:searchQuery', newValue)
-})
-
-watch(() => props.searchQuery, (newValue) => {
-  localSearchQuery.value = newValue
-})
 </script>
 
 <style scoped>
