@@ -15,7 +15,7 @@
 </template>
 
 <script setup lang="ts">
-import { useImageDownload } from '@/composables/useImageDownload'
+import { useImageDownload } from '../../composables/useImageDownload'
 import ImageGalleryBase from '../ImageGalleryBase.vue'
 
 const props = defineProps<{
