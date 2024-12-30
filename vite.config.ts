@@ -13,8 +13,9 @@ import path from 'node:path'
 export default defineConfig({
 resolve: {
   alias: {
+    '@': path.resolve(__dirname, './src'),
     '~/': `${path.resolve(__dirname, 'src')}/`,
-    'vue': 'vue/dist/vue.esm-bundler.js', // Add this line to alias Vue for runtime template compilation
+    'vue': 'vue/dist/vue.esm-bundler.js'
   },
 },
   plugins: [
@@ -53,12 +54,16 @@ resolve: {
       'Cross-Origin-Embedder-Policy': 'require-corp'
     }
   },
-//       optimizeDeps:
-// {
-//   include: ['element-plus/**']
-// }
-    ssr: {
-    // TODO: workaround until they support native ESM
-    noExternal: ['element-plus'],
-  },
+optimizeDeps: {
+  include: [
+    'element-plus',
+    '@element-plus/icons-vue',
+    'vue',
+    'file-saver',
+    'jszip'
+  ]
+},
+ssr: {
+  noExternal: ['element-plus'],
+},
 })
