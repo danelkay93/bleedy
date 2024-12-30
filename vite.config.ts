@@ -1,4 +1,4 @@
-import { defineConfig } from 'vite'
+import { defineConfig, optimizeDeps } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import Icons from 'unplugin-icons/vite'
 import IconsResolver from 'unplugin-icons/resolver'
@@ -21,8 +21,7 @@ resolve: {
     vue({
       template: {
         compilerOptions: {
-          isCustomElement: (tag) => tag.startsWith('wired-'),
-          runtimeCompilerBuild: true
+          isCustomElement: (tag) => tag.startsWith('wired-')
         }
       }
     }),
@@ -53,5 +52,13 @@ resolve: {
       'Cross-Origin-Opener-Policy': 'same-origin',
       'Cross-Origin-Embedder-Policy': 'require-corp'
     }
-  }
+  },
+//       optimizeDeps:
+// {
+//   include: ['element-plus/**']
+// }
+    ssr: {
+    // TODO: workaround until they support native ESM
+    noExternal: ['element-plus'],
+  },
 })
