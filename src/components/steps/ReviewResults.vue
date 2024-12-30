@@ -15,36 +15,17 @@
 </template>
 
 <script setup lang="ts">
-import { saveAs } from 'file-saver'
-import JSZip from 'jszip'
+import { useImageDownload } from '@/composables/useImageDownload'
 import ImageGalleryBase from '../ImageGalleryBase.vue'
 
 const props = defineProps<{
   images: string[]
 }>()
 
-async function downloadImage(imageUrl: string, index: number) {
-  const response = await fetch(imageUrl)
-  const blob = await response.blob()
-  saveAs(blob, `processed-image-${index + 1}.${blob.type.split('/')[1]}`)
-}
+const { downloadImage, downloadZip } = useImageDownload()
 
-async function downloadZip() {
-  const zip = new JSZip()
-  
-  // Add all images to zip
-  await Promise.all(props.images.map(async (imageUrl, index) => {
-    const response = await fetch(imageUrl)
-    const blob = await response.blob()
-    zip.file(
-      `processed-image-${index + 1}.${blob.type.split('/')[1]}`,
-      blob
-    )
-  }))
-  
-  // Generate and download zip
-  const content = await zip.generateAsync({ type: 'blob' })
-  saveAs(content, 'processed-images.zip')
+function handleDownloadZip() {
+  downloadZip(props.images)
 }
 </script>
 
