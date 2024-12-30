@@ -7,6 +7,7 @@ import AutoImport from 'unplugin-auto-import/vite'
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 import ElementPlus from 'unplugin-element-plus/vite'
 import path from 'node:path'
+import autoprefixer from 'autoprefixer';
 
 
 
@@ -48,6 +49,13 @@ resolve: {
       autoInstall: true
     })
   ],
+    css: {
+    postcss: {
+      plugins: [
+        autoprefixer(),
+      ],
+    },
+  },
   server: {
     headers: {
       'Cross-Origin-Opener-Policy': 'same-origin',

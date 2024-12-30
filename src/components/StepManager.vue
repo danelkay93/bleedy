@@ -1,16 +1,20 @@
 <template>
+
+
   <div class="step-manager">
-    <el-steps :active="activeStep" finish-status="success" simple>
-      <el-step 
-        v-for="(step, index) in steps" 
-        :key="step.title" 
+<el-row justify="center">
+  <el-col class="col" span="14">
+    <el-steps :simple="true" :active="activeStep" finish-status="success" simple>
+      <el-step
+        v-for="(step, index) in steps"
+        :key="step.title"
         :title="step.title"
         @click="handleStepClick(index)"
         :class="{ 'clickable': canNavigateToStep(index) }"
       >
         <template #icon>
           <div class="step-icon">
-            <wired-checkbox 
+            <wired-checkbox
               :checked="index < activeStep"
               disabled
               :class="{
@@ -22,23 +26,22 @@
         </template>
       </el-step>
     </el-steps>
-    
+
     <div class="step-content">
       <slot :activeStep="activeStep" />
     </div>
-
     <div class="navigation-buttons">
-      <wired-button 
-        v-show="activeStep > 0" 
+      <wired-button
+        v-show="activeStep > 0"
         @click="prevStep"
       >
         Previous
       </wired-button>
-      <wired-button 
-        v-if="activeStep < steps.length - 1" 
+      <wired-button
+        v-if="activeStep < steps.length - 1"
         @click="nextStep"
         :class="{ 'disabled': isNextDisabled }"
-        :style="{ 
+        :style="{
           opacity: isNextDisabled ? '0.5' : '1',
           pointerEvents: isNextDisabled ? 'none' : 'auto'
         }"
@@ -46,78 +49,63 @@
         Next
       </wired-button>
     </div>
+      </el-col>
+
+   </el-row>
   </div>
+
+
+
 </template>
 
-<script>
-import { ref, watch } from 'vue'
-import 'wired-elements'
+<script setup lang="ts">
+import { ref, watch } from 'vue';
+import {WiredButton, WiredCheckbox } from 'wired-elements';
 
-export default {
-  props: {
-    steps: {
-      type: Array,
-      required: true
-    },
-    modelValue: {
-      type: Number,
-      default: 0
-    },
-    isNextDisabled: {
-      type: Boolean,
-      default: false
-    }
-  },
-  emits: ['update:modelValue'],
-  setup(props, { emit }) {
-    const activeStep = ref(props.modelValue)
+const props = defineProps<{
+  steps: Array<{ title: string }>,
+  modelValue: number,
+  isNextDisabled: boolean
+}>()
 
-    watch(() => props.modelValue, (newValue) => {
-      activeStep.value = newValue
-    })
+const emit = defineEmits(['update:modelValue'])
 
-    function nextStep() {
-      if (activeStep.value < props.steps.length - 1 && !props.isNextDisabled) {
-        activeStep.value++
-        emit('update:modelValue', activeStep.value)
-      }
-    }
+const activeStep = ref(props.modelValue)
 
-    const completedSteps = ref([0])
+watch(() => props.modelValue, (newValue) => {
+  activeStep.value = newValue
+})
 
-    function canNavigateToStep(stepIndex) {
-      // Allow navigation to next step or any completed step
-      return stepIndex <= activeStep.value + 1 && (stepIndex <= Math.max(...completedSteps.value) || stepIndex === activeStep.value + 1)
-    }
+function nextStep() {
+  if (activeStep.value < props.steps.length - 1 && !props.isNextDisabled) {
+    activeStep.value++
+    emit('update:modelValue', activeStep.value)
+  }
+}
 
-    // Update completedSteps when activeStep changes
-    watch(activeStep, (newStep) => {
-      if (!completedSteps.value.includes(newStep)) {
-        completedSteps.value.push(newStep)
-      }
-    })
+const completedSteps = ref([0])
 
-    function handleStepClick(stepIndex) {
-      if (canNavigateToStep(stepIndex)) {
-        activeStep.value = stepIndex
-        emit('update:modelValue', stepIndex)
-      }
-    }
+function canNavigateToStep(stepIndex: number) {
+  return stepIndex <= activeStep.value + 1 && (stepIndex <= Math.max(...completedSteps.value) || stepIndex === activeStep.value + 1)
+}
 
-    function prevStep() {
-      if (activeStep.value > 0) {
-        activeStep.value--
-        emit('update:modelValue', activeStep.value)
-      }
-    }
+watch(activeStep, (newStep) => {
+  if (!completedSteps.value.includes(newStep)) {
+    completedSteps.value.push(newStep)
+  }
+})
 
-    return {
-      activeStep,
-      nextStep,
-      prevStep,
-      handleStepClick,
-      canNavigateToStep
-    }
+function handleStepClick(stepIndex: number) {
+  if (canNavigateToStep(stepIndex)) {
+    activeStep.value = stepIndex
+    emit('update:modelValue', stepIndex)
+  }
+}
+
+function prevStep() {
+  if (activeStep.value > 0) {
+    activeStep.value--
+    emit('update:modelValue', activeStep.value)
   }
 }
 </script>
@@ -125,9 +113,8 @@ export default {
 <style scoped>
 .step-manager {
   width: 100%;
-  max-width: 800px;
   margin: 0 auto;
-  padding: 20px;
+  padding: 10px;
 }
 
 .step-content {
@@ -165,7 +152,10 @@ export default {
   height: 24px;
 }
 
-/* Override disabled checkbox appearance */
+.col {
+  width: 100%;
+}
+
 :deep(wired-checkbox[disabled]) {
   opacity: 1;
 }

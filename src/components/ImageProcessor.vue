@@ -46,7 +46,7 @@ import BleedAdjustment from './steps/BleedAdjustment.vue'
 import ProcessImages from './steps/ProcessImages.vue'
 import ReviewResults from './steps/ReviewResults.vue'
 import { processorSteps } from '../config/processorSteps'
-import 'wired-elements'
+import {WiredCard} from 'wired-elements'
 
 const activeStep = ref(0)
 const bleedAmount = ref(50)
@@ -78,7 +78,6 @@ const saveAsZip = () => {
 
 .step-content {
   width: 100%;
-  max-width: 1000px;
   margin: 0 auto;
 }
 
@@ -92,8 +91,7 @@ const saveAsZip = () => {
   margin: 20px 0;
 }
 
-.wired-card {
-  max-width: 1000px;
+wired-card {
   width: 100%;
   margin: 0 auto 20px;
   padding: 20px;
