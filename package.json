@@ -27,7 +27,8 @@
     "vue": "^3.5.13",
     "vue-router": "^4.5.0",
     "vue3-image-preview": "^0.2.7",
-    "vuedraggable": "^2.24.3"
+    "vuedraggable": "^2.24.3",
+    "wired-elements": "^3.0.0-rc.6"
   },
   "devDependencies": {
     "@rushstack/eslint-patch": "^1.10.4",
