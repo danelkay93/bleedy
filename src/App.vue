@@ -14,7 +14,7 @@
       </el-header>
       <el-main>
         <el-row justify="center">
-          <el-col class="step-row" :span="12">
+          <el-col class="step-row" :span=12>
             <router-view></router-view>
           </el-col>
         </el-row>
@@ -134,8 +134,8 @@ el-header {
   flex-direction: column; /* Use flexbox to control layout */
   background-color: var(--primary-dark);
   padding: 0;
-  --el-header-height: 6.5rem; /* Set header height */
-  min-height: 6.5rem;
+  --el-header-height: "6.5rem"; /* Set header height */
+  min-height: "6.5rem";
 }
 
 .header-content {
@@ -146,7 +146,7 @@ el-header {
   background-repeat: no-repeat; /* Prevent repeating */
   margin-top: 0;
   margin-left: 0;
-  min-height: 6.5rem;
+  min-height: "6.5rem";
 }
 
 .logo-container {
