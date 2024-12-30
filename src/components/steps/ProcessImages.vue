@@ -7,12 +7,13 @@
       </div>
       <div id="bleedy-output" class="output-container"></div>
       <div class="process-status" v-if="processing">
-        <WiredProgress :progress="progress" />
-        <div class="status-text">
-          <p>Processed {{ processedCount }} of {{ totalFiles }} files</p>
-          <p>Elapsed: {{ formatTime(elapsedTime) }}</p>
-          <p>Estimated remaining: {{ formatTime(remainingTime) }}</p>
-        </div>
+        <ImageProcessingProgress
+          :progress="progress"
+          :processed-count="processedCount"
+          :total-files="totalFiles"
+          :elapsed-time="elapsedTime"
+          :remaining-time="remainingTime"
+        />
       </div>
       <div class="process-actions">
         <wired-button @click="handleProcess" :disabled="processing">
@@ -39,7 +40,7 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted } from 'vue'
-import WiredProgress from '../WiredProgress.vue'
+import ImageProcessingProgress from '../ImageProcessingProgress.vue'
 import { useImageDownload } from '@/composables/useImageDownload'
 import ImageGalleryBase from '../ImageGalleryBase.vue'
 
@@ -59,12 +60,6 @@ const totalFiles = ref(0)
 const elapsedTime = ref(0)
 const remainingTime = ref(0)
 
-function formatTime(seconds: number): string {
-  if (!seconds || isNaN(seconds)) return '...'
-  const mins = Math.floor(seconds / 60)
-  const secs = Math.round(seconds % 60)
-  return `${mins}:${secs.toString().padStart(2, '0')}`
-}
 
 function handleProgressEvent(event: CustomEvent) {
   const detail = event.detail
