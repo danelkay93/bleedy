@@ -2,7 +2,7 @@
 <template>
   <div class="common-layout">
     <el-container>
-      <el-header :height="6.5">
+      <el-header height="6.5">
         <el-row>
           <div class="header-content" :style="{ backgroundImage: svgBackground }">
             <div class="logo-container">
