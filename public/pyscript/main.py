@@ -68,15 +68,16 @@ async def process_files(event):
             rate = processed_count / elapsed if elapsed > 0 else 0
             remaining = (len(files) - processed_count) / rate if rate > 0 else 0
             
-            # Use PyScript's event system instead of window.dispatchEvent
-            event_detail = {
-                "progress": progress,
-                "processed": processed_count,
-                "total": len(files),
-                "elapsed": elapsed,
-                "remaining": remaining
-            }
-            page.window.dispatchEvent("processing-progress", event_detail)
+            # Dispatch progress event using window directly
+            window.dispatchEvent(window.CustomEvent.new("processing-progress", {
+                "detail": {
+                    "progress": progress,
+                    "processed": processed_count,
+                    "total": len(files),
+                    "elapsed": elapsed,
+                    "remaining": remaining
+                }
+            }))
         
         for i, file in enumerate(files):
             console.log(f"⚙️ Processing file {i + 1}/{len(files)}: {file.name}")
