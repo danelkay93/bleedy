@@ -8,10 +8,11 @@ export function useImageDownload() {
     saveAs(blob, `processed-image-${index + 1}.${blob.type.split('/')[1]}`)
   }
 
-  async function downloadZip(images: string[]) {
+  async function downloadZip(images: string[] | readonly string[]) {
     const zip = new JSZip()
+    const imageArray = Array.from(images)
     
-    await Promise.all(images.map(async (imageUrl, index) => {
+    await Promise.all(imageArray.map(async (imageUrl, index) => {
       const response = await fetch(imageUrl)
       const blob = await response.blob()
       zip.file(
