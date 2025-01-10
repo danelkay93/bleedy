@@ -19,12 +19,28 @@ jobs:
         with:
           submodules: true
           lfs: false      
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        name: Install pnpm
+        with:
+          version: 10
+          run_install: false
+
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install
       - name: Build And Deploy
         id: builddeploy
         uses: Azure/static-web-apps-deploy@v1
         env:
-          PRE_BUILD_COMMAND: npm install -g pnpm
-          CUSTOM_BUILD_COMMAND: pnpm install --frozen-lockfile && pnpm run build
+          RUN_BUILD_COMMAND: pnpm run build
         with:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_THANKFUL_MUSHROOM_08ECC5D1E }}
           repo_token: ${{ secrets.GITHUB_TOKEN }} # Used for Github integrations (i.e. PR comments)
