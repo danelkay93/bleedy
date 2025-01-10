@@ -7,18 +7,17 @@ import AutoImport from 'unplugin-auto-import/vite'
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 import ElementPlus from 'unplugin-element-plus/vite'
 import path from 'node:path'
-import autoprefixer from 'autoprefixer';
-
-
+import autoprefixer from 'autoprefixer'
+import dns from 'node:dns'
 
 export default defineConfig({
-resolve: {
-  alias: {
-    '@': path.resolve(__dirname, './src'),
-    '~/': `${path.resolve(__dirname, 'src')}/`,
-    'vue': 'vue/dist/vue.esm-bundler.js'
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, './src'),
+      '~/': `${path.resolve(__dirname, 'src')}/`,
+      vue: 'vue/dist/vue.esm-bundler.js'
+    }
   },
-},
   plugins: [
     vue({
       template: {
@@ -49,29 +48,24 @@ resolve: {
       autoInstall: true
     })
   ],
-    css: {
+  css: {
     postcss: {
-      plugins: [
-        autoprefixer(),
-      ],
-    },
+      plugins: [autoprefixer()]
+    }
   },
   server: {
     headers: {
       'Cross-Origin-Opener-Policy': 'same-origin',
       'Cross-Origin-Embedder-Policy': 'require-corp'
+    },
+    fs: {
+      strict: false
     }
   },
-optimizeDeps: {
-  include: [
-    'element-plus',
-    '@element-plus/icons-vue',
-    'vue',
-    'file-saver',
-    'jszip'
-  ]
-},
-ssr: {
-  noExternal: ['element-plus'],
-},
+  optimizeDeps: {
+    include: ['element-plus', '@element-plus/icons-vue', 'vue', 'file-saver', 'jszip']
+  },
+  ssr: {
+    noExternal: ['element-plus']
+  }
 })

@@ -1,70 +1,56 @@
 <template>
-
-
   <div class="step-manager">
-<el-row justify="center">
-  <el-col class="col" :span="14">
-    <el-steps :simple="true" :active="activeStep" finish-status="success" simple>
-      <el-step
-        v-for="(step, index) in steps"
-        :key="step.title"
-        :title="step.title"
-        @click="handleStepClick(index)"
-        :class="{ 'clickable': canNavigateToStep(index) }"
-      >
-        <template #icon>
-          <div class="step-icon">
-            <wired-checkbox
-              :checked="index < activeStep"
-              disabled
-              :class="{
-                'current-step': index === activeStep,
-                'completed-step': index < activeStep
-              }"
-            />
-          </div>
-        </template>
-      </el-step>
-    </el-steps>
+    <el-row justify="center">
+      <el-col class="col" :span="14">
+        <el-steps :simple="true" :active="activeStep" finish-status="success">
+          <el-step
+            v-for="(step, index) in steps"
+            :key="step.title"
+            :title="step.title"
+            @click="handleStepClick(index)"
+            :class="{ clickable: canNavigateToStep(index) }">
+            <template #icon>
+              <div class="step-icon">
+                <wired-checkbox
+                  :checked="index < activeStep"
+                  disabled
+                  :class="{
+                    'current-step': index === activeStep,
+                    'completed-step': index < activeStep
+                  }" />
+              </div>
+            </template>
+          </el-step>
+        </el-steps>
 
-    <div class="step-content">
-      <slot :activeStep="activeStep" />
-    </div>
-    <div class="navigation-buttons">
-      <wired-button
-        v-show="activeStep > 0"
-        @click="prevStep"
-      >
-        Previous
-      </wired-button>
-      <wired-button
-        v-if="activeStep < steps.length - 1"
-        @click="nextStep"
-        :class="{ 'disabled': isNextDisabled }"
-        :style="{
-          opacity: isNextDisabled ? '0.5' : '1',
-          pointerEvents: isNextDisabled ? 'none' : 'auto'
-        }"
-      >
-        Next
-      </wired-button>
-    </div>
+        <div class="step-content">
+          <slot :activeStep="activeStep" />
+        </div>
+        <div class="navigation-buttons">
+          <wired-button v-show="activeStep > 0" @click="prevStep">Previous</wired-button>
+          <wired-button
+            v-if="activeStep < steps.length - 1"
+            @click="nextStep"
+            :class="{ disabled: isNextDisabled }"
+            :style="{
+              opacity: isNextDisabled ? '0.5' : '1',
+              pointerEvents: isNextDisabled ? 'none' : 'auto'
+            }">
+            Next
+          </wired-button>
+        </div>
       </el-col>
-
-   </el-row>
+    </el-row>
   </div>
-
-
-
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue';
-import {WiredButton, WiredCheckbox } from 'wired-elements';
+import { ref, watch } from 'vue'
+import { WiredButton, WiredCheckbox } from 'wired-elements'
 
 const props = defineProps<{
-  steps: Array<{ title: string }>,
-  modelValue: number,
+  steps: Array<{ title: string }>
+  modelValue: number
   isNextDisabled: boolean
 }>()
 
@@ -72,9 +58,12 @@ const emit = defineEmits(['update:modelValue'])
 
 const activeStep = ref(props.modelValue)
 
-watch(() => props.modelValue, (newValue) => {
-  activeStep.value = newValue
-})
+watch(
+  () => props.modelValue,
+  (newValue) => {
+    activeStep.value = newValue
+  }
+)
 
 function nextStep() {
   if (activeStep.value < props.steps.length - 1 && !props.isNextDisabled) {
@@ -86,7 +75,10 @@ function nextStep() {
 const completedSteps = ref([0])
 
 function canNavigateToStep(stepIndex: number) {
-  return stepIndex <= activeStep.value + 1 && (stepIndex <= Math.max(...completedSteps.value) || stepIndex === activeStep.value + 1)
+  return (
+    stepIndex <= activeStep.value + 1 &&
+    (stepIndex <= Math.max(...completedSteps.value) || stepIndex === activeStep.value + 1)
+  )
 }
 
 watch(activeStep, (newStep) => {
@@ -162,7 +154,7 @@ function prevStep() {
 
 :deep(.current-step) {
   transform: scale(1.2);
-  filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.2));
+  filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.2));
 }
 
 :deep(.current-step)::before {

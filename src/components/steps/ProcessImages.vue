@@ -1,24 +1,23 @@
 <template>
   <div class="process-and-review">
-      <div class="process-header">
-        <h3>Ready to add bleed to {{ imageCount }} images</h3>
-        <p>Using {{ bleedAmount }}px bleed margin</p>
-      </div>
-      <div id="bleedy-output" class="output-container"></div>
-      <div class="process-status" v-if="processing">
-        <ImageProcessingProgress
-          :progress="progress"
-          :processed-count="processedCount"
-          :total-files="totalFiles"
-          :elapsed-time="elapsedTime"
-          :remaining-time="remainingTime"
-        />
-      </div>
-      <div class="process-actions">
-        <wired-button @click="handleProcess" :disabled="processing">
-          {{ processing ? 'Processing...' : 'Add Bleed!' }}
-        </wired-button>
-      </div>
+    <div class="process-header">
+      <h3>Ready to add bleed to {{ imageCount }} images</h3>
+      <p>Using {{ bleedAmount }}px bleed margin</p>
+    </div>
+    <div id="bleedy-output" class="output-container"></div>
+    <div class="process-status" v-if="processing">
+      <ImageProcessingProgress
+        :progress="progress"
+        :processed-count="processedCount"
+        :total-files="totalFiles"
+        :elapsed-time="elapsedTime"
+        :remaining-time="remainingTime" />
+    </div>
+    <div class="process-actions">
+      <wired-button @click="handleProcess" :disabled="processing">
+        {{ processing ? 'Processing...' : 'Add Bleed!' }}
+      </wired-button>
+    </div>
   </div>
 </template>
 
@@ -41,7 +40,6 @@ const processedCount = ref(0)
 const totalFiles = ref(0)
 const elapsedTime = ref(0)
 const remainingTime = ref(0)
-
 
 interface ProgressEvent extends CustomEvent {
   detail: {
@@ -74,7 +72,7 @@ const imageCount = computed(() => props.images.length)
 
 async function handleProcess() {
   processing.value = true
-  
+
   try {
     // Create custom event for PyScript
     const event = new CustomEvent('process-images', {
@@ -83,38 +81,38 @@ async function handleProcess() {
         bleedAmount: props.bleedAmount
       }
     })
-    
+
     document.querySelector('.image-bleed-processor')?.dispatchEvent(event)
-    
+
     // Wait for PyScript to process images
     const maxWaitTime = 10000 // 10 seconds
     const checkInterval = 100 // 100ms
     let waitTime = 0
-    
+
     while (waitTime < maxWaitTime) {
       const images = Array.from(
         document.getElementById('bleedy-output')?.getElementsByTagName('img') || []
       )
       if (images.length === props.images.length) {
         console.log('✨ All images processed and ready')
-        const imageUrls = images.map(img => img.src)
+        const imageUrls = images.map((img) => img.src)
         processedImages.value = imageUrls
         emit('process-complete', imageUrls)
         break
       }
-      await new Promise(resolve => setTimeout(resolve, checkInterval))
+      await new Promise((resolve) => setTimeout(resolve, checkInterval))
       waitTime += checkInterval
     }
 
     if (waitTime >= maxWaitTime) {
       throw new Error('Timeout waiting for images to process')
     }
-    
+
     // Get processed images from output container
     const images = Array.from(
       document.getElementById('bleedy-output')?.getElementsByTagName('img') || []
-    ).map(img => img.src)
-    
+    ).map((img) => img.src)
+
     processedImages.value = images
     emit('process-complete', images)
   } catch (error) {
@@ -123,8 +121,6 @@ async function handleProcess() {
     processing.value = false
   }
 }
-
-const { downloadImage, downloadZip } = useImageDownload()
 </script>
 
 <style scoped>
