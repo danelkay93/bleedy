@@ -1,14 +1,12 @@
-import { defineConfig, optimizeDeps } from 'vite'
+import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import Icons from 'unplugin-icons/vite'
 import IconsResolver from 'unplugin-icons/resolver'
 import Components from 'unplugin-vue-components/vite'
 import AutoImport from 'unplugin-auto-import/vite'
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
-import ElementPlus from 'unplugin-element-plus/vite'
 import path from 'node:path'
 import autoprefixer from 'autoprefixer'
-import dns from 'node:dns'
 
 export default defineConfig({
   resolve: {
@@ -22,7 +20,7 @@ export default defineConfig({
     vue({
       template: {
         compilerOptions: {
-          isCustomElement: (tag) => tag.startsWith('wired-')
+          isCustomElement: (tag: string) => tag.startsWith('wired-')
         }
       }
     }),

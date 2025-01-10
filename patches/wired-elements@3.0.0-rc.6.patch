@@ -1,0 +1,26 @@
+diff --git a/lib/wired-lib.js b/lib/wired-lib.js
+index 5b1d153746d999cd6d87fb259d61c7c4de68a848..a30fdd2fcbfb7bcbfc8e53a3f056be3a3b44d155 100644
+--- a/lib/wired-lib.js
++++ b/lib/wired-lib.js
+@@ -90,7 +90,7 @@ export function ellipse(parent, x, y, width, height, seed) {
+ }
+ export function hachureFill(points, seed) {
+     const hf = new ZigZagFiller(fillHelper);
+-    const ops = hf.fillPolygon(points, options(seed));
++    const ops = hf.fillPolygons(points, options(seed));
+     return createPathNode(ops, null);
+ }
+ export function hachureEllipseFill(cx, cy, width, height, seed) {
+diff --git a/src/wired-lib.ts b/src/wired-lib.ts
+index f44daf40c583b124505c6e0db28b52c4e6f49355..c681b0c973f7e790f12db0c6e62c7f45d6034a78 100644
+--- a/src/wired-lib.ts
++++ b/src/wired-lib.ts
+@@ -112,7 +112,7 @@ export function ellipse(parent: SVGElement, x: number, y: number, width: number,
+ 
+ export function hachureFill(points: Point[], seed: number): SVGElement {
+   const hf = new ZigZagFiller(fillHelper);
+-  const ops = hf.fillPolygon(points, options(seed));
++  const ops = hf.fillPolygons(points, options(seed));
+   return createPathNode(ops, null);
+ }
+ 

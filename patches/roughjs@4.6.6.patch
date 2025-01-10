@@ -1,0 +1,12 @@
+diff --git a/bin/fillers/zigzag-filler.js b/bin/fillers/zigzag-filler.js
+index 7119c029277f29dd0ad88a3fc3c1de84592ab4d8..d03d3875a7f145e07e69cadf34a9b552de3cef7e 100644
+--- a/bin/fillers/zigzag-filler.js
++++ b/bin/fillers/zigzag-filler.js
+@@ -28,4 +28,7 @@ export class ZigZagFiller extends HachureFiller {
+         const ops = this.renderLines(zigzagLines, o);
+         return { type: 'fillSketch', ops };
+     }
++    fillPolygon(polygon, o) {
++        return this.fillPolygons([polygon], o);
++    }
+ }

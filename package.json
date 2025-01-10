@@ -1,14 +1,12 @@
 {
   "name": "bleedy",
-  "version": "0.0.0",
-  "private": true,
+  "version": "0.0.1",
+  "private": false,
   "type": "module",
-  "packageManager": "pnpm@9.15.3",
+  "packageManager": "npm@11.0.0+sha512.11dff29565d2297c74e7c594a9762581bde969f0aa5cbe6f5b3644bf008a16c065ece61094d9ffbb81125be38df8e1ba43eb8244b3d30c61eb797e9a2440e3ec",
   "scripts": {
-    "preinstall": "npx only-allow pnpm",
-    "postinstall": "syncpack fix-mismatches",
     "dev": "vite",
-    "build": "run-p type-check \"build-only {@}\" --",
+    "build": "run-p type-check build-only --",
     "preview": "vite preview",
     "test:unit": "vitest",
     "build-only": "vite build",
@@ -35,8 +33,6 @@
     "wired-elements": "^3.0.0-rc.6"
   },
   "devDependencies": {
-    "@eslint/js": "^9.17.0",
-    "@rushstack/eslint-patch": "^1.10.4",
     "@tsconfig/node20": "^20.1.4",
     "@types/jsdom": "^21.1.7",
     "@types/node": "^22.10.2",
@@ -47,11 +43,9 @@
     "@vue/test-utils": "^2.4.6",
     "@vue/tsconfig": "^0.7.0",
     "autoprefixer": "^10.4.20",
-    "cypress": "^13.17.0",
     "eslint": "^9.17.0",
     "eslint-plugin-vue": "^9.32.0",
     "jsdom": "^25.0.1",
-    "npm-run-all2": "^7.0.2",
     "postcss": "^8.4.49",
     "prettier": "^3.4.2",
     "sass": "^1.83.0",
@@ -67,10 +61,10 @@
     "vite": "^6.0.6",
     "vite-plugin-vue-devtools": "^7.6.8",
     "vitest": "^2.1.8",
-    "vue-tsc": "^2.2.0"
+    "vue-tsc": "^2.2.0",
+    "eslint-plugin-format": "^1.0.1"
   },
-  "packageManager": "pnpm@9.15.2+sha512.93e57b0126f0df74ce6bff29680394c0ba54ec47246b9cf321f0121d8d9bb03f750a705f24edc3c1180853afd7c2c3b94196d0a3d53d3e069d9e2793ef11f321",
-  "pnpm": {
+  "npm": {
     "patchedDependencies": {
       "roughjs@4.6.6": "patches/roughjs@4.6.6.patch",
       "wired-elements@3.0.0-rc.6": "patches/wired-elements@3.0.0-rc.6.patch"
