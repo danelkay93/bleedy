@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "engines": {
-    "pnpm": "^10.0.0"
+    "pnpm": "9.15.2"
   },
   "scripts": {
     "preinstall": "npx only-allow pnpm",

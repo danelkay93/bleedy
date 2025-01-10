@@ -2,18 +2,14 @@
   <div class="bleed-adjustment">
     <label>Adjust Bleed Amount:</label>
     <div class="value-display">
-      <wired-card elevation="1">
-        {{ modelValue }} pixels
-      </wired-card>
+      <wired-card elevation="1">{{ modelValue }} pixels</wired-card>
     </div>
     <div class="slider-container" ref="sliderContainer">
-      <wired-slider 
-        min="0" 
-        max="100" 
+      <wired-slider
+        min="0"
+        max="100"
         :value="modelValue"
-        @change="$emit('update:modelValue', Number($event.target.value))"
-      >
-      </wired-slider>
+        @change="$emit('update:modelValue', Number($event.target.value))"></wired-slider>
     </div>
   </div>
 </template>
@@ -21,11 +17,14 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 
-const props = withDefaults(defineProps<{
-  modelValue: number
-}>(), {
-  modelValue: 32
-})
+const props = withDefaults(
+  defineProps<{
+    modelValue: number
+  }>(),
+  {
+    modelValue: 32
+  }
+)
 
 defineEmits<{
   (e: 'update:modelValue', value: number): void
@@ -39,7 +38,7 @@ onMounted(() => {
   if (slider) {
     // Force roughness and style refresh
     slider.setAttribute('roughness', '2')
-    slider.requestUpdate?.()
+    // slider.requestUpdate?.()
   }
 })
 </script>

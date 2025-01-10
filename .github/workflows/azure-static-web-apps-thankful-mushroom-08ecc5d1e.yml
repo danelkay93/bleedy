@@ -15,12 +15,10 @@ jobs:
     runs-on: ubuntu-latest
     name: Build and Deploy Job
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           submodules: true
-          lfs: false      
-      - name: Checkout
-        uses: actions/checkout@v4
+          lfs: false
 
       - uses: pnpm/action-setup@v4
         name: Install pnpm
@@ -34,12 +32,13 @@ jobs:
           cache: 'pnpm'
 
       - name: Install dependencies
-        run: pnpm install --shamefully-hoist
+        run: pnpm install --shamefully-hoist --ignore-scripts
+
       - name: Build And Deploy
         id: builddeploy
         uses: Azure/static-web-apps-deploy@v1
-        # env:
-        #   RUN_BUILD_COMMAND: pnpm run build
+        env:
+          RUN_BUILD_COMMAND: pnpm run build
         with:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_THANKFUL_MUSHROOM_08ECC5D1E }}
           repo_token: ${{ secrets.GITHUB_TOKEN }} # Used for Github integrations (i.e. PR comments)
