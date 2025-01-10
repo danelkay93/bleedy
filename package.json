@@ -30,8 +30,7 @@
     "vue-router": "^4.5.0",
     "vue3-image-preview": "^0.2.7",
     "vuedraggable": "^4.1.0",
-    "wired-elements": "^3.0.0-rc.6",
-    "paper-css": "^0.4.1"
+    "wired-elements": "^3.0.0-rc.6"
   },
   "devDependencies": {
     "@tsconfig/node20": "^20.1.4",
