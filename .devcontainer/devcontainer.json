@@ -3,5 +3,8 @@
     "build": "npm install && npm run build",
     "test": "npm run test:unit",
     "launch": "npm preview"
+  },
+  "settings": {
+    "nodeVersion": "20.x"
   }
 }

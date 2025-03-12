@@ -23,10 +23,19 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '16.x'
+          node-version: '20.x'
 
       - name: Install dependencies
         run: npm install
+
+      - name: Type Check
+        run: npm run type-check
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Format
+        run: npm run format
 
       - name: Build And Deploy
         id: builddeploy
