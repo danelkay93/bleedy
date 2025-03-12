@@ -41,19 +41,29 @@ import ReviewResults from './steps/ReviewResults.vue'
 import { processorSteps } from '../config/processorSteps'
 import { WiredCard } from 'wired-elements'
 
+// Active step in the process
 const activeStep = ref(0)
+
+// Amount of bleed to add to images
 const bleedAmount = ref(50)
+
+// Array to store processed images
 const processedImages = ref<string[]>([])
+
+// Array to store selected images
 const selectedImages = ref<File[]>([])
 
+// Update selected images
 const updateSelectedImages = (images: File[]) => {
   selectedImages.value = images
 }
 
+// Handle completion of image processing
 const handleProcessComplete = (images: string[]) => {
   processedImages.value = images
 }
 
+// Save processed images as a ZIP file
 const saveAsZip = () => {
   console.log('Saving processed images as ZIP')
   // Implement ZIP saving logic here

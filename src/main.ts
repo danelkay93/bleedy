@@ -7,16 +7,13 @@ import 'doodle.css/doodle.css'
 import App from './App.vue'
 import router from './router'
 
-// import { register } from 'wired-elements'
 import './assets/handdrawn.css'
 import 'paper-css/paper.css'
 
 const app = createApp(App)
 
-
 app.use(createPinia())
 app.use(router)
 app.use(ElementPlus);
-
 
 app.mount('#app')

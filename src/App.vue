@@ -36,7 +36,7 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, nextTick } from 'vue'
 import rough from 'roughjs'
 import Logo from './components/Logo.vue'
 import ImageProcessor from './components/ImageProcessor.vue'
