@@ -1,3 +1,7 @@
+interpreter = "0.26.1" # Pin Pyodide version
 packages = ["pillow" ] # "opencv-contrib-python-headless"
 experimental_create_proxy = "auto"
 sync_main_only = true
+
+[js_modules.main]
+"/js/bleedy_interop.js" = "interop"
