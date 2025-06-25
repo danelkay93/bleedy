@@ -2,18 +2,18 @@
   <wired-card elevation="2" class="progress-card">
     <div class="progress-content">
       <wired-progress :value="progress" :max="100"></wired-progress>
-      
+
       <div class="status-details">
         <div class="status-row files">
           <wired-icon-button>📁</wired-icon-button>
           <span>{{ processedCount }} / {{ totalFiles }} files</span>
         </div>
-        
+
         <div class="status-row time">
           <wired-icon-button>⏱️</wired-icon-button>
           <span>Elapsed: {{ formatTime(elapsedTime) }}</span>
         </div>
-        
+
         <div class="status-row estimate">
           <wired-icon-button>🎯</wired-icon-button>
           <span>Remaining: {{ formatTime(remainingTime) }}</span>

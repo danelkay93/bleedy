@@ -1,21 +1,21 @@
 @forward 'element-plus/theme-chalk/src/common/var.scss' with (
-$colors: (
-  'primary': (
-    'base': #607d8b,
-  ),
-  'success': (
-    'base': #67c23a,
-  ),
-  'warning': (
-    'base': #e6a23c,
-  ),
-  'danger': (
-    'base': #e53935,
-  ),
-  'info': (
-    'base': #909399,
-  ),
-  ),
+  $colors: (
+    'primary': (
+      'base': #607d8b
+    ),
+    'success': (
+      'base': #67c23a
+    ),
+    'warning': (
+      'base': #e6a23c
+    ),
+    'danger': (
+      'base': #e53935
+    ),
+    'info': (
+      'base': #909399
+    )
+  )
 );
 
 // Define your custom SCSS variables
@@ -31,21 +31,20 @@ body {
 }
 
 .el-header {
-  background-color: $colors['primary'];
+  background-color: $colors[ 'primary'];
   color: $text-light;
 }
 
 .el-footer {
-  background-color: $colors['primary'];
+  background-color: $colors[ 'primary'];
   color: $text-light;
 }
 
 .el-button {
-  background-color: $colors['danger'];
+  background-color: $colors[ 'danger'];
   color: $text-light;
 }
 
 .el-button--primary:hover {
-  background-color: darken($colors ['danger'], 10%);
+  background-color: darken($colors [ 'danger'], 10%);
 }
-

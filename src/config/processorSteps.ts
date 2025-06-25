@@ -6,7 +6,7 @@ export const processorSteps = [
   },
   {
     name: 'Adjust Bleed',
-    title: 'Settings', 
+    title: 'Settings',
     iconName: 'bleed-settings-icon'
   },
   {
@@ -21,4 +21,4 @@ export const processorSteps = [
   }
 ] as const
 
-export type ProcessorStep = typeof processorSteps[number]
+export type ProcessorStep = (typeof processorSteps)[number]

@@ -8,7 +8,7 @@
 
     <!-- Draggable image thumbnails -->
     <draggable v-model="filteredImages" class="image-list" @end="onEnd">
-      <template #item="{ element }">
+      <template #item="{element}">
         <div class="image-item">
           <img :src="element.url" alt="image" @click="openLightbox(element.url)" />
           <el-button type="danger" @click="removeImage(element)">Remove</el-button>
@@ -22,9 +22,9 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import {ref} from 'vue'
 import draggable from 'vuedraggable'
-import { VuePreview } from 'vue3-image-preview'
+import {VuePreview} from 'vue3-image-preview'
 
 const images = ref([]) // All images
 const searchQuery = ref('') // For searching images
@@ -43,7 +43,7 @@ async function openFilePicker() {
   try {
     const fileHandles = await window.showOpenFilePicker({
       multiple: true,
-      types: [{ description: 'Images', accept: { 'image/*': ['.png', '.jpg', '.jpeg'] } }]
+      types: [{description: 'Images', accept: {'image/*': ['.png', '.jpg', '.jpeg']}}]
     })
 
     // Convert FileHandles to file URLs and push to the images array

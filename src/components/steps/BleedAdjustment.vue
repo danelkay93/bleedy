@@ -15,8 +15,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
-import { DEFAULT_BLEED_AMOUNT } from '../../config/appConfig'
+import {ref, onMounted} from 'vue'
+import {DEFAULT_BLEED_AMOUNT} from '../../config/appConfig'
 
 const props = withDefaults(
   defineProps<{

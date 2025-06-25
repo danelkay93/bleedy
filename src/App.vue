@@ -4,7 +4,7 @@
     <el-container>
       <el-header height="6.5">
         <el-row>
-          <div class="header-content" :style="{ backgroundImage: svgBackground }">
+          <div class="header-content" :style="{backgroundImage: svgBackground}">
             <div class="logo-container">
               <Logo class="logo" />
               <p class="app-name cabin-sketch-bold">bleedy.py</p>
@@ -14,7 +14,7 @@
       </el-header>
       <el-main>
         <el-row justify="center">
-          <el-col class="step-row" :span=12>
+          <el-col class="step-row" :span="12">
             <router-view></router-view>
           </el-col>
         </el-row>
@@ -36,7 +36,7 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue'
+import {onMounted, ref} from 'vue'
 import rough from 'roughjs'
 import Logo from './components/Logo.vue'
 import ImageProcessor from './components/ImageProcessor.vue'
@@ -134,8 +134,8 @@ el-header {
   flex-direction: column; /* Use flexbox to control layout */
   background-color: var(--primary-dark);
   padding: 0;
-  --el-header-height: "6.5rem"; /* Set header height */
-  min-height: "6.5rem";
+  --el-header-height: '6.5rem'; /* Set header height */
+  min-height: '6.5rem';
 }
 
 .header-content {
@@ -146,7 +146,7 @@ el-header {
   background-repeat: no-repeat; /* Prevent repeating */
   margin-top: 0;
   margin-left: 0;
-  min-height: "6.5rem";
+  min-height: '6.5rem';
 }
 
 .logo-container {

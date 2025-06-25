@@ -2,10 +2,8 @@
   <div class="review-results">
     <p>Review your processed images below:</p>
     <ImageGalleryBase :images="images">
-      <template #actions="{ image, index }">
-        <wired-button @click="downloadImage(image, index)">
-          Download
-        </wired-button>
+      <template #actions="{image, index}">
+        <wired-button @click="downloadImage(image, index)">Download</wired-button>
       </template>
     </ImageGalleryBase>
     <div class="download-all">
@@ -15,15 +13,14 @@
 </template>
 
 <script setup lang="ts">
-import { useImageDownload } from '@/composables/useImageDownload.ts'
+import {useImageDownload} from '@/composables/useImageDownload.ts'
 import ImageGalleryBase from '../ImageGalleryBase.vue'
 
 const props = defineProps<{
   images: string[]
 }>()
 
-const { downloadImage, downloadZip } = useImageDownload()
-
+const {downloadImage, downloadZip} = useImageDownload()
 </script>
 
 <style scoped>

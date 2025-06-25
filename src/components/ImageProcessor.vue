@@ -1,10 +1,10 @@
 <template>
   <div class="image-bleed-processor">
     <StepManager
-      :steps="processorSteps.map((step) => ({ title: step.title }))"
+      :steps="processorSteps.map((step) => ({title: step.title}))"
       v-model="activeStep"
       :is-next-disabled="activeStep === 0 && selectedImages.length === 0">
-      <template #default="{ activeStep }">
+      <template #default="{activeStep}">
         <div class="step-content">
           <h2 class="step-title">{{ processorSteps[activeStep].title }}</h2>
           <wired-card elevation="2">
@@ -32,15 +32,15 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-import { DEFAULT_BLEED_AMOUNT } from '../config/appConfig'
+import {ref} from 'vue'
+import {DEFAULT_BLEED_AMOUNT} from '../config/appConfig'
 import StepManager from './StepManager.vue'
 import ImageSelection from './ImageSelection.vue'
 import BleedAdjustment from './steps/BleedAdjustment.vue'
 import ProcessImages from './steps/ProcessImages.vue'
 import ReviewResults from './steps/ReviewResults.vue'
-import { processorSteps } from '../config/processorSteps'
-import { WiredCard } from 'wired-elements'
+import {processorSteps} from '../config/processorSteps'
+import {WiredCard} from 'wired-elements'
 
 const activeStep = ref(0)
 const bleedAmount = ref(DEFAULT_BLEED_AMOUNT)

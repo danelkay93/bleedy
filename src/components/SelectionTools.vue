@@ -21,14 +21,12 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue'
-import {
-  Setting, RemoveFilled, Delete
-} from '@element-plus/icons-vue'
+import {ref} from 'vue'
+import {Setting, RemoveFilled, Delete} from '@element-plus/icons-vue'
 
 const isCollapse = ref(true)
 const selectedImages = ref<string[]>([])
-const images = ref<{ id: string }[]>([])
+const images = ref<{id: string}[]>([])
 const handleOpen = (key: string, keyPath: string[]) => {
   console.log(key, keyPath)
 }

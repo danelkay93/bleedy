@@ -8,7 +8,7 @@
             :key="step.title"
             :title="step.title"
             @click="handleStepClick(index)"
-            :class="{ clickable: canNavigateToStep(index) }">
+            :class="{clickable: canNavigateToStep(index)}">
             <template #icon>
               <div class="step-icon">
                 <wired-checkbox
@@ -31,7 +31,7 @@
           <wired-button
             v-if="activeStep < steps.length - 1"
             @click="nextStep"
-            :class="{ disabled: isNextDisabled }"
+            :class="{disabled: isNextDisabled}"
             :style="{
               opacity: isNextDisabled ? '0.5' : '1',
               pointerEvents: isNextDisabled ? 'none' : 'auto'
@@ -45,11 +45,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue'
-import { WiredButton, WiredCheckbox } from 'wired-elements'
+import {ref, watch} from 'vue'
+import {WiredButton, WiredCheckbox} from 'wired-elements'
 
 const props = defineProps<{
-  steps: Array<{ title: string }>
+  steps: Array<{title: string}>
   modelValue: number
   isNextDisabled: boolean
 }>()

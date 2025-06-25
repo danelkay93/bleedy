@@ -39,7 +39,7 @@
 </template>
 
 <script>
-import { ref, computed } from 'vue'
+import {ref, computed} from 'vue'
 import 'wired-elements'
 
 export default {
@@ -168,10 +168,10 @@ export default {
     },
     splitImageFilename(filename) {
       const lastDotIndex = filename.lastIndexOf('.')
-      if (lastDotIndex === -1) return { name: filename, ext: '' }
+      if (lastDotIndex === -1) return {name: filename, ext: ''}
       const name = filename.slice(0, lastDotIndex)
       const ext = filename.slice(lastDotIndex + 1)
-      return { name: name, ext: ext }
+      return {name: name, ext: ext}
     }
   },
   beforeUnmount() {
