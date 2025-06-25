@@ -32,7 +32,7 @@ fieldset,
   align-self: center;
   outline: none;
   border: 2px solid #919090;
-  border-radius: 255px 15px 225px 15px/15px 225px 15px 255px;
+  border-radius: 255px 15px 225px / 15px 225px 15px 255px;
 
   /*
     Above is shorthand for:
@@ -89,13 +89,13 @@ button {
 thead tr th {
   border-bottom: 2px solid #919090;
   box-shadow: 20px 38px 34px -26px rgb(0 0 0 / 20%);
-  border-radius: 0 0 225px 0/0 0 15px 0;
+  border-radius: 0 0 225px / 0 0 15px;
 }
 
 tfoot tr td {
   border-top: 2px solid #919090;
   box-shadow: 20px 38px 34px -26px rgb(0 0 0 / 20%);
-  border-radius: 255px 0 0 0/15px 0 0 0;
+  border-radius: 255px 0 0 / 15px 0 0;
 }
 
 td,
