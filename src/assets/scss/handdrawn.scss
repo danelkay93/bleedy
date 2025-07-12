@@ -1,12 +1,15 @@
 $gray: #717171;
 $lightgray: #919090;
+
 // @import url(https://fonts.googleapis.com/css?family=Indie+Flower);
 // @import url(https://fonts.googleapis.com/css?family=Covered+By+Your+Grace);
 // @import url(https://fonts.googleapis.com/css?family=Shadows+Into+Light);
-@import url(https://fonts.googleapis.com/css?family=Architects+Daughter);
+@import "https://fonts.googleapis.com/css?family=Architects+Daughter";
+
 body {
   // background: whitesmoke url(assets/backgrounds/paper_texture309.jpg);
-  background: whitesmoke url(assets/backgrounds/paper_texture310.jpg);
+  background: whitesmoke url("assets/backgrounds/paper_texture310.jpg");
+
   // background: whitesmoke url(assets/backgrounds/paper_texture318.jpg);
   // background: whitesmoke url(assets/backgrounds/paper_texture327.jpg);
   // background: whitesmoke url(assets/backgrounds/paper_texture332.jpg);
@@ -25,7 +28,9 @@ select,
 button {
   // font-family: 'Indie Flower', cursive;
   font-family: 'Architects Daughter', cursive;
+
   /*     font-family: 'Shadows Into Light', cursive; */
+
   /*     font-family: 'Covered By Your Grace', cursive; */
   padding: 0.2rem 0.4rem;
 }
@@ -38,14 +43,16 @@ button,
 table,
 .hd-border,
 fieldset,
-.checkbox > input[type='checkbox'] + label:before,
-.radio > input[type='radio'] + label:before {
+.checkbox > input[type='checkbox'] + label::before,
+.radio > input[type='radio'] + label::before {
   background: transparent;
   align-self: center;
   outline: none;
   border: 2px solid $lightgray;
+
   // box-shadow: 20px 18px 24px -26px hsla(0, 0%, 0%, .2);
-  border-radius: 255px 15px 225px 15px/15px 225px 15px 255px;
+  border-radius: 255px 15px 225px / 15px 225px 15px 255px;
+
   /*
       Above is shorthand for:
       border-top-left-radius: 255px 15px;
@@ -56,18 +63,23 @@ fieldset,
   &.lined.thick {
     border: solid 7px #41403e;
   }
+
   &.dotted.thick {
     border: dotted 5px #41403e;
   }
+
   &.dashed.thick {
     border: dashed 5px #41403e;
   }
+
   &.lined.thin {
     border: solid 2px #41403e;
   }
+
   &.dotted.thin {
     border: dotted 2px #41403e;
   }
+
   &.dashed.thin {
     border: dashed 2px #41403e;
   }
@@ -81,28 +93,30 @@ button,
 textarea {
   color: $gray;
 }
-/**/
+
+/*  */
 input[type='button'],
 button {
   background: $lightgray;
   cursor: pointer;
   color: white;
 }
+
 /* Tables */
 thead {
   tr th {
     border-bottom: 2px solid $lightgray;
-    box-shadow: 20px 38px 34px -26px hsla(0, 0%, 0%, 0.2);
-    border-radius: 0 0 225px 0/0 0 15px 0;
+    box-shadow: 20px 38px 34px -26px hsl(0deg 0% 0% / 20%);
+    border-radius: 0 0 225px / 0 0 15px;
   }
 }
 
 tfoot {
   tr td {
     border-top: 2px solid $lightgray;
-    box-shadow: 20px 38px 34px -26px hsla(0, 0%, 0%, 0.2);
-    border-radius: 0 0 225px 0/0 0 15px 0;
-    border-radius: 255px 0 0 0/15px 0 0 0;
+    box-shadow: 20px 38px 34px -26px hsl(0deg 0% 0% / 20%);
+    border-radius: 0 0 225px / 0 0 15px;
+    border-radius: 255px 0 0 / 15px 0 0;
   }
 }
 
@@ -114,7 +128,8 @@ th {
 ul li {
   list-style: none;
   position: relative;
-  &:before {
+
+  &::before {
     font-family: icons;
     content: '\E02D';
     position: absolute;
@@ -129,7 +144,7 @@ ul li {
  */
 
 $color-default: $gray; // default color
-$color-default-light: #dddddd; // default color light
+$color-default-light: #ddd; // default color light
 $color-active: $gray; // color when active or checked
 $color-active-light: #9effc4; // active color light
 $color-focus: $gray; // color when focused
@@ -142,6 +157,7 @@ $margin-el: 7px; // default margin for our custom inputs
 .radio {
   display: inline;
 }
+
 .checkbox > input[type='checkbox'],
 .radio > input[type='radio'] {
   &:checked,
@@ -150,6 +166,7 @@ $margin-el: 7px; // default margin for our custom inputs
     height: 0;
     display: none;
     opacity: 0;
+
     & + label {
       display: inline-block;
       margin-right: $margin-el;
@@ -159,7 +176,8 @@ $margin-el: 7px; // default margin for our custom inputs
       padding-top: 2px;
       position: relative;
       cursor: pointer;
-      &:before {
+
+      &::before {
         // position elements absolute to parent container
         position: absolute;
         display: inline-block;
@@ -170,19 +188,23 @@ $margin-el: 7px; // default margin for our custom inputs
         border: 2px solid $color-default;
         color: $color-default;
       }
-      &:hover:before {
+
+      &:hover::before {
         // add some hover styling
         // background-color: $color-default;
       }
     }
-    &:focus + label:before {
+
+    &:focus + label::before {
       border-color: $color-focus;
       box-shadow: 0 0 6px 0 $color-focus;
     }
+
     &[disabled] + label {
       cursor: not-allowed;
       opacity: 0.4;
-      &:before {
+
+      &::before {
         opacity: 0.7;
       }
     }
@@ -190,12 +212,13 @@ $margin-el: 7px; // default margin for our custom inputs
 }
 
 // styling for checkbox for both states
-.checkbox > [type='checkbox']:checked + label:before,
-.checkbox > [type='checkbox']:not(:checked) + label:before {
+.checkbox > [type='checkbox']:checked + label::before,
+.checkbox > [type='checkbox']:not(:checked) + label::before {
   // set icon font
-  font-family: 'icons';
+  font-family: icons;
   line-height: 0.3rem;
   font-size: 1rem;
+
   // add some CSS3-animations
   transition:
     border-color 0.2s ease-in,
@@ -203,25 +226,27 @@ $margin-el: 7px; // default margin for our custom inputs
 }
 
 // styling for checkbox when selected
-.checkbox > [type='checkbox']:checked + label:before {
+.checkbox > [type='checkbox']:checked + label::before {
   // set checkmark icon
   content: '\E028';
   color: #fff;
+
   // background-color: $color-active;
   border-color: $color-active;
 }
 
 // styling for checkbox when not selected
-.checkbox > [type='checkbox']:not(:checked) + label:before {
+.checkbox > [type='checkbox']:not(:checked) + label::before {
   // remove checkmark icon
   content: '';
 }
 
 // styling for radio for both states
-.radio > [type='radio']:checked + label:before,
-.radio > [type='radio']:not(:checked) + label:before {
+.radio > [type='radio']:checked + label::before,
+.radio > [type='radio']:not(:checked) + label::before {
   content: '';
   border-radius: 15px;
+
   // add some CSS3-animations
   transition:
     border-color 0.2s ease-in,
@@ -230,16 +255,17 @@ $margin-el: 7px; // default margin for our custom inputs
 }
 
 // styling for radio when selected
-.radio > [type='radio']:checked + label:before {
+.radio > [type='radio']:checked + label::before {
   color: $color-active;
   border-color: $color-active;
   background-color: $color-active;
+
   // use box-shadow to render circle
   box-shadow: inset 0 0 0 1px #fff;
 }
 
 // styling for radio when not selected
-.radio > [type='radio']:not(:checked) + label:before {
+.radio > [type='radio']:not(:checked) + label::before {
   box-shadow: inset 0 0 0 3px #fff;
 }
 
@@ -258,24 +284,29 @@ $margin-el: 7px; // default margin for our custom inputs
   height: 0;
   display: none;
   opacity: 0;
+
   & + label {
     cursor: pointer;
     display: inline-block;
     margin-right: $margin-el;
     margin-top: $margin-el;
     margin-bottom: $margin-el;
+
     // apply padding so the switch fits inside the label
     padding-right: 60px;
-    &:after {
+
+    &::after {
       content: '';
       top: 4px;
       right: 10px;
       width: 30px;
       height: 12px;
+
       // use absolute for better positioning
       position: absolute;
       border-radius: 30px;
     }
+
     & + .hd-switch-knob {
       top: 0;
       width: 20px;
@@ -286,19 +317,22 @@ $margin-el: 7px; // default margin for our custom inputs
       cursor: pointer;
       pointer-events: none;
       box-shadow: 1px 1px 1px $color-default-light;
+
       // add some CSS3-animations
       transition:
         right 0.1s ease-in,
         background-color 0.1s ease-in;
     }
   }
-  &:focus + label:after,
+
+  &:focus + label::after,
   &:focus + label + .hd-switch-knob {
     box-shadow: 0 0 6px 0 $color-focus;
   }
+
   &[disabled] {
     & + label,
-    & + label:after,
+    & + label::after,
     & + label + .hd-switch-knob {
       cursor: not-allowed;
       opacity: 0.4;
@@ -306,11 +340,11 @@ $margin-el: 7px; // default margin for our custom inputs
   }
 }
 
-.hd-switch > [type='checkbox']:checked + label:after {
+.hd-switch > [type='checkbox']:checked + label::after {
   background-color: $color-active-light;
 }
 
-.hd-switch > [type='checkbox']:not(:checked) + label:after {
+.hd-switch > [type='checkbox']:not(:checked) + label::after {
   background-color: $color-default-light;
 }
 
