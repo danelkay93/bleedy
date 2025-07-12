@@ -100,7 +100,7 @@ onMounted(() => {
 </script>
 
 <style scoped>
-@import url('https://fonts.googleapis.com/css2?family=Cabin+Sketch:wght@400;700&display=swap');
+@import 'https://fonts.googleapis.com/css2?family=Cabin+Sketch:wght@400;700&display=swap';
 
 /* Common layout styles */
 .common-layout {
@@ -134,7 +134,9 @@ el-header {
   flex-direction: column; /* Use flexbox to control layout */
   background-color: var(--primary-dark);
   padding: 0;
+
   --el-header-height: "6.5rem"; /* Set header height */
+
   min-height: "6.5rem";
 }
 
@@ -192,14 +194,14 @@ el-footer {
   text-align: center;
   font-size: 0.85rem;
   color: var(--text-light);
-  font-family: 'Doodle', sans-serif;
+  font-family: Doodle, sans-serif;
 }
 
 /* Body styles */
 body {
   margin: 0;
   padding: 0;
-  font-family: 'Doodle', sans-serif;
+  font-family: Doodle, sans-serif;
   background-color: var(--background-light);
 }
 </style>

@@ -196,7 +196,7 @@ export default {
 
 .status-messages {
   text-align: center;
-  font-family: 'Doodle', sans-serif;
+  font-family: Doodle, sans-serif;
   margin: 1rem 0;
 }
 
