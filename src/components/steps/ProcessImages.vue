@@ -182,7 +182,10 @@ async function handleProcess() {
         }
         // Optionally, show an error to the user
       }
-    }, TIMEOUT_PER_IMAGE_MS * totalFiles.value) as unknown as number
+const timeoutId = window.setTimeout(
+  () => { /* … */ },
+  TIMEOUT_PER_IMAGE_MS * totalFiles.value
+)
   } catch (error) {
     console.error('JS: Error dispatching process-images event:', error)
     processing.value = false
