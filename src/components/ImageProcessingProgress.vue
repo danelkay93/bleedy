@@ -45,8 +45,10 @@ function formatTime(seconds: number): string {
 <style scoped>
 .progress-card {
   width: 100%;
+
   --wired-progress-color: #000;
   --wired-progress-label-color: #000;
+
   font-family: 'Architects Daughter', cursive;
 }
 
@@ -75,6 +77,7 @@ function formatTime(seconds: number): string {
 
 :deep(wired-icon-button) {
   --wired-icon-size: 16px;
+
   font-size: 14px;
 }
 </style>
