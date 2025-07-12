@@ -74,10 +74,6 @@ function handleProgressEvent(event: PyScriptProgressEvent) {
   remainingTime.value = detail.remaining
 
   // If all files reported by progress event are processed, but not yet by individual image events
-  if (detail.processed === detail.total && detail.total > 0) {
-    // This is a fallback in case individual image events don't perfectly match up.
-    // The main completion logic is in handleProcessedImageEvent.
-  }
 }
 
 interface ProcessedImageEventDetail {
