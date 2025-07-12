@@ -1,25 +1,42 @@
 <template>
-  <div class="image-card" :class="{'selected-card': selected}">
-    <img :src="image.preview" :alt="image.name" :title="image.name" class="image-thumbnail" />
+  <div
+    class="image-card"
+    :class="{'selected-card': selected}"
+  >
+    <img
+      :src="image.preview"
+      :alt="image.name"
+      :title="image.name"
+      class="image-thumbnail"
+    >
 
     <div class="file-info">
-      <div v-for="(value, key) in fileInfo" :key="key">
+      <div
+        v-for="(value, key) in fileInfo"
+        :key="key"
+      >
         <small>
           {{ key }}:
           <span
             v-if="key === 'Filename' || key === 'Type'"
-            v-html="highlightMatch(value, searchQuery)"></span>
+            v-html="highlightMatch(value, searchQuery)"
+          />
           <span v-else>{{ value }}</span>
         </small>
       </div>
     </div>
-    <wired-button v-if="selected" class="remove-button" elevation="2" @click.stop="$emit('remove')">
+    <wired-button
+      v-if="selected"
+      class="remove-button"
+      elevation="2"
+      @click.stop="$emit('remove')"
+    >
       ✕
     </wired-button>
   </div>
 </template>
 
-<script>
+<script lang="ts">
 export default {
   name: 'ImageGalleryItem',
   props: {
@@ -36,6 +53,7 @@ export default {
       default: ''
     }
   },
+  emits: ['remove'],
   computed: {
     fileInfo() {
       const {name, ext} = this.splitImageFilename(this.image.name)
@@ -49,20 +67,20 @@ export default {
     }
   },
   methods: {
-    truncateText(text, maxLength) {
+    truncateText(text: string, maxLength: number) {
       if (text.length <= maxLength) return text
       return text.substring(0, maxLength) + '...'
     },
-    highlightMatch(text, query) {
+    highlightMatch(text: string, query: string) {
       if (!query) return text
       const regex = new RegExp(`(${query})`, 'gi')
       return text.replace(regex, '<mark>$1</mark>')
     },
-    formatSize(size) {
+    formatSize(size: number) {
       const i = Math.floor(Math.log(size) / Math.log(1024))
       return (size / Math.pow(1024, i)).toFixed(2) * 1 + ' ' + ['B', 'KB', 'MB', 'GB', 'TB'][i]
     },
-    splitImageFilename(filename) {
+    splitImageFilename(filename: string) {
       const lastDotIndex = filename.lastIndexOf('.')
       if (lastDotIndex === -1) return {name: filename, ext: ''}
       const name = filename.slice(0, lastDotIndex)

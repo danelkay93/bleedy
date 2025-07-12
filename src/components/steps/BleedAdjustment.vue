@@ -2,14 +2,20 @@
   <div class="bleed-adjustment">
     <label>Adjust Bleed Amount:</label>
     <div class="value-display">
-      <wired-card elevation="1">{{ modelValue }} pixels</wired-card>
+      <wired-card elevation="1">
+        {{ modelValue }} pixels
+      </wired-card>
     </div>
-    <div class="slider-container" ref="sliderContainer">
+    <div
+      ref="sliderContainer"
+      class="slider-container"
+    >
       <wired-slider
         min="0"
         max="100"
         :value="modelValue"
-        @change="$emit('update:modelValue', Number($event.target.value))"></wired-slider>
+        @change="$emit('update:modelValue', Number($event.target.value))"
+      />
     </div>
   </div>
 </template>

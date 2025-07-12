@@ -1,12 +1,18 @@
 <template>
-  <svg ref="svg" viewBox="0 0 100 120" width="100%" height="100%"></svg>
+  <svg
+    ref="svg"
+    viewBox="0 0 100 120"
+    width="100%"
+    height="100%"
+  />
 </template>
 
-<script>
+<script lang="ts">
 import {onMounted, ref} from 'vue'
 import rough from 'roughjs/bundled/rough.esm.js'
 
 export default {
+  name: 'BloodLogo',
   setup() {
     const svg = ref(null)
 

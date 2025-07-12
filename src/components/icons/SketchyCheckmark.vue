@@ -1,16 +1,20 @@
 <template>
-  <div class="sketchy-checkmark" ref="checkmarkContainer"></div>
+  <div
+    ref="checkmarkContainer"
+    class="sketchy-checkmark"
+  />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import {onMounted, ref} from 'vue'
 import rough from 'roughjs'
 
-const checkmarkContainer = ref(null)
+const checkmarkContainer = ref<HTMLElement | null>(null)
 
 onMounted(() => {
-  const rc = rough.svg(checkmarkContainer.value)
-  const svg = rc.svg(`
+  if (checkmarkContainer.value) {
+    const rc = rough.svg(checkmarkContainer.value)
+    const svg = rc.svg(`
     <svg width="20" height="20">
       ${
         rc.path('M4 10 L8 14 L16 6', {
@@ -22,8 +26,9 @@ onMounted(() => {
       }
     </svg>
   `)
-  checkmarkContainer.value.innerHTML = ''
-  checkmarkContainer.value.appendChild(svg)
+    checkmarkContainer.value.innerHTML = ''
+    checkmarkContainer.value.appendChild(svg)
+  }
 })
 </script>
 

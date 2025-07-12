@@ -1,14 +1,22 @@
 <template>
   <div class="step-manager">
     <el-row justify="center">
-      <el-col class="col" :span="14">
-        <el-steps :simple="true" :active="activeStep" finish-status="success">
+      <el-col
+        class="col"
+        :span="14"
+      >
+        <el-steps
+          :simple="true"
+          :active="activeStep"
+          finish-status="success"
+        >
           <el-step
             v-for="(step, index) in steps"
             :key="step.title"
             :title="step.title"
+            :class="{clickable: canNavigateToStep(index)}"
             @click="handleStepClick(index)"
-            :class="{clickable: canNavigateToStep(index)}">
+          >
             <template #icon>
               <div class="step-icon">
                 <wired-checkbox
@@ -17,25 +25,32 @@
                   :class="{
                     'current-step': index === activeStep,
                     'completed-step': index < activeStep
-                  }" />
+                  }"
+                />
               </div>
             </template>
           </el-step>
         </el-steps>
 
         <div class="step-content">
-          <slot :activeStep="activeStep" />
+          <slot :active-step="activeStep" />
         </div>
         <div class="navigation-buttons">
-          <wired-button v-show="activeStep > 0" @click="prevStep">Previous</wired-button>
+          <wired-button
+            v-show="activeStep > 0"
+            @click="prevStep"
+          >
+            Previous
+          </wired-button>
           <wired-button
             v-if="activeStep < steps.length - 1"
-            @click="nextStep"
             :class="{disabled: isNextDisabled}"
             :style="{
               opacity: isNextDisabled ? '0.5' : '1',
               pointerEvents: isNextDisabled ? 'none' : 'auto'
-            }">
+            }"
+            @click="nextStep"
+          >
             Next
           </wired-button>
         </div>

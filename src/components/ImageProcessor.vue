@@ -1,28 +1,37 @@
 <template>
   <div class="image-bleed-processor">
     <StepManager
-      :steps="processorSteps.map((step) => ({title: step.title}))"
       v-model="activeStep"
-      :is-next-disabled="activeStep === 0 && selectedImages.length === 0">
+      :steps="processorSteps.map((step) => ({title: step.title}))"
+      :is-next-disabled="activeStep === 0 && selectedImages.length === 0"
+    >
       <template #default="{activeStep}">
         <div class="step-content">
-          <h2 class="step-title">{{ processorSteps[activeStep].title }}</h2>
+          <h2 class="step-title">
+            {{ processorSteps[activeStep].title }}
+          </h2>
           <wired-card elevation="2">
             <div class="step-content-inner">
               <ImageSelection
                 v-if="activeStep === 0"
-                :activeStep="activeStep"
-                @update:selected-images="updateSelectedImages" />
-              <BleedAdjustment v-else-if="activeStep === 1" v-model="bleedAmount" />
+                :active-step="activeStep"
+                @update:selected-images="updateSelectedImages"
+              />
+              <BleedAdjustment
+                v-else-if="activeStep === 1"
+                v-model="bleedAmount"
+              />
               <ProcessImages
                 v-else-if="activeStep === 2"
                 :images="selectedImages"
                 :bleed-amount="bleedAmount"
-                @process-complete="handleProcessComplete" />
+                @process-complete="handleProcessComplete"
+              />
               <ReviewResults
                 v-else-if="activeStep === 3"
                 :images="processedImages"
-                @save="saveAsZip" />
+                @save="saveAsZip"
+              />
             </div>
           </wired-card>
         </div>
