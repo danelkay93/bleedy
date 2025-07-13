@@ -1,5 +1,5 @@
 @font-face {
-  font-family: 'icons';
+  font-family: icons;
   src: url('fonts/icons.eot');
   src:
     url('fonts/icons.eot?#iefix') format('eot'),
@@ -9,12 +9,13 @@
 }
 
 @mixin icon-styles {
-  font-family: 'icons';
+  font-family: icons;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   font-style: normal;
   font-variant: normal;
   font-weight: normal;
+
   // speak: none; // only necessary if not using the private unicode range (firstGlyph option)
   text-decoration: none;
   text-transform: none;
@@ -270,6 +271,7 @@ $icons: (
     @warn "Icon '#{$filename}' not found.";
     @return null;
   }
+
   @return map-get($icons, $filename);
 }
 
@@ -280,6 +282,7 @@ $icons: (
     } @else {
       @include icon-styles;
     }
+
     content: icon-char($filename);
   }
 }
@@ -287,714 +290,951 @@ $icons: (
 .icon-anchor {
   @include icon(anchor);
 }
+
 .icon-android {
   @include icon(android);
 }
+
 .icon-apple {
   @include icon(apple);
 }
+
 .icon-archive {
   @include icon(archive);
 }
+
 .icon-arrow-alt {
   @include icon(arrow-alt);
 }
+
 .icon-arrow-down {
   @include icon(arrow-down);
 }
+
 .icon-arrow-left {
   @include icon(arrow-left);
 }
+
 .icon-arrow-right {
   @include icon(arrow-right);
 }
+
 .icon-arrow-up {
   @include icon(arrow-up);
 }
+
 .icon-balance-scale {
   @include icon(balance-scale);
 }
+
 .icon-ban {
   @include icon(ban);
 }
+
 .icon-bar-chart {
   @include icon(bar-chart);
 }
+
 .icon-barcode {
   @include icon(barcode);
 }
+
 .icon-bars {
   @include icon(bars);
 }
+
 .icon-battery-empty {
   @include icon(battery-empty);
 }
+
 .icon-battery-full {
   @include icon(battery-full);
 }
+
 .icon-battery-half {
   @include icon(battery-half);
 }
+
 .icon-battery-quarter {
   @include icon(battery-quarter);
 }
+
 .icon-beer {
   @include icon(beer);
 }
+
 .icon-behance {
   @include icon(behance);
 }
+
 .icon-bell {
   @include icon(bell);
 }
+
 .icon-bicycle {
   @include icon(bicycle);
 }
+
 .icon-birthday-cake {
   @include icon(birthday-cake);
 }
+
 .icon-bolt {
   @include icon(bolt);
 }
+
 .icon-bomb {
   @include icon(bomb);
 }
+
 .icon-book {
   @include icon(book);
 }
+
 .icon-bookmark-o {
   @include icon(bookmark-o);
 }
+
 .icon-briefcase {
   @include icon(briefcase);
 }
+
 .icon-bug {
   @include icon(bug);
 }
+
 .icon-bullseye {
   @include icon(bullseye);
 }
+
 .icon-calculator {
   @include icon(calculator);
 }
+
 .icon-calendar {
   @include icon(calendar);
 }
+
 .icon-caret-down {
   @include icon(caret-down);
 }
+
 .icon-caret-left {
   @include icon(caret-left);
 }
+
 .icon-caret-square-o-down {
   @include icon(caret-square-o-down);
 }
+
 .icon-caret-square-o-left {
   @include icon(caret-square-o-left);
 }
+
 .icon-caret-square-o-right {
   @include icon(caret-square-o-right);
 }
+
 .icon-caret-square-o-up {
   @include icon(caret-square-o-up);
 }
+
 .icon-caret-up {
   @include icon(caret-up);
 }
+
 .icon-check {
   @include icon(check);
 }
+
 .icon-chevron-down {
   @include icon(chevron-down);
 }
+
 .icon-chevron-left {
   @include icon(chevron-left);
 }
+
 .icon-chevron-right {
   @include icon(chevron-right);
 }
+
 .icon-chevron-up {
   @include icon(chevron-up);
 }
+
 .icon-circle-o {
   @include icon(circle-o);
 }
+
 .icon-clipboard {
   @include icon(clipboard);
 }
+
 .icon-clone {
   @include icon(clone);
 }
+
 .icon-cloud-remove {
   @include icon(cloud-remove);
 }
+
 .icon-cloud-sync {
   @include icon(cloud-sync);
 }
+
 .icon-cloud-upload {
   @include icon(cloud-upload);
 }
+
 .icon-cloud {
   @include icon(cloud);
 }
+
 .icon-code-fork {
   @include icon(code-fork);
 }
+
 .icon-code {
   @include icon(code);
 }
+
 .icon-coffee {
   @include icon(coffee);
 }
+
 .icon-cog {
   @include icon(cog);
 }
+
 .icon-cogs {
   @include icon(cogs);
 }
+
 .icon-comment {
   @include icon(comment);
 }
+
 .icon-comments {
   @include icon(comments);
 }
+
 .icon-compass {
   @include icon(compass);
 }
+
 .icon-compress {
   @include icon(compress);
 }
+
 .icon-cutlery {
   @include icon(cutlery);
 }
+
 .icon-dashboard {
   @include icon(dashboard);
 }
+
 .icon-database {
   @include icon(database);
 }
+
 .icon-delicious {
   @include icon(delicious);
 }
+
 .icon-desktop {
   @include icon(desktop);
 }
+
 .icon-download {
   @include icon(download);
 }
+
 .icon-dribble {
   @include icon(dribble);
 }
+
 .icon-edit {
   @include icon(edit);
 }
+
 .icon-eject {
   @include icon(eject);
 }
+
 .icon-envelope {
   @include icon(envelope);
 }
+
 .icon-euro {
   @include icon(euro);
 }
+
 .icon-exchange {
   @include icon(exchange);
 }
+
 .icon-expand {
   @include icon(expand);
 }
+
 .icon-eye {
   @include icon(eye);
 }
+
 .icon-eyedropper {
   @include icon(eyedropper);
 }
+
 .icon-facebook {
   @include icon(facebook);
 }
+
 .icon-female {
   @include icon(female);
 }
+
 .icon-file-ai-o {
   @include icon(file-ai-o);
 }
+
 .icon-file-archive-o {
   @include icon(file-archive-o);
 }
+
 .icon-file-css-o {
   @include icon(file-css-o);
 }
+
 .icon-file-doc-o {
   @include icon(file-doc-o);
 }
+
 .icon-file-eps-o {
   @include icon(file-eps-o);
 }
+
 .icon-file-gif-o {
   @include icon(file-gif-o);
 }
+
 .icon-file-html-o {
   @include icon(file-html-o);
 }
+
 .icon-file-jpg-o {
   @include icon(file-jpg-o);
 }
+
 .icon-file-js-o {
   @include icon(file-js-o);
 }
+
 .icon-file-minus {
   @include icon(file-minus);
 }
+
 .icon-file-o {
   @include icon(file-o);
 }
+
 .icon-file-pdf-o {
   @include icon(file-pdf-o);
 }
+
 .icon-file-php-o {
   @include icon(file-php-o);
 }
+
 .icon-file-png-o {
   @include icon(file-png-o);
 }
+
 .icon-file-psd-o {
   @include icon(file-psd-o);
 }
+
 .icon-file-text-o {
   @include icon(file-text-o);
 }
+
 .icon-file-xls-o {
   @include icon(file-xls-o);
 }
+
 .icon-files-o {
   @include icon(files-o);
 }
+
 .icon-film {
   @include icon(film);
 }
+
 .icon-filter {
   @include icon(filter);
 }
+
 .icon-fire {
   @include icon(fire);
 }
+
 .icon-flag {
   @include icon(flag);
 }
+
 .icon-flask {
   @include icon(flask);
 }
+
 .icon-floppy-o {
   @include icon(floppy-o);
 }
+
 .icon-folder-lock {
   @include icon(folder-lock);
 }
+
 .icon-folder-minus {
   @include icon(folder-minus);
 }
+
 .icon-folder-plus {
   @include icon(folder-plus);
 }
+
 .icon-folder-remove {
   @include icon(folder-remove);
 }
+
 .icon-font {
   @include icon(font);
 }
+
 .icon-frown-o {
   @include icon(frown-o);
 }
+
 .icon-futbol-o {
   @include icon(futbol-o);
 }
+
 .icon-gamepad {
   @include icon(gamepad);
 }
+
 .icon-gem {
   @include icon(gem);
 }
+
 .icon-github {
   @include icon(github);
 }
+
 .icon-glass {
   @include icon(glass);
 }
+
 .icon-globe {
   @include icon(globe);
 }
+
 .icon-google-plus {
   @include icon(google-plus);
 }
+
 .icon-graduation-cap {
   @include icon(graduation-cap);
 }
+
 .icon-hdd-o {
   @include icon(hdd-o);
 }
+
 .icon-headphones {
   @include icon(headphones);
 }
+
 .icon-heart {
   @include icon(heart);
 }
+
 .icon-home {
   @include icon(home);
 }
+
 .icon-hourglass-half {
   @include icon(hourglass-half);
 }
+
 .icon-industry {
   @include icon(industry);
 }
+
 .icon-info-circle-o {
   @include icon(info-circle-o);
 }
+
 .icon-info-circle {
   @include icon(info-circle);
 }
+
 .icon-instagram {
   @include icon(instagram);
 }
+
 .icon-jpy {
   @include icon(jpy);
 }
+
 .icon-key {
   @include icon(key);
 }
+
 .icon-keyboard {
   @include icon(keyboard);
 }
+
 .icon-leaf {
   @include icon(leaf);
 }
+
 .icon-life-ring {
   @include icon(life-ring);
 }
+
 .icon-lightbulb-o {
   @include icon(lightbulb-o);
 }
+
 .icon-line-chart {
   @include icon(line-chart);
 }
+
 .icon-link {
   @include icon(link);
 }
+
 .icon-linkedin {
   @include icon(linkedin);
 }
+
 .icon-list {
   @include icon(list);
 }
+
 .icon-location-arrow {
   @include icon(location-arrow);
 }
+
 .icon-lock {
   @include icon(lock);
 }
+
 .icon-magic {
   @include icon(magic);
 }
+
 .icon-magnet {
   @include icon(magnet);
 }
+
 .icon-male {
   @include icon(male);
 }
+
 .icon-map-marker {
   @include icon(map-marker);
 }
+
 .icon-map-o {
   @include icon(map-o);
 }
+
 .icon-map-signs {
   @include icon(map-signs);
 }
+
 .icon-map {
   @include icon(map);
 }
+
 .icon-mars {
   @include icon(mars);
 }
+
 .icon-microphone {
   @include icon(microphone);
 }
+
 .icon-minus-circle {
   @include icon(minus-circle);
 }
+
 .icon-minus-square-o {
   @include icon(minus-square-o);
 }
+
 .icon-minus {
   @include icon(minus);
 }
+
 .icon-money {
   @include icon(money);
 }
+
 .icon-moon-o {
   @include icon(moon-o);
 }
+
 .icon-music {
   @include icon(music);
 }
+
 .icon-paint-brush {
   @include icon(paint-brush);
 }
+
 .icon-paper-plane {
   @include icon(paper-plane);
 }
+
 .icon-paragraph {
   @include icon(paragraph);
 }
+
 .icon-pause {
   @include icon(pause);
 }
+
 .icon-pencil-22 {
   @include icon(pencil-22);
 }
+
 .icon-pencil-square-o {
   @include icon(pencil-square-o);
 }
+
 .icon-pencil {
   @include icon(pencil);
 }
+
 .icon-phone {
   @include icon(phone);
 }
+
 .icon-picture-o {
   @include icon(picture-o);
 }
+
 .icon-pie-chart {
   @include icon(pie-chart);
 }
+
 .icon-pinterest {
   @include icon(pinterest);
 }
+
 .icon-play {
   @include icon(play);
 }
+
 .icon-plus-circle-o {
   @include icon(plus-circle-o);
 }
+
 .icon-plus-square-o {
   @include icon(plus-square-o);
 }
+
 .icon-plus {
   @include icon(plus);
 }
+
 .icon-power-off {
   @include icon(power-off);
 }
+
 .icon-question-circle {
   @include icon(question-circle);
 }
+
 .icon-question {
   @include icon(question);
 }
+
 .icon-quote-right {
   @include icon(quote-right);
 }
+
 .icon-random {
   @include icon(random);
 }
+
 .icon-refresh {
   @include icon(refresh);
 }
+
 .icon-repeat {
   @include icon(repeat);
 }
+
 .icon-rss {
   @include icon(rss);
 }
+
 .icon-scissors {
   @include icon(scissors);
 }
+
 .icon-search-minus {
   @include icon(search-minus);
 }
+
 .icon-search-plus {
   @include icon(search-plus);
 }
+
 .icon-search {
   @include icon(search);
 }
+
 .icon-share-alt {
   @include icon(share-alt);
 }
+
 .icon-shopping-bag {
   @include icon(shopping-bag);
 }
+
 .icon-shopping-cart {
   @include icon(shopping-cart);
 }
+
 .icon-sign-in {
   @include icon(sign-in);
 }
+
 .icon-sign-out {
   @include icon(sign-out);
 }
+
 .icon-sitemap {
   @include icon(sitemap);
 }
+
 .icon-skype {
   @include icon(skype);
 }
+
 .icon-sliders {
   @include icon(sliders);
 }
+
 .icon-smile-o {
   @include icon(smile-o);
 }
+
 .icon-sort {
   @include icon(sort);
 }
+
 .icon-space-shuttle {
   @include icon(space-shuttle);
 }
+
 .icon-square-o {
   @include icon(square-o);
 }
+
 .icon-star-half {
   @include icon(star-half);
 }
+
 .icon-star-o {
   @include icon(star-o);
 }
+
 .icon-step-backward {
   @include icon(step-backward);
 }
+
 .icon-step-forward {
   @include icon(step-forward);
 }
+
 .icon-suitcase {
   @include icon(suitcase);
 }
+
 .icon-sun-o {
   @include icon(sun-o);
 }
+
 .icon-tag {
   @include icon(tag);
 }
+
 .icon-television {
   @include icon(television);
 }
+
 .icon-terminal {
   @include icon(terminal);
 }
+
 .icon-th-large {
   @include icon(th-large);
 }
+
 .icon-th {
   @include icon(th);
 }
+
 .icon-thumb-down {
   @include icon(thumb-down);
 }
+
 .icon-thumb-tack {
   @include icon(thumb-tack);
 }
+
 .icon-thumbs-o-up {
   @include icon(thumbs-o-up);
 }
+
 .icon-ticket {
   @include icon(ticket);
 }
+
 .icon-times-circle {
   @include icon(times-circle);
 }
+
 .icon-times-square {
   @include icon(times-square);
 }
+
 .icon-times {
   @include icon(times);
 }
+
 .icon-tint {
   @include icon(tint);
 }
+
 .icon-trash {
   @include icon(trash);
 }
+
 .icon-tree {
   @include icon(tree);
 }
+
 .icon-trophy {
   @include icon(trophy);
 }
+
 .icon-truck {
   @include icon(truck);
 }
+
 .icon-twitter {
   @include icon(twitter);
 }
+
 .icon-umbrella {
   @include icon(umbrella);
 }
+
 .icon-undo {
   @include icon(undo);
 }
+
 .icon-unlock {
   @include icon(unlock);
 }
+
 .icon-usb {
   @include icon(usb);
 }
+
 .icon-usd {
   @include icon(usd);
 }
+
 .icon-user-minus {
   @include icon(user-minus);
 }
+
 .icon-user-plus {
   @include icon(user-plus);
 }
+
 .icon-user-star {
   @include icon(user-star);
 }
+
 .icon-user {
   @include icon(user);
 }
+
 .icon-users {
   @include icon(users);
 }
+
 .icon-venus {
   @include icon(venus);
 }
+
 .icon-video-camera {
   @include icon(video-camera);
 }
+
 .icon-vimeo {
   @include icon(vimeo);
 }
+
 .icon-volume-diabled {
   @include icon(volume-diabled);
 }
+
 .icon-volume-down-2 {
   @include icon(volume-down-2);
 }
+
 .icon-volume-down {
   @include icon(volume-down);
 }
+
 .icon-volume-off {
   @include icon(volume-off);
 }
+
 .icon-volume-up {
   @include icon(volume-up);
 }
+
 .icon-warning {
   @include icon(warning);
 }
+
 .icon-weather {
   @include icon(weather);
 }
+
 .icon-webcam {
   @include icon(webcam);
 }
+
 .icon-wifi {
   @include icon(wifi);
 }
+
 .icon-windows {
   @include icon(windows);
 }
+
 .icon-wrench {
   @include icon(wrench);
 }
