@@ -135,9 +135,9 @@ el-header {
   background-color: var(--primary-dark);
   padding: 0;
 
-  --el-header-height: "6.5rem"; /* Set header height */
+  --el-header-height: 6.5rem; /* Set header height */
 
-  min-height: "6.5rem";
+  min-height: 6.5rem;
 }
 
 .header-content {
