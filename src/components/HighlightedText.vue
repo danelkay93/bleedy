@@ -55,7 +55,7 @@ export default defineComponent({
 
 <style scoped>
 mark {
-  background-color: #ffff00;
+  background-color: #ff0;
   color: #000;
   padding: 0 2px;
   border-radius: 2px;
