@@ -21,6 +21,7 @@ declare module 'vue' {
     ElSteps: typeof import('element-plus/es')['ElSteps']
     FilePicker: typeof import('./src/components/FilePicker.vue')['default']
     FileUploader: typeof import('./src/components/FileUploader.vue')['default']
+    HighlightedText: typeof import('./src/components/HighlightedText.vue')['default']
     IconBleedy: typeof import('./src/components/icons/IconBleedy.vue')['default']
     IconDocumentation: typeof import('./src/components/icons/IconDocumentation.vue')['default']
     IconSupport: typeof import('./src/components/icons/IconSupport.vue')['default']
