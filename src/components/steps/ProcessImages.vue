@@ -22,13 +22,7 @@
         :disabled="processing && processedCount < totalFiles"
         @click="handleProcess"
       >
-        {{
-          processing && processedCount < totalFiles
-            ? 'Processing...'
-            : processedCount === totalFiles && totalFiles > 0
-              ? 'Done!'
-              : 'Add Bleed!'
-        }}
+        {{ buttonLabel }}
       </wired-button>
     </div>
   </div>
@@ -105,11 +99,25 @@ function handleProcessedImageEvent(event: BleedyImageProcessedEvent) {
     finalProcessedImages.value = [...tempProcessedImages.value]
     emit('process-complete', finalProcessedImages.value)
     processing.value = false // Indicate processing is no longer active
+    if (processTimeoutId !== null) {
+      clearTimeout(processTimeoutId) // Prevent timeout callback from firing later
+      processTimeoutId = null // Reset the timeout ID
+    }
 
     // It's crucial to clean up this specific listener once all expected images are received.
     window.removeEventListener('bleedy-image-processed', handleProcessedImageEvent as EventListener)
   }
 }
+
+const buttonLabel = computed(() => {
+  if (processing.value && processedCount.value < totalFiles.value) {
+    return 'Processing...'
+  }
+  if (processedCount.value === totalFiles.value && totalFiles.value > 0) {
+    return 'Done!'
+  }
+  return 'Add Bleed!'
+})
 
 let processTimeoutId: number | null = null
 
