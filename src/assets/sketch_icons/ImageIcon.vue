@@ -60,6 +60,6 @@
 
 <script lang="ts">
 export default {
-  name: 'image.vue'
+  name: 'ImageIcon'
 }
 </script>

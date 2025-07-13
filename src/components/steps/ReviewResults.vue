@@ -20,7 +20,7 @@
 import {useImageDownload} from '@/composables/useImageDownload.ts'
 import ImageGalleryBase from '../ImageGalleryBase.vue'
 
-const props = defineProps<{
+defineProps<{
   images: string[]
 }>()
 

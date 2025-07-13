@@ -20,6 +20,6 @@
 
 <script lang="ts">
 export default {
-  name: 'right-arrow.vue'
+  name: 'RightArrowIcon'
 }
 </script>

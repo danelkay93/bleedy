@@ -5,32 +5,31 @@
       :steps="processorSteps.map((step) => ({title: step.title}))"
       :is-next-disabled="activeStep === 0 && selectedImages.length === 0"
     >
-      <template #default="{activeStep}">
+      <template #default="{currentStep}">
         <div class="step-content">
           <h2 class="step-title">
-            {{ processorSteps[activeStep].title }}
+            {{ processorSteps[currentStep].title }}
           </h2>
           <wired-card elevation="2">
             <div class="step-content-inner">
               <ImageSelection
-                v-if="activeStep === 0"
-                :active-step="activeStep"
+                v-if="currentStep === 0"
+                :active-step="currentStep"
                 @update:selected-images="updateSelectedImages"
               />
               <BleedAdjustment
-                v-else-if="activeStep === 1"
+                v-else-if="currentStep === 1"
                 v-model="bleedAmount"
               />
               <ProcessImages
-                v-else-if="activeStep === 2"
+                v-else-if="currentStep === 2"
                 :images="selectedImages"
                 :bleed-amount="bleedAmount"
                 @process-complete="handleProcessComplete"
               />
               <ReviewResults
-                v-else-if="activeStep === 3"
+                v-else-if="currentStep === 3"
                 :images="processedImages"
-                @save="saveAsZip"
               />
             </div>
           </wired-card>

@@ -54,6 +54,6 @@
 
 <script lang="ts">
 export default {
-  name: 'download.vue'
+  name: 'DownloadIcon'
 }
 </script>

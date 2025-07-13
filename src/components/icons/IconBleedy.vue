@@ -31,7 +31,7 @@
 import {defineComponent} from 'vue'
 
 export default defineComponent({
-  name: 'Bleedy',
+  name: 'IconBleedy',
   data() {
     return {}
   }

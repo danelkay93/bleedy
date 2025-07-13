@@ -32,7 +32,7 @@
 <script setup lang="ts">
 import {WiredProgress} from 'wired-elements'
 
-const props = defineProps<{
+defineProps<{
   progress: number
   processedCount: number
   totalFiles: number

@@ -23,14 +23,13 @@
 </template>
 
 <script setup lang="ts">
-import {ref, watch} from 'vue'
 import {Search} from '@element-plus/icons-vue'
 
-const props = defineProps<{
+defineProps<{
   searchQuery: string
 }>()
 
-const emit = defineEmits<{
+defineEmits<{
   (e: 'browse'): void
   (e: 'update:searchQuery', value: string): void
 }>()

@@ -57,7 +57,6 @@
 </template>
 
 <script lang="ts">
-import {ref, computed} from 'vue'
 import 'wired-elements'
 
 export default {
@@ -66,7 +65,10 @@ export default {
     SearchToolbar: () => import('./SearchToolbar.vue')
   },
   props: {
-    activeStep: Number
+    activeStep: {
+      type: Number,
+      default: 0
+    }
   },
   emits: ['update:selectedImages'],
   data() {

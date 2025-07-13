@@ -17,9 +17,10 @@
       >
         <small>
           {{ key }}:
-          <span
+          <HighlightedText
             v-if="key === 'Filename' || key === 'Type'"
-            v-html="highlightMatch(value, searchQuery)"
+            :text="value"
+            :query="searchQuery"
           />
           <span v-else>{{ value }}</span>
         </small>
@@ -37,8 +38,13 @@
 </template>
 
 <script lang="ts">
+import HighlightedText from './HighlightedText.vue'
+
 export default {
   name: 'ImageGalleryItem',
+  components: {
+    HighlightedText
+  },
   props: {
     image: {
       type: Object,
@@ -70,11 +76,6 @@ export default {
     truncateText(text: string, maxLength: number) {
       if (text.length <= maxLength) return text
       return text.substring(0, maxLength) + '...'
-    },
-    highlightMatch(text: string, query: string) {
-      if (!query) return text
-      const regex = new RegExp(`(${query})`, 'gi')
-      return text.replace(regex, '<mark>$1</mark>')
     },
     formatSize(size: number) {
       const i = Math.floor(Math.log(size) / Math.log(1024))

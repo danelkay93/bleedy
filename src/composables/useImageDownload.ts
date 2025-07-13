@@ -9,6 +9,7 @@ export function useImageDownload() {
   }
 
   async function downloadZip(images: string[] | readonly string[]) {
+    // TODO: Implement ZIP saving logic here
     const zip = new JSZip()
     const imageArray = Array.from(images)
 

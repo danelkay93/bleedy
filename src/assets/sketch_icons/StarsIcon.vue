@@ -79,6 +79,6 @@
 
 <script lang="ts">
 export default {
-  name: 'stars.vue'
+  name: 'StarsIcon'
 }
 </script>

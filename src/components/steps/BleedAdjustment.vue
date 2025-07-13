@@ -24,7 +24,7 @@
 import {ref, onMounted} from 'vue'
 import {DEFAULT_BLEED_AMOUNT} from '../../config/appConfig'
 
-const props = withDefaults(
+withDefaults(
   defineProps<{
     modelValue: number
   }>(),
