@@ -19,6 +19,7 @@ declare module 'vue' {
     ElRow: typeof import('element-plus/es')['ElRow']
     ElStep: typeof import('element-plus/es')['ElStep']
     ElSteps: typeof import('element-plus/es')['ElSteps']
+    HighlightedText: typeof import('./src/components/HighlightedText.vue')['default']
     IconBleedy: typeof import('./src/components/icons/IconBleedy.vue')['default']
     IconDocumentation: typeof import('./src/components/icons/IconDocumentation.vue')['default']
     IconSupport: typeof import('./src/components/icons/IconSupport.vue')['default']

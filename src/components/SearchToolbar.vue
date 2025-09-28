@@ -1,19 +1,19 @@
 <template>
   <div class="toolbar">
-    <el-button 
+    <el-button
       class="browse-button"
-      @click="$emit('browse')"
       type="primary"
+      @click="$emit('browse')"
     >
       Browse
     </el-button>
 
     <el-input
       :model-value="searchQuery"
-      @update:model-value="$emit('update:searchQuery', $event)"
       placeholder="Search Images..."
       class="search-input"
       clearable
+      @update:model-value="$emit('update:searchQuery', $event)"
     >
       <template #prefix>
         <el-icon><Search /></el-icon>
@@ -23,18 +23,16 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue'
-import { Search } from '@element-plus/icons-vue'
+import {Search} from '@element-plus/icons-vue'
 
-const props = defineProps<{
+defineProps<{
   searchQuery: string
 }>()
 
-const emit = defineEmits<{
+defineEmits<{
   (e: 'browse'): void
   (e: 'update:searchQuery', value: string): void
 }>()
-
 </script>
 
 <style scoped>

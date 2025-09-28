@@ -7,15 +7,15 @@
  * @param {string} format - The format of the processed image (e.g., 'PNG', 'JPEG').
  */
 export function dispatchProcessedImageToVue(name, blobUrl, format) {
-  console.log(`JS interop: dispatching processed image - Name: ${name}, Format: ${format}`);
+  console.log(`JS interop: dispatching processed image - Name: ${name}, Format: ${format}`)
   const event = new CustomEvent('bleedy-image-processed', {
     detail: {
       name,
       blobUrl,
-      format,
+      format
     }
-  });
-  window.dispatchEvent(event);
+  })
+  window.dispatchEvent(event)
 }
 
 /**
@@ -31,9 +31,9 @@ export function dispatchProgressToVue(progressDetail) {
   // console.log('JS interop: dispatching progress', progressDetail); // Can be noisy
   const event = new CustomEvent('processing-progress', {
     detail: progressDetail
-  });
-  window.dispatchEvent(event);
+  })
+  window.dispatchEvent(event)
 }
 
 // Log to confirm the module is loaded by PyScript
-console.log("bleedy_interop.js loaded");
+console.log('bleedy_interop.js loaded')

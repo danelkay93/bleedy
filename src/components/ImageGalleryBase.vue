@@ -1,8 +1,8 @@
 <template>
   <div class="image-gallery">
     <div class="gallery-grid">
-      <div 
-        v-for="(img, index) in images" 
+      <div
+        v-for="(img, index) in images"
         :key="index"
         class="image-item"
       >
@@ -11,9 +11,13 @@
             :src="typeof img === 'string' ? img : img.url"
             :alt="typeof img === 'string' ? 'Image' : img.name"
             @click="$emit('image-click', img)"
-          />
+          >
           <div class="image-actions">
-            <slot name="actions" :image="img" :index="index"></slot>
+            <slot
+              name="actions"
+              :image="img"
+              :index="index"
+            />
           </div>
         </wired-card>
       </div>
@@ -23,11 +27,11 @@
 
 <script setup lang="ts">
 defineProps<{
-  images: Array<string | { url: string; name: string; file: File }>
+  images: Array<string | {url: string; name: string; file: File}>
 }>()
 
 defineEmits<{
-  (e: 'image-click', image: string | { url: string; name: string; file: File }): void
+  (e: 'image-click', image: string | {url: string; name: string; file: File}): void
 }>()
 </script>
 
@@ -65,7 +69,6 @@ defineEmits<{
 
 :deep(wired-card) {
   height: 100%;
-
   --wired-card-background-color: transparent;
 }
 </style>

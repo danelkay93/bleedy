@@ -1,19 +1,25 @@
 <template>
-  <wired-card elevation="2" class="progress-card">
+  <wired-card
+    elevation="2"
+    class="progress-card"
+  >
     <div class="progress-content">
-      <wired-progress :value="progress" :max="100"></wired-progress>
-      
+      <wired-progress
+        :value="progress"
+        :max="100"
+      />
+
       <div class="status-details">
         <div class="status-row files">
           <wired-icon-button>📁</wired-icon-button>
           <span>{{ processedCount }} / {{ totalFiles }} files</span>
         </div>
-        
+
         <div class="status-row time">
           <wired-icon-button>⏱️</wired-icon-button>
           <span>Elapsed: {{ formatTime(elapsedTime) }}</span>
         </div>
-        
+
         <div class="status-row estimate">
           <wired-icon-button>🎯</wired-icon-button>
           <span>Remaining: {{ formatTime(remainingTime) }}</span>
@@ -26,7 +32,7 @@
 <script setup lang="ts">
 import {WiredProgress} from 'wired-elements'
 
-const props = defineProps<{
+defineProps<{
   progress: number
   processedCount: number
   totalFiles: number
@@ -45,10 +51,8 @@ function formatTime(seconds: number): string {
 <style scoped>
 .progress-card {
   width: 100%;
-
   --wired-progress-color: #000;
   --wired-progress-label-color: #000;
-
   font-family: 'Architects Daughter', cursive;
 }
 
@@ -77,7 +81,6 @@ function formatTime(seconds: number): string {
 
 :deep(wired-icon-button) {
   --wired-icon-size: 16px;
-
   font-size: 14px;
 }
 </style>

@@ -3,17 +3,31 @@
   <el-row justify="center">
     <el-col :span="20">
       <div class="image-selection">
-        <SearchToolbar v-model:searchQuery="searchQuery" @browse="openFilePicker" />
+        <SearchToolbar
+          v-model:search-query="searchQuery"
+          @browse="openFilePicker"
+        />
 
         <!-- Status Messages -->
-        <div v-if="activeStep === 0" class="status-messages">
-          <div v-if="images.length === 0" class="no-images">
+        <div
+          v-if="activeStep === 0"
+          class="status-messages"
+        >
+          <div
+            v-if="images.length === 0"
+            class="no-images"
+          >
             <p>No images selected.</p>
             <p>Click the "Browse" button to select images.</p>
           </div>
           <div v-else>
-            <p v-if="filteredFiles.length === 0">No images match the current search filter.</p>
-            <p v-else class="selection-counter">
+            <p v-if="filteredFiles.length === 0">
+              No images match the current search filter.
+            </p>
+            <p
+              v-else
+              class="selection-counter"
+            >
               {{
                 searchQuery.trim()
                   ? `${filteredFiles.length}/${images.length} images displayed`
@@ -24,22 +38,25 @@
         </div>
 
         <!-- Image Grid -->
-        <div v-if="activeStep === 0 && filteredFiles.length > 0" class="image-grid">
+        <div
+          v-if="activeStep === 0 && filteredFiles.length > 0"
+          class="image-grid"
+        >
           <ImageGalleryItem
             v-for="image in filteredFiles"
             :key="image.id"
             :image="image"
             :selected="selectedImages.includes(image.id)"
-            :searchQuery="searchQuery"
-            @remove="removeImage(image.id)" />
+            :search-query="searchQuery"
+            @remove="removeImage(image.id)"
+          />
         </div>
       </div>
     </el-col>
   </el-row>
 </template>
 
-<script>
-import { ref, computed } from 'vue'
+<script lang="ts">
 import 'wired-elements'
 
 export default {
@@ -48,7 +65,10 @@ export default {
     SearchToolbar: () => import('./SearchToolbar.vue')
   },
   props: {
-    activeStep: Number
+    activeStep: {
+      type: Number,
+      default: 0
+    }
   },
   emits: ['update:selectedImages'],
   data() {
@@ -85,8 +105,16 @@ export default {
       return images
     }
   },
+  beforeUnmount() {
+    // Clean up object URLs
+    this.images.forEach((image) => {
+      if (image.preview) {
+        URL.revokeObjectURL(image.preview)
+      }
+    })
+  },
   methods: {
-    removeImage(imageId) {
+    removeImage(imageId: number) {
       // Remove from selected images
       const selectedIndex = this.selectedImages.indexOf(imageId)
       if (selectedIndex > -1) {
@@ -162,25 +190,17 @@ export default {
     sortFiles() {
       // Sorting is handled in the computed property `filteredFiles`
     },
-    formatSize(size) {
+    formatSize(size: number) {
       const i = Math.floor(Math.log(size) / Math.log(1024))
       return (size / Math.pow(1024, i)).toFixed(2) * 1 + ' ' + ['B', 'KB', 'MB', 'GB', 'TB'][i]
     },
-    splitImageFilename(filename) {
+    splitImageFilename(filename: string) {
       const lastDotIndex = filename.lastIndexOf('.')
-      if (lastDotIndex === -1) return { name: filename, ext: '' }
+      if (lastDotIndex === -1) return {name: filename, ext: ''}
       const name = filename.slice(0, lastDotIndex)
       const ext = filename.slice(lastDotIndex + 1)
-      return { name: name, ext: ext }
+      return {name: name, ext: ext}
     }
-  },
-  beforeUnmount() {
-    // Clean up object URLs
-    this.images.forEach((image) => {
-      if (image.preview) {
-        URL.revokeObjectURL(image.preview)
-      }
-    })
   }
 }
 </script>
@@ -196,7 +216,7 @@ export default {
 
 .status-messages {
   text-align: center;
-  font-family: Doodle, sans-serif;
+  font-family: 'Doodle', sans-serif;
   margin: 1rem 0;
 }
 

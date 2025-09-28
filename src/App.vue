@@ -4,28 +4,39 @@
     <el-container>
       <el-header height="6.5">
         <el-row>
-          <div class="header-content" :style="{ backgroundImage: svgBackground }">
+          <div
+            class="header-content"
+            :style="{backgroundImage: svgBackground}"
+          >
             <div class="logo-container">
               <Logo class="logo" />
-              <p class="app-name cabin-sketch-bold">bleedy.py</p>
+              <p class="app-name cabin-sketch-bold">
+                bleedy.py
+              </p>
             </div>
           </div>
         </el-row>
       </el-header>
       <el-main>
         <el-row justify="center">
-          <el-col class="step-row" :span=12>
-            <router-view></router-view>
+          <el-col
+            class="step-row"
+            :span="12"
+          >
+            <router-view />
           </el-col>
         </el-row>
       </el-main>
       <el-footer>
-        <el-row justify="center" align="middle">
+        <el-row
+          justify="center"
+          align="middle"
+        >
           <div class="footer-content">
             Based on bleedy.py, by North101 and OliviaJuliet.
-            <br />
+            <br>
             Created by Buteremelse.
-            <br />
+            <br>
             This website is not produced, endorsed, supported, or affiliated with Fantasy Flight
             Games.
           </div>
@@ -35,11 +46,10 @@
   </div>
 </template>
 
-<script setup>
-import { onMounted, ref } from 'vue'
+<script setup lang="ts">
+import {onMounted, ref} from 'vue'
 import rough from 'roughjs'
 import Logo from './components/Logo.vue'
-import ImageProcessor from './components/ImageProcessor.vue'
 
 const svgBackground = ref('') // Store the encoded SVG background
 
@@ -135,9 +145,9 @@ el-header {
   background-color: var(--primary-dark);
   padding: 0;
 
-  --el-header-height: 6.5rem; /* Set header height */
+  --el-header-height: '6.5rem'; /* Set header height */
 
-  min-height: 6.5rem;
+  min-height: '6.5rem';
 }
 
 .header-content {
@@ -148,7 +158,7 @@ el-header {
   background-repeat: no-repeat; /* Prevent repeating */
   margin-top: 0;
   margin-left: 0;
-  min-height: "6.5rem";
+  min-height: '6.5rem';
 }
 
 .logo-container {
