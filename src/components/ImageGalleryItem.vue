@@ -107,8 +107,10 @@ export default {
   position: absolute;
   bottom: 10px;
   right: 10px;
-  --wired-button-background-color: #ff4444;
+
+  --wired-button-background-color: #f44;
   --wired-button-color: white;
+
   font-size: 12px;
   padding: 2px;
   min-width: 24px;
@@ -117,7 +119,7 @@ export default {
 }
 
 .remove-button:hover {
-  --wired-button-background-color: #ff0000;
+  --wired-button-background-color: #f00;
 }
 
 .image-thumbnail {
@@ -132,7 +134,7 @@ export default {
 }
 
 mark {
-  background-color: #ffff00;
+  background-color: #ff0;
   color: #000;
   padding: 0 2px;
   border-radius: 2px;

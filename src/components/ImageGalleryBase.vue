@@ -69,6 +69,7 @@ defineEmits<{
 
 :deep(wired-card) {
   height: 100%;
+
   --wired-card-background-color: transparent;
 }
 </style>

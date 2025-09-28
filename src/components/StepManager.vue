@@ -169,7 +169,7 @@ function prevStep() {
 
 :deep(.current-step) {
   transform: scale(1.2);
-  filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.2));
+  filter: drop-shadow(2px 2px 2px rgb(0 0 0 / 20%));
 }
 
 :deep(.current-step)::before {

@@ -66,6 +66,7 @@ onMounted(() => {
 
 .value-display wired-card {
   --wired-card-background-color: transparent;
+
   padding: 0.5rem 1rem;
   font-family: 'Architects Daughter', cursive;
 }
@@ -77,6 +78,7 @@ onMounted(() => {
 
 :deep(wired-slider) {
   width: 100%;
+
   --wired-slider-knob-color: var(--el-color-primary);
   --wired-slider-bar-color: #666;
 }
