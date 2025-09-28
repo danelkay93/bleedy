@@ -1,5 +1,5 @@
-/* global module, process */
-module.exports = {
+/* global process */
+export default {
   root: true,
   env: {
     node: true,
