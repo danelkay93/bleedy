@@ -14,9 +14,13 @@ import rough from 'roughjs/bundled/rough.esm.js'
 export default {
   name: 'BloodLogo',
   setup() {
-    const svg = ref(null)
+    const svg = ref<SVGSVGElement | null>(null)
 
     onMounted(() => {
+      if (!svg.value) {
+        return
+      }
+
       const rc = rough.svg(svg.value)
 
       const path = rc.path('M50,110 C20,110 0,90 50,10 C100,90 80,110 50,110 Z', {

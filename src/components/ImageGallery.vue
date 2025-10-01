@@ -48,10 +48,16 @@ import {ref, computed} from 'vue'
 import draggable from 'vuedraggable'
 import {VuePreview} from 'vue3-image-preview'
 
-const images = ref([]) // All images
+type GalleryImage = {
+  url: string
+  name: string
+  file: File
+}
+
+const images = ref<GalleryImage[]>([]) // All images
 const searchQuery = ref('') // For searching images
-const lightboxImages = ref([]) // Lightbox images for preview
-const lightbox = ref(null)
+const lightboxImages = ref<string[]>([]) // Lightbox images for preview
+const lightbox = ref<InstanceType<typeof VuePreview> | null>(null)
 
 // Filtered images based on search
 const filteredImages = computed(() => {
@@ -87,14 +93,14 @@ async function openFilePicker() {
 }
 
 // Remove image from the gallery
-function removeImage(image) {
+function removeImage(image: GalleryImage) {
   images.value = images.value.filter((img) => img !== image)
 }
 
 // Open image in lightbox
-function openLightbox(url) {
+function openLightbox(url: string) {
   lightboxImages.value = [url] // Display the clicked image
-  lightbox.value.show()
+  lightbox.value?.show()
 }
 
 // Sort end event handler

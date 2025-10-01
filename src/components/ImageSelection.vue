@@ -131,7 +131,11 @@ export default {
         this.images.splice(imageIndex, 1)
       }
 
-      this.$emit('update:selectedImages', this.selectedImages)
+      // Emit remaining File objects, not IDs
+      const remainingFiles = this.images
+        .filter((img) => this.selectedImages.includes(img.id))
+        .map((img) => img.file)
+      this.$emit('update:selectedImages', remainingFiles)
     },
     openFilePicker() {
       const options = {

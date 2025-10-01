@@ -16,10 +16,6 @@ body {
   font-family: 'Architects Daughter', cursive;
 }
 
-:focus {
-  outline: none;
-}
-
 body,
 input,
 textarea,
@@ -100,6 +96,13 @@ button {
   background: $lightgray;
   cursor: pointer;
   color: white;
+}
+
+/* Accessible focus styles for interactive elements */
+button:focus-visible,
+input[type='button']:focus-visible {
+  outline: 2px solid #0a84ff;
+  outline-offset: 2px;
 }
 
 /* Tables */
@@ -195,7 +198,7 @@ $margin-el: 7px; // default margin for our custom inputs
       }
     }
 
-    &:focus + label::before {
+    &:focus-visible + label::before {
       border-color: $color-focus;
       box-shadow: 0 0 6px 0 $color-focus;
     }
@@ -325,8 +328,8 @@ $margin-el: 7px; // default margin for our custom inputs
     }
   }
 
-  &:focus + label::after,
-  &:focus + label + .hd-switch-knob {
+  &:focus-visible + label::after,
+  &:focus-visible + label + .hd-switch-knob {
     box-shadow: 0 0 6px 0 $color-focus;
   }
 
