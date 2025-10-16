@@ -46,8 +46,12 @@ npm run build
 ```bash
 npm run type-check
 ```
-- **Known Issues**: Currently fails with 4 TypeScript errors in components
-- Errors relate to missing method references and type mismatches
+- **Known Issues**: Currently fails with 46+ TypeScript errors in components
+- Errors relate to:
+  - Missing type definitions for never[] arrays
+  - Property access on implicit 'any' types
+  - Missing Window API types (showOpenFilePicker)
+  - RoughJS module declaration issues
 - Build still succeeds despite type errors
 
 #### Preview Production Build
@@ -58,13 +62,13 @@ npm run preview
 
 ### Linting and Formatting
 
-#### ESLint (BROKEN - Needs Fix)
+#### ESLint
 ```bash
 npm run lint
 ```
-- **Status**: Currently broken due to ESLint 9.x flat config migration
-- **Issue**: `eslint.config.js` uses old CommonJS format but project is ES modules
-- **Workaround**: Use `npx eslint . --fix` after converting config to ES modules format
+- **Status**: Working with ESLint 9.x flat config (ES modules format)
+- Configuration in `eslint.config.js` uses modern ES modules format
+- Automatically ignores `dist/`, `dist-ssr/`, and `node_modules/` folders
 
 #### Prettier
 ```bash
@@ -139,21 +143,24 @@ npm run test:unit
 
 ### Known Dependency Issues
 - **wired-elements**: Using old RC version (3.0.0-rc.6) that's no longer maintained
-- **ESLint**: Configuration needs migration to flat config format
 - **Browserslist**: Data is 7 months old (warning during build)
 
 ## Continuous Integration
 
 ### GitHub Workflows
-1. **Azure Static Web Apps CI/CD** (`.github/workflows/azure-static-web-apps-*.yml`)
+1. **Azure Static Web Apps CI/CD** (`.github/workflows/azure-static-web-apps-thankful-mushroom-08ecc5d1e.yml`)
    - Deploys to Azure on pushes to master
    - Uses standard Node.js build process
 
-2. **SonarCloud** (`.github/workflows/sonarcloud.yml`)
+2. **CI** (`.github/workflows/ci.yml`)
+   - Continuous integration checks on push/PR
+   - Runs build and lint checks
+
+3. **SonarCloud** (`.github/workflows/sonarcloud.yml`)
    - Code quality analysis on push/PR
 
-3. **Build** (`.github/workflows/build.yml`)
-   - Currently only runs SonarCloud scan
+4. **Post-Merge Cleanup** (`.github/workflows/post-merge-cleanup.yml`)
+   - Cleanup tasks after merge
 
 ### Pre-commit Hooks (Planned)
 - `scripts/check-pyscript-version.sh` - Validates PyScript version consistency
@@ -162,13 +169,17 @@ npm run test:unit
 ## Common Issues and Solutions
 
 ### TypeScript Errors
-- **Issue**: 4 type errors in components (missing methods, type mismatches)
+- **Issue**: 46+ type errors across multiple components
 - **Impact**: Build succeeds, but `npm run type-check` fails
-- **Solution**: Fix component type definitions and method references
+- **Main Issues**:
+  - ImageSelection.vue: Array type inference (`never[]` instead of proper types)
+  - Missing Window API types for File System Access API
+  - RoughJS module lacks TypeScript declarations
+- **Solution**: Add proper type annotations and interface declarations
 
 ### ESLint Configuration
-- **Issue**: Config uses old format, incompatible with ESLint 9.x
-- **Solution**: Convert `eslint.config.js` to ES modules format, remove `root` property
+- **Status**: Using ESLint 9.x flat config format (ES modules) with proper ignore patterns
+- Ignores `dist/`, `dist-ssr/`, and `node_modules/` folders automatically
 
 ### PyScript Loading
 - **Issue**: PyScript loads asynchronously, may cause timing issues
