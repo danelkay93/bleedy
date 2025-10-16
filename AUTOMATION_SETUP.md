@@ -11,6 +11,7 @@ This document explains the automated workflows and configurations set up for the
 **Trigger**: Runs when a PR is merged to `master` or `main`
 
 **Actions Performed**:
+
 - ✅ Detects if the merged PR is a consolidation PR (checks title/description)
 - ✅ Closes all consolidated PRs (PRs #1, #7, #8, #10, #12, #14, #15)
 - ✅ Adds explanatory comments to closed PRs
@@ -23,11 +24,13 @@ This document explains the automated workflows and configurations set up for the
 
 **Configuration**: `.github/workflows/post-merge-cleanup.yml`
 
-**Requirements**: 
+**Requirements**:
+
 - GitHub token with appropriate permissions (automatically provided by GitHub Actions)
 - No manual intervention needed
 
 **How it works**:
+
 1. When any PR is merged to master, the workflow checks if it's a consolidation PR
 2. If yes, it iterates through the list of consolidated PR numbers and branch names
 3. Closes each PR with a comment explaining the consolidation
@@ -38,11 +41,13 @@ This document explains the automated workflows and configurations set up for the
 
 **Purpose**: Validate code quality, formatting, type safety, and build success on every PR.
 
-**Trigger**: 
+**Trigger**:
+
 - Push to `master`
 - Pull request opened, synchronized, or reopened
 
 **Actions Performed**:
+
 - ✅ Checks code formatting with Prettier
 - ✅ Lints code with ESLint (no auto-fix in CI)
 - ✅ Runs TypeScript type checking
@@ -54,11 +59,13 @@ This document explains the automated workflows and configurations set up for the
 
 **Purpose**: Automatically monitor and update dependencies to keep the project secure and up-to-date.
 
-**Schedule**: 
+**Schedule**:
+
 - **npm dependencies**: Weekly on Mondays at 09:00 UTC
 - **GitHub Actions**: Monthly
 
 **Features**:
+
 - 📦 Groups related dependencies to reduce PR noise
   - Production dependencies (Vue, Element Plus)
   - Development dependencies (TypeScript, ESLint, Vite)
@@ -70,6 +77,7 @@ This document explains the automated workflows and configurations set up for the
 **Configuration**: `.github/dependabot.yml`
 
 **Ignored Major Updates**:
+
 - `vue` - Major updates require manual review
 - `element-plus` - Major updates require manual review
 - `vite` - Major updates require manual review
@@ -80,46 +88,55 @@ This document explains the automated workflows and configurations set up for the
 
 **Purpose**: Run code quality checks before commits and pushes to catch issues early.
 
-**Configuration**: `.huskyrc.json`
+**Status**: Husky v9.1.7 is installed but hooks are not yet configured.
 
-**Hooks**:
+**Current State**:
+- Husky is installed in devDependencies
+- `prepare` script is configured in package.json
+- `.huskyrc.json` exists (legacy v4 format, not used by Husky v9)
+- `.husky/` directory does not exist yet
+
+**Intended Hooks** (from `.huskyrc.json`):
 
 #### Pre-commit
-Runs before each commit:
+
+Should run before each commit:
+
 ```bash
 npm run format:check  # Verify code formatting
 npm run lint -- --no-fix  # Check for linting issues
 ```
 
 #### Pre-push
-Runs before pushing to remote:
+
+Should run before pushing to remote:
+
 ```bash
 npm run type-check  # Verify TypeScript types
 npm run build  # Ensure project builds successfully
 ```
 
-**Setup Instructions**:
+**Setup Instructions** (To enable hooks):
 
-1. Install Husky (if not already installed):
+1. Initialize Husky v9:
+
 ```bash
-npm install --save-dev husky
+npx husky init
 ```
 
-2. Initialize Husky:
+2. Create hook scripts in `.husky/` directory:
+
 ```bash
-npx husky install
+# Create pre-commit hook
+echo "npm run format:check && npm run lint -- --no-fix" > .husky/pre-commit
+chmod +x .husky/pre-commit
+
+# Create pre-push hook
+echo "npm run type-check && npm run build" > .husky/pre-push
+chmod +x .husky/pre-push
 ```
 
-3. Add Husky setup to package.json (automatic with .huskyrc.json):
-```json
-{
-  "scripts": {
-    "prepare": "husky install"
-  }
-}
-```
-
-4. The hooks will automatically run based on `.huskyrc.json` configuration
+3. The hooks will run automatically on commit/push after setup
 
 ### PyScript Version Check Hook
 
@@ -130,10 +147,13 @@ npx husky install
 **Status**: Placeholder implementation - needs completion
 
 **To Integrate**:
+
 1. Complete the version parsing logic in the script
-2. Add to Husky pre-commit hook:
+2. After Husky hooks are configured, add to pre-commit hook:
+
 ```bash
-npx husky add .husky/pre-commit "bash scripts/check-pyscript-version.sh"
+# After initializing Husky, append to .husky/pre-commit
+echo "bash scripts/check-pyscript-version.sh" >> .husky/pre-commit
 ```
 
 **Future Work**: See `TODO.md` for full implementation plan
@@ -143,6 +163,7 @@ npx husky add .husky/pre-commit "bash scripts/check-pyscript-version.sh"
 ### Current Setup
 
 **Dependabot**: Enabled for automated security updates
+
 - Monitors npm dependencies weekly
 - Groups security updates with regular dependency updates
 - Automatically opens PRs for vulnerabilities
@@ -160,6 +181,7 @@ npx husky add .husky/pre-commit "bash scripts/check-pyscript-version.sh"
    - Monitor continuously
 
 **npm audit**:
+
 - Run manually: `npm audit`
 - Fix issues: `npm audit fix`
 - For breaking changes: `npm audit fix --force` (review carefully)
@@ -177,6 +199,7 @@ Some actions cannot be fully automated and require manual intervention:
 3. Or, ask reviewers to resolve their reviews after reading the responses
 
 **Reviews to address**:
+
 - CodeRabbit review (already addressed in commits)
 - Any other pending reviews
 
@@ -217,10 +240,11 @@ npm update <package-name>
 
 ### Setup Required
 
-1. **Husky hooks**: Run once by any developer:
+1. **Husky hooks**: Not yet active. To enable:
+
 ```bash
-npm install
-npx husky install
+npx husky init
+# Then create hook scripts in .husky/ directory (see Pre-commit Hooks section)
 ```
 
 2. **PyScript version check**: Complete script implementation (see TODO.md)
@@ -230,15 +254,18 @@ npx husky install
 ## 📊 Monitoring and Maintenance
 
 ### Weekly Tasks
+
 - Review Dependabot PRs
 - Merge approved dependency updates
 
 ### Monthly Tasks
+
 - Review security audit: `npm audit`
 - Check for outdated dependencies: `npm outdated`
 - Review and update ignored major versions if needed
 
 ### Quarterly Tasks
+
 - Review automation effectiveness
 - Update workflow configurations if needed
 - Review and update pre-commit hooks
@@ -257,6 +284,7 @@ To update the list of PRs/branches to clean up in future consolidations:
 ### Changing Dependabot Behavior
 
 Edit `.github/dependabot.yml`:
+
 - Adjust schedule frequency
 - Modify grouping patterns
 - Add/remove ignored dependencies
@@ -264,46 +292,58 @@ Edit `.github/dependabot.yml`:
 
 ### Customizing Husky Hooks
 
-Edit `.huskyrc.json`:
-- Add new hooks (`commit-msg`, `post-merge`, etc.)
-- Modify existing hook commands
-- Add custom scripts
+After initializing Husky and creating hook scripts in `.husky/` directory:
+
+- Add new hooks by creating files in `.husky/` (e.g., `commit-msg`, `post-merge`)
+- Modify existing hook scripts in `.husky/` directory
+- Add custom scripts to hook files
+
+Note: `.huskyrc.json` is not used by Husky v9
 
 ## 🐛 Troubleshooting
 
 ### Post-merge cleanup didn't run
 
 **Possible causes**:
+
 - PR title/description doesn't contain "consolidate"
 - PR was closed but not merged
 - Workflow permissions issue
 
 **Solution**:
+
 - Check workflow runs in GitHub Actions tab
 - Manually close PRs and delete branches if needed
 
 ### Dependabot not creating PRs
 
 **Possible causes**:
+
 - Dependabot not enabled for repository
 - No updates available
 - Open PR limit reached
 
 **Solution**:
+
 - Check Dependabot status in repository settings
 - Review Insights > Dependency graph > Dependabot
 
 ### Husky hooks not running
 
 **Possible causes**:
-- Husky not installed
+
+- Husky hooks not yet configured (`.husky/` directory doesn't exist)
 - Git hooks not initialized
 - Script execution permissions
 
 **Solution**:
+
 ```bash
-npm install
-npx husky install
+# Initialize Husky v9
+npx husky init
+
+# Create hook scripts (see Pre-commit Hooks section)
+# Make them executable
 chmod +x .husky/*
 ```
 
