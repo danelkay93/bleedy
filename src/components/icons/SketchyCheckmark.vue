@@ -1,8 +1,5 @@
 <template>
-  <div
-    ref="checkmarkContainer"
-    class="sketchy-checkmark"
-  />
+  <div ref="checkmarkContainer" class="sketchy-checkmark" />
 </template>
 
 <script setup lang="ts">

@@ -1,23 +1,14 @@
 <template>
   <div class="image-gallery">
     <div class="gallery-grid">
-      <div
-        v-for="(img, index) in images"
-        :key="index"
-        class="image-item"
-      >
+      <div v-for="(img, index) in images" :key="index" class="image-item">
         <wired-card elevation="2">
           <img
             :src="typeof img === 'string' ? img : img.url"
             :alt="typeof img === 'string' ? 'Image' : img.name"
-            @click="$emit('image-click', img)"
-          >
+            @click="$emit('image-click', img)" />
           <div class="image-actions">
-            <slot
-              name="actions"
-              :image="img"
-              :index="index"
-            />
+            <slot name="actions" :image="img" :index="index" />
           </div>
         </wired-card>
       </div>

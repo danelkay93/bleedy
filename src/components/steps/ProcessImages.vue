@@ -7,21 +7,16 @@
     <!-- <div id="bleedy-output" class="output-container"></div> Removed this -->
     <div
       v-if="processing || (totalFiles > 0 && processedCount < totalFiles)"
-      class="process-status"
-    >
+      class="process-status">
       <ImageProcessingProgress
         :progress="progress"
         :processed-count="processedCount"
         :total-files="totalFiles"
         :elapsed-time="elapsedTime"
-        :remaining-time="remainingTime"
-      />
+        :remaining-time="remainingTime" />
     </div>
     <div class="process-actions">
-      <wired-button
-        :disabled="processing && processedCount < totalFiles"
-        @click="handleProcess"
-      >
+      <wired-button :disabled="processing && processedCount < totalFiles" @click="handleProcess">
         {{
           processing && processedCount < totalFiles
             ? 'Processing...'
