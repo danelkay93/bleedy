@@ -16,6 +16,18 @@ export default defineConfig({
       vue: 'vue/dist/vue.esm-bundler.js'
     }
   },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'element-plus': ['element-plus', '@element-plus/icons-vue'],
+          'vue-vendor': ['vue', 'vue-router', 'pinia'],
+          utilities: ['file-saver', 'jszip']
+        }
+      }
+    },
+    chunkSizeWarningLimit: 1500
+  },
   plugins: [
     vue({
       template: {

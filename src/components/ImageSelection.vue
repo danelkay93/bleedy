@@ -58,11 +58,13 @@
 
 <script lang="ts">
 import 'wired-elements'
+import ImageGalleryItem from './ImageGalleryItem.vue'
+import SearchToolbar from './SearchToolbar.vue'
 
 export default {
   components: {
-    ImageGalleryItem: () => import('./ImageGalleryItem.vue'),
-    SearchToolbar: () => import('./SearchToolbar.vue')
+    ImageGalleryItem,
+    SearchToolbar
   },
   props: {
     activeStep: {

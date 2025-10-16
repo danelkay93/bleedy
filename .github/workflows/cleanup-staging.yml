@@ -1,0 +1,158 @@
+name: Cleanup Staging Environments
+
+on:
+  # Run weekly on Sundays at 2 AM UTC
+  schedule:
+    - cron: '0 2 * * 0'
+  # Allow manual trigger
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Dry run mode (show what would be deleted without deleting)'
+        required: false
+        default: 'false'
+        type: choice
+        options:
+          - 'true'
+          - 'false'
+
+jobs:
+  cleanup-staging:
+    name: Clean up unused staging environments
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Azure Login
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: List and Clean Staging Environments
+        id: cleanup
+        run: |
+          echo "🔍 Checking for staging environments to clean up..."
+
+          DRY_RUN="${{ github.event.inputs.dry_run || 'false' }}"
+
+          # Get the Static Web App name from the workflow file
+          # This assumes the resource name matches the subdomain in the URL
+          SWA_NAME="thankful-mushroom-08ecc5d1e"
+          RESOURCE_GROUP="${{ secrets.AZURE_RESOURCE_GROUP || 'bleedy-rg' }}"
+
+          echo "Static Web App: $SWA_NAME"
+          echo "Resource Group: $RESOURCE_GROUP"
+          echo "Dry Run Mode: $DRY_RUN"
+
+          # List all environments for this Static Web App
+          echo "Fetching environment list..."
+          ENVIRONMENTS=$(az staticwebapp environment list \
+            --name "$SWA_NAME" \
+            --resource-group "$RESOURCE_GROUP" \
+            --query "[].{name:name, kind:kind, hostname:hostname}" \
+            -o json 2>/dev/null || echo "[]")
+
+          if [ "$ENVIRONMENTS" = "[]" ]; then
+            echo "⚠️ Could not fetch environments. This might be due to:"
+            echo "   1. Missing AZURE_CREDENTIALS secret"
+            echo "   2. Incorrect AZURE_RESOURCE_GROUP secret"
+            echo "   3. Static Web App name changed"
+            echo ""
+            echo "Please configure the following secrets:"
+            echo "   - AZURE_CREDENTIALS: Service principal credentials"
+            echo "   - AZURE_RESOURCE_GROUP: Resource group name (optional, defaults to 'bleedy-rg')"
+            exit 1
+          fi
+
+          echo "Found environments:"
+          echo "$ENVIRONMENTS" | jq -r '.[] | "  - \(.name) (\(.kind))"'
+
+          # Get list of open PRs
+          echo ""
+          echo "Fetching open pull requests..."
+          OPEN_PRS=$(gh pr list --json number --jq '.[].number' | tr '\n' ' ')
+          echo "Open PRs: $OPEN_PRS"
+
+          # Track cleanup actions
+          CLEANED=0
+          KEPT=0
+
+          # Process each staging environment
+          echo ""
+          echo "Processing environments..."
+          echo "$ENVIRONMENTS" | jq -c '.[]' | while read -r env; do
+            ENV_NAME=$(echo "$env" | jq -r '.name')
+            ENV_KIND=$(echo "$env" | jq -r '.kind')
+            
+            # Skip production environment
+            if [ "$ENV_KIND" = "Production" ] || [ "$ENV_NAME" = "default" ]; then
+              echo "ℹ️  Keeping production environment: $ENV_NAME"
+              KEPT=$((KEPT + 1))
+              continue
+            fi
+            
+            # Extract PR number from environment name (usually format: pr-<number>)
+            PR_NUM=$(echo "$ENV_NAME" | grep -oP 'pr-\K\d+' || echo "")
+            
+            if [ -z "$PR_NUM" ]; then
+              echo "⚠️  Cannot determine PR number for environment: $ENV_NAME"
+              KEPT=$((KEPT + 1))
+              continue
+            fi
+            
+            # Check if PR is still open
+            if echo "$OPEN_PRS" | grep -q "\b$PR_NUM\b"; then
+              echo "ℹ️  Keeping staging for open PR #$PR_NUM: $ENV_NAME"
+              KEPT=$((KEPT + 1))
+            else
+              if [ "$DRY_RUN" = "true" ]; then
+                echo "🔍 [DRY RUN] Would delete staging environment: $ENV_NAME (closed PR #$PR_NUM)"
+              else
+                echo "🗑️  Deleting staging environment: $ENV_NAME (closed PR #$PR_NUM)"
+                az staticwebapp environment delete \
+                  --name "$SWA_NAME" \
+                  --resource-group "$RESOURCE_GROUP" \
+                  --environment-name "$ENV_NAME" \
+                  --yes \
+                  || echo "⚠️  Failed to delete $ENV_NAME"
+              fi
+              CLEANED=$((CLEANED + 1))
+            fi
+          done
+
+          echo ""
+          echo "## 🧹 Cleanup Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          if [ "$DRY_RUN" = "true" ]; then
+            echo "**Mode**: Dry Run (no actual deletions)" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "**Mode**: Live Cleanup" >> $GITHUB_STEP_SUMMARY
+          fi
+
+          echo "- **Environments kept**: $KEPT" >> $GITHUB_STEP_SUMMARY
+          echo "- **Environments cleaned**: $CLEANED" >> $GITHUB_STEP_SUMMARY
+
+          if [ $CLEANED -gt 0 ]; then
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "✅ Successfully cleaned up $CLEANED staging environment(s)" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "ℹ️ No staging environments needed cleanup" >> $GITHUB_STEP_SUMMARY
+          fi
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Notify on failure
+        if: failure()
+        run: |
+          echo "## ❌ Staging Cleanup Failed" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Please check the workflow logs for details." >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Common issues:" >> $GITHUB_STEP_SUMMARY
+          echo "- Missing or invalid AZURE_CREDENTIALS secret" >> $GITHUB_STEP_SUMMARY
+          echo "- Incorrect AZURE_RESOURCE_GROUP configuration" >> $GITHUB_STEP_SUMMARY
+          echo "- Insufficient permissions in Azure" >> $GITHUB_STEP_SUMMARY
