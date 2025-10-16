@@ -13,7 +13,8 @@
     "type-check": "vue-tsc --build --force",
     "lint": "eslint . --fix",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "prepare": "husky install || true"
   },
   "dependencies": {
     "@element-plus/icons-vue": "^2.3.1",
@@ -46,6 +47,7 @@
     "eslint": "^9.17.0",
     "eslint-plugin-format": "^1.0.1",
     "eslint-plugin-vue": "^9.32.0",
+    "husky": "^9.1.7",
     "jsdom": "^25.0.1",
     "postcss": "^8.4.49",
     "prettier": "^3.4.2",
