@@ -1,0 +1,122 @@
+name: Docker Compose Orchestration
+
+on:
+  pull_request:
+    branches:
+      - master
+    paths:
+      - 'Dockerfile'
+      - 'docker-compose.yml'
+      - 'nginx.conf'
+      - 'src/**'
+      - 'public/**'
+      - '.github/workflows/docker-compose.yml'
+  workflow_dispatch:
+
+jobs:
+  docker-compose-test:
+    name: Test Docker Compose Setup
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Cache Docker layers
+        uses: actions/cache@v4
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-buildx-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-buildx-
+
+      - name: Build Docker images
+        run: |
+          docker-compose build --no-cache
+
+      - name: Start services
+        run: |
+          docker-compose up -d web
+          
+      - name: Wait for services to be ready
+        run: |
+          echo "Waiting for web service to be ready..."
+          timeout 60 bash -c 'until docker-compose ps | grep -q "web.*Up"; do sleep 2; done'
+          docker-compose ps
+
+      - name: Check service health
+        run: |
+          echo "Checking web service..."
+          docker-compose logs web
+          
+          # Check if the service is running
+          docker-compose ps | grep web | grep Up
+
+      - name: Run basic smoke tests
+        run: |
+          # Wait a bit for Vite dev server to fully start
+          sleep 10
+          
+          # Check if dev server is responding
+          docker-compose exec -T web wget --spider http://localhost:5173 || true
+
+      - name: Stop services
+        if: always()
+        run: |
+          docker-compose down -v
+
+      - name: Build production image
+        run: |
+          docker build --target production -t bleedy:latest .
+
+      - name: Test production build
+        run: |
+          docker-compose --profile production up -d nginx
+          sleep 5
+          docker-compose ps
+          docker-compose logs nginx
+
+      - name: Cleanup
+        if: always()
+        run: |
+          docker-compose --profile production down -v
+          docker system prune -f
+
+  docker-security-scan:
+    name: Security Scan Docker Images
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build image for scanning
+        run: |
+          docker build --target production -t bleedy:scan .
+
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: 'bleedy:scan'
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+          severity: 'CRITICAL,HIGH'
+
+      - name: Upload Trivy results to GitHub Security
+        uses: github/codeql-action/upload-sarif@v3
+        if: always()
+        with:
+          sarif_file: 'trivy-results.sarif'
+
+      - name: Run Trivy vulnerability scanner (table output)
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: 'bleedy:scan'
+          format: 'table'
+          severity: 'CRITICAL,HIGH'

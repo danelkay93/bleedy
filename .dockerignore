@@ -1,0 +1,69 @@
+# Git
+.git
+.gitignore
+.gitattributes
+
+# CI/CD
+.github
+
+# Documentation
+*.md
+!README.md
+
+# Node
+node_modules
+npm-debug.log
+yarn-error.log
+.npm
+.yarn
+
+# Testing
+coverage
+.nyc_output
+*.test.js
+*.spec.js
+
+# Editor
+.vscode
+.idea
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Build artifacts
+dist-ssr
+
+# Python (for build context)
+__pycache__
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv
+env
+.venv
+
+# Pulumi
+.pulumi
+infrastructure/
+
+# Automation
+automation/
+
+# Docker
+Dockerfile
+docker-compose*.yml
+.dockerignore
+
+# Misc
+.env
+.env.local
+.env.*.local
+*.log
+tmp
+temp
+.cache

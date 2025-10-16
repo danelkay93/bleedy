@@ -1,0 +1,88 @@
+name: Pulumi Infrastructure
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - 'infrastructure/**'
+      - '.github/workflows/pulumi.yml'
+  pull_request:
+    branches:
+      - master
+    paths:
+      - 'infrastructure/**'
+      - '.github/workflows/pulumi.yml'
+  workflow_dispatch:
+    inputs:
+      stack:
+        description: 'Pulumi stack to update'
+        required: false
+        default: 'dev'
+
+jobs:
+  pulumi:
+    name: Pulumi Infrastructure Management
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+          cache-dependency-path: 'infrastructure/requirements.txt'
+
+      - name: Install dependencies
+        run: |
+          cd infrastructure
+          pip install -r requirements.txt
+
+      - name: Configure Pulumi
+        run: |
+          echo "Pulumi version:"
+          pulumi version
+
+      - name: Pulumi Preview (Pull Request)
+        if: github.event_name == 'pull_request'
+        uses: pulumi/actions@v5
+        with:
+          command: preview
+          stack-name: dev
+          work-dir: infrastructure
+          comment-on-pr: true
+          comment-on-summary: true
+        env:
+          PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
+
+      - name: Pulumi Up (Master Branch)
+        if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+        uses: pulumi/actions@v5
+        with:
+          command: up
+          stack-name: ${{ github.event.inputs.stack || 'dev' }}
+          work-dir: infrastructure
+        env:
+          PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
+
+      - name: Pulumi Up (Manual Trigger)
+        if: github.event_name == 'workflow_dispatch'
+        uses: pulumi/actions@v5
+        with:
+          command: up
+          stack-name: ${{ github.event.inputs.stack }}
+          work-dir: infrastructure
+        env:
+          PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
+
+      - name: Export Pulumi Outputs
+        if: success()
+        run: |
+          cd infrastructure
+          echo "## Pulumi Outputs" >> $GITHUB_STEP_SUMMARY
+          pulumi stack output --json >> $GITHUB_STEP_SUMMARY
+        env:
+          PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
