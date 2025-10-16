@@ -25,8 +25,64 @@ jobs:
           sudo chown -R $(whoami) .git
           sudo chmod -R u+w .git
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          cache: 'npm'
+
+      - name: Install dependencies with retry
+        run: |
+          MAX_ATTEMPTS=3
+          ATTEMPT=0
+          SUCCESS=false
+          
+          while [ $ATTEMPT -lt $MAX_ATTEMPTS ]; do
+            ATTEMPT=$((ATTEMPT + 1))
+            echo "Attempt $ATTEMPT of $MAX_ATTEMPTS..."
+            
+            if npm ci; then
+              SUCCESS=true
+              echo "✅ npm ci succeeded on attempt $ATTEMPT"
+              break
+            else
+              if [ $ATTEMPT -lt $MAX_ATTEMPTS ]; then
+                echo "::warning::npm ci failed on attempt $ATTEMPT, retrying in 30 seconds..."
+                rm -rf node_modules
+                npm cache clean --force
+                sleep 30
+              else
+                echo "::error::npm ci failed after $MAX_ATTEMPTS attempts"
+              fi
+            fi
+          done
+          
+          if [ "$SUCCESS" = false ]; then
+            exit 1
+          fi
+
+      - name: Build project
+        run: npm run build
+
+      - name: Validate build output
+        id: validate
+        run: |
+          if [ ! -d "dist" ]; then
+            echo "::error::Build failed - dist directory not found"
+            exit 1
+          fi
+          
+          if [ ! -f "dist/index.html" ]; then
+            echo "::error::Build failed - index.html not found in dist"
+            exit 1
+          fi
+          
+          echo "✅ Build validation passed"
+          echo "build_valid=true" >> $GITHUB_OUTPUT
+
       - name: Build And Deploy
         id: builddeploy
+        if: steps.validate.outputs.build_valid == 'true'
         uses: Azure/static-web-apps-deploy@v1
         with:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_THANKFUL_MUSHROOM_08ECC5D1E }}
@@ -38,6 +94,40 @@ jobs:
           api_location: '' # Api source code path - optional
           output_location: 'dist' # Built app content directory - optional
           ###### End of Repository/Build Configurations ######
+        continue-on-error: true
+
+      - name: Check deployment status
+        if: steps.builddeploy.outcome == 'failure'
+        run: |
+          echo "::error::Azure Static Web Apps deployment failed"
+          echo "### Deployment Failed ❌" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Possible causes:**" >> $GITHUB_STEP_SUMMARY
+          echo "- Staging environment limit reached (check Azure portal)" >> $GITHUB_STEP_SUMMARY
+          echo "- API token expired or invalid" >> $GITHUB_STEP_SUMMARY
+          echo "- Build output directory misconfigured" >> $GITHUB_STEP_SUMMARY
+          echo "- Network connectivity issues" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Next steps:**" >> $GITHUB_STEP_SUMMARY
+          echo "1. Check Azure Static Web Apps service health" >> $GITHUB_STEP_SUMMARY
+          echo "2. Verify staging environments in Azure portal" >> $GITHUB_STEP_SUMMARY
+          echo "3. Review workflow logs for specific error messages" >> $GITHUB_STEP_SUMMARY
+          echo "4. Run cleanup workflow if staging limit reached" >> $GITHUB_STEP_SUMMARY
+          exit 1
+
+      - name: Add deployment success comment
+        if: github.event_name == 'pull_request' && steps.builddeploy.outcome == 'success'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: '✅ **Deployment Successful**\n\n' +
+                    'Your changes have been deployed to a staging environment.\n' +
+                    'Preview URL will be available in the Azure Static Web Apps bot comment.'
+            })
 
   close_pull_request_job:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'
@@ -50,3 +140,9 @@ jobs:
         with:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_THANKFUL_MUSHROOM_08ECC5D1E }}
           action: 'close'
+        continue-on-error: true
+
+      - name: Cleanup notification
+        if: steps.closepullrequest.outcome == 'success'
+        run: |
+          echo "✅ Staging environment cleaned up successfully"

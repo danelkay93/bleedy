@@ -43,3 +43,24 @@ npm run test:unit
 ```sh
 npm run lint
 ```
+
+## CI/CD Pipeline
+
+This project uses GitHub Actions for continuous integration and deployment. For detailed information about our CI/CD pipelines, including:
+
+- Workflow descriptions and configurations
+- Best practices for package management and security
+- Troubleshooting common issues
+- Maintenance procedures
+
+Please see the [CI/CD Guide](./docs/CI_CD_GUIDE.md).
+
+### Quick Reference
+
+- **Lock file sync**: Automatically maintained by GitHub Actions
+- **Security audits**: Run on every PR and push to master
+- **Build optimization**: Uses manual chunking for optimal performance
+- **Azure deployment**: Automatic with staging environment management
+
+For more details, consult the comprehensive [CI/CD documentation](./docs/CI_CD_GUIDE.md).
+
