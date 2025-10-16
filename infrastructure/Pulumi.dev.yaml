@@ -1,0 +1,6 @@
+config:
+  bleedy-infrastructure:environment: development
+  pulumi:tags:
+    value:
+      environment: development
+      managed-by: pulumi

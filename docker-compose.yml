@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  # Bleedy web application
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "5173:5173"
+    environment:
+      - NODE_ENV=development
+    volumes:
+      - ./src:/app/src
+      - ./public:/app/public
+      - node_modules:/app/node_modules
+    command: npm run dev
+    networks:
+      - bleedy-network
+
+  # Nginx for production-like serving (optional)
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "8080:80"
+    volumes:
+      - ./dist:/usr/share/nginx/html:ro
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      - web
+    networks:
+      - bleedy-network
+    profiles:
+      - production
+
+volumes:
+  node_modules:
+
+networks:
+  bleedy-network:
+    driver: bridge

@@ -6,13 +6,19 @@ on:
     branches:
       - master
       - main
+  workflow_dispatch:
+    inputs:
+      pr_number:
+        description: 'PR number that was merged'
+        required: true
+        type: number
 
 jobs:
   cleanup-consolidated-prs:
     name: Clean up consolidated PRs and branches
     runs-on: ubuntu-latest
-    # Only run if PR was merged (not just closed)
-    if: github.event.pull_request.merged == true
+    # Only run if PR was merged (not just closed) or manually triggered
+    if: github.event.pull_request.merged == true || github.event_name == 'workflow_dispatch'
     
     steps:
       - name: Checkout repository
@@ -20,6 +26,17 @@ jobs:
         with:
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+          cache-dependency-path: 'automation/requirements.txt'
+
+      - name: Install Python dependencies
+        run: |
+          pip install -r automation/requirements.txt
 
       - name: Check if this is the consolidation PR
         id: check_consolidation
@@ -37,8 +54,29 @@ jobs:
             echo "Not a consolidation PR - skipping cleanup"
           fi
 
-      - name: Close consolidated PRs
+      - name: Run Python cleanup script
         if: steps.check_consolidation.outputs.is_consolidation == 'true'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+        run: |
+          PR_NUMBER="${{ github.event.pull_request.number || github.event.inputs.pr_number }}"
+          python automation/scripts/post_merge_cleanup.py --pr-number "$PR_NUMBER"
+
+      - name: Run Python cleanup script
+        if: steps.check_consolidation.outputs.is_consolidation == 'true'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+        run: |
+          PR_NUMBER="${{ github.event.pull_request.number || github.event.inputs.pr_number }}"
+          python automation/scripts/post_merge_cleanup.py --pr-number "$PR_NUMBER"
+
+      # Fallback: Original JavaScript-based cleanup (kept for reference)
+      - name: Close consolidated PRs (Fallback)
+        if: false # Disabled in favor of Python script
+        uses: actions/github-script@v7
+        if: false # Disabled in favor of Python script
         uses: actions/github-script@v7
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -85,8 +123,8 @@ jobs:
               }
             }
 
-      - name: Delete consolidated branches
-        if: steps.check_consolidation.outputs.is_consolidation == 'true'
+      - name: Delete consolidated branches (Fallback)
+        if: false # Disabled in favor of Python script
         uses: actions/github-script@v7
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -117,8 +155,8 @@ jobs:
               }
             }
 
-      - name: Create cleanup summary
-        if: steps.check_consolidation.outputs.is_consolidation == 'true'
+      - name: Create cleanup summary (Fallback)
+        if: false # Disabled in favor of Python script
         uses: actions/github-script@v7
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
