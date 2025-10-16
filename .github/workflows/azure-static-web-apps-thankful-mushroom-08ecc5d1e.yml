@@ -31,17 +31,35 @@ jobs:
           node-version: '20.x'
           cache: 'npm'
 
-      - name: Install dependencies
-        uses: nick-fields/retry-action@v3
-        with:
-          timeout_minutes: 10
-          max_attempts: 3
-          retry_wait_seconds: 30
-          command: npm ci
-          on_retry_command: |
-            echo "::warning::npm ci failed, retrying..."
-            rm -rf node_modules
-            npm cache clean --force
+      - name: Install dependencies with retry
+        run: |
+          MAX_ATTEMPTS=3
+          ATTEMPT=0
+          SUCCESS=false
+          
+          while [ $ATTEMPT -lt $MAX_ATTEMPTS ]; do
+            ATTEMPT=$((ATTEMPT + 1))
+            echo "Attempt $ATTEMPT of $MAX_ATTEMPTS..."
+            
+            if npm ci; then
+              SUCCESS=true
+              echo "✅ npm ci succeeded on attempt $ATTEMPT"
+              break
+            else
+              if [ $ATTEMPT -lt $MAX_ATTEMPTS ]; then
+                echo "::warning::npm ci failed on attempt $ATTEMPT, retrying in 30 seconds..."
+                rm -rf node_modules
+                npm cache clean --force
+                sleep 30
+              else
+                echo "::error::npm ci failed after $MAX_ATTEMPTS attempts"
+              fi
+            fi
+          done
+          
+          if [ "$SUCCESS" = false ]; then
+            exit 1
+          fi
 
       - name: Build project
         run: npm run build
