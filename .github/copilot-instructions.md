@@ -90,6 +90,9 @@ npm run format
 
 - Formats source files in `src/` directory
 - Configuration in `.prettierrc.json`
+- **Known Issue**: Prettier cache may report formatting issues even when files are correctly formatted
+  - Use `npx prettier --check . --cache=false` to verify actual formatting status
+  - Use `npx prettier --write . --cache=false` if standard format command seems inconsistent
 
 ### Testing
 
@@ -216,6 +219,12 @@ npm run test:unit
 
 - Large bundle size warnings are expected due to PyScript/Pyodide dependencies
 - Chunk size limit warnings can be ignored for this use case
+
+### Prettier Cache Issues
+
+- **Issue**: `npm run format:check` may report formatting issues due to stale cache
+- **Verification**: Use `npx prettier --check . --cache=false` to verify true formatting status
+- **Solution**: Run `npx prettier --write . --cache=false` or clear `node_modules/.cache/prettier/`
 
 ## Development Guidelines
 
