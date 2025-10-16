@@ -1,34 +1,63 @@
 <template>
   <div class="image-gallery">
     <!-- Search bar -->
-    <input v-model="searchQuery" placeholder="Search images..." class="search-bar" />
+    <input
+      v-model="searchQuery"
+      placeholder="Search images..."
+      class="search-bar"
+    >
 
     <!-- File picker button -->
-    <el-button @click="openFilePicker">Select Images</el-button>
+    <el-button @click="openFilePicker">
+      Select Images
+    </el-button>
 
     <!-- Draggable image thumbnails -->
-    <draggable v-model="filteredImages" class="image-list" @end="onEnd">
-      <template #item="{ element }">
+    <draggable
+      v-model="filteredImages"
+      class="image-list"
+      @end="onEnd"
+    >
+      <template #item="{element}">
         <div class="image-item">
-          <img :src="element.url" alt="image" @click="openLightbox(element.url)" />
-          <el-button type="danger" @click="removeImage(element)">Remove</el-button>
+          <img
+            :src="element.url"
+            alt="image"
+            @click="openLightbox(element.url)"
+          >
+          <el-button
+            type="danger"
+            @click="removeImage(element)"
+          >
+            Remove
+          </el-button>
         </div>
       </template>
     </draggable>
 
     <!-- Lightbox component for image preview -->
-    <vue-preview :images="lightboxImages" ref="lightbox"></vue-preview>
+    <vue-preview
+      ref="lightbox"
+      :images="lightboxImages"
+    />
   </div>
 </template>
 
-<script setup>
-import { ref } from 'vue'
+<script setup lang="ts">
+import {ref, computed} from 'vue'
 import draggable from 'vuedraggable'
-import { VuePreview } from 'vue3-image-preview'
+import {VuePreview} from 'vue3-image-preview'
 
-const images = ref([]) // All images
+type GalleryImage = {
+  url: string
+  name: string
+  file: File
+}
+
+const images = ref<GalleryImage[]>([]) // All images
 const searchQuery = ref('') // For searching images
-const lightboxImages = ref([]) // Lightbox images for preview
+const lightboxImages = ref<string[]>([]) // Lightbox images for preview
+const lightbox = ref<InstanceType<typeof VuePreview> | null>(null)
 
 // Filtered images based on search
 const filteredImages = computed(() => {
@@ -43,7 +72,7 @@ async function openFilePicker() {
   try {
     const fileHandles = await window.showOpenFilePicker({
       multiple: true,
-      types: [{ description: 'Images', accept: { 'image/*': ['.png', '.jpg', '.jpeg'] } }]
+      types: [{description: 'Images', accept: {'image/*': ['.png', '.jpg', '.jpeg']}}]
     })
 
     // Convert FileHandles to file URLs and push to the images array
@@ -64,14 +93,14 @@ async function openFilePicker() {
 }
 
 // Remove image from the gallery
-function removeImage(image) {
+function removeImage(image: GalleryImage) {
   images.value = images.value.filter((img) => img !== image)
 }
 
 // Open image in lightbox
-function openLightbox(url) {
+function openLightbox(url: string) {
   lightboxImages.value = [url] // Display the clicked image
-  refs.lightbox.show()
+  lightbox.value?.show()
 }
 
 // Sort end event handler

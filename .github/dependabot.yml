@@ -1,0 +1,62 @@
+version: 2
+updates:
+  # Enable version updates for npm
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+      timezone: "UTC"
+    # Group updates to reduce PR noise
+    groups:
+      production-dependencies:
+        patterns:
+          - "vue*"
+          - "element-plus"
+          - "@element-plus/*"
+        update-types:
+          - "minor"
+          - "patch"
+      development-dependencies:
+        patterns:
+          - "@types/*"
+          - "@typescript-eslint/*"
+          - "eslint*"
+          - "vite*"
+          - "vitest*"
+        update-types:
+          - "minor"
+          - "patch"
+    # Apply labels to PRs for easier management
+    labels:
+      - "dependencies"
+      - "automated"
+    # Limit open PRs
+    open-pull-requests-limit: 5
+    # Ignore major version bumps for critical dependencies
+    ignore:
+      - dependency-name: "vue"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "element-plus"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "vite"
+        update-types: ["version-update:semver-major"]
+    # Automatically rebase PRs when needed
+    rebase-strategy: "auto"
+    # Set custom commit message prefix
+    commit-message:
+      prefix: "deps"
+      include: "scope"
+
+  # Enable version updates for GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "monthly"
+    labels:
+      - "dependencies"
+      - "github-actions"
+    open-pull-requests-limit: 3
+    commit-message:
+      prefix: "ci"

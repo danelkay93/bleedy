@@ -1,0 +1,138 @@
+name: Post-Merge Cleanup
+
+on:
+  pull_request:
+    types: [closed]
+    branches:
+      - master
+      - main
+
+jobs:
+  cleanup-consolidated-prs:
+    name: Clean up consolidated PRs and branches
+    runs-on: ubuntu-latest
+    # Only run if PR was merged (not just closed)
+    if: github.event.pull_request.merged == true
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Check if this is the consolidation PR
+        id: check_consolidation
+        run: |
+          # Check if PR title or description mentions consolidation
+          PR_TITLE="${{ github.event.pull_request.title }}"
+          PR_BODY="${{ github.event.pull_request.body }}"
+          
+          if [[ "$PR_TITLE" == *"Consolidate"* ]] || [[ "$PR_TITLE" == *"consolidate"* ]] || \
+             [[ "$PR_BODY" == *"PRs Consolidated"* ]] || [[ "$PR_BODY" == *"consolidat"* ]]; then
+            echo "is_consolidation=true" >> $GITHUB_OUTPUT
+            echo "This is a consolidation PR - will perform cleanup"
+          else
+            echo "is_consolidation=false" >> $GITHUB_OUTPUT
+            echo "Not a consolidation PR - skipping cleanup"
+          fi
+
+      - name: Close consolidated PRs
+        if: steps.check_consolidation.outputs.is_consolidation == 'true'
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            
+            // List of PR numbers to close (from consolidation)
+            const prsToClose = [1, 7, 8, 10, 12, 14, 15];
+            
+            // Add comment and close each PR
+            for (const prNumber of prsToClose) {
+              try {
+                // Check if PR exists and is open
+                const { data: pr } = await github.rest.pulls.get({
+                  owner,
+                  repo,
+                  pull_number: prNumber
+                });
+                
+                if (pr.state === 'open') {
+                  // Add comment explaining consolidation
+                  await github.rest.issues.createComment({
+                    owner,
+                    repo,
+                    issue_number: prNumber,
+                    body: `This PR has been consolidated into #${{ github.event.pull_request.number }} and merged to master.\n\nAll changes from this PR are included in the consolidated merge. Closing as completed.`
+                  });
+                  
+                  // Close the PR
+                  await github.rest.pulls.update({
+                    owner,
+                    repo,
+                    pull_number: prNumber,
+                    state: 'closed'
+                  });
+                  
+                  console.log(`✅ Closed PR #${prNumber}`);
+                } else {
+                  console.log(`ℹ️ PR #${prNumber} is already ${pr.state}`);
+                }
+              } catch (error) {
+                console.log(`⚠️ Could not process PR #${prNumber}: ${error.message}`);
+              }
+            }
+
+      - name: Delete consolidated branches
+        if: steps.check_consolidation.outputs.is_consolidation == 'true'
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            
+            // List of branches to delete (from consolidation)
+            const branchesToDelete = [
+              'refactor-cleanup',
+              'phase1-refactor-pyscript-deps',
+              'fix/eslint-errors',
+              'snyk-upgrade-element-plus-2.9.1',
+              'snyk-upgrade-element-plus-2.9.5',
+              'snyk-upgrade-element-plus-2.10.5'
+            ];
+            
+            for (const branch of branchesToDelete) {
+              try {
+                await github.rest.git.deleteRef({
+                  owner,
+                  repo,
+                  ref: `heads/${branch}`
+                });
+                console.log(`✅ Deleted branch: ${branch}`);
+              } catch (error) {
+                console.log(`⚠️ Could not delete branch ${branch}: ${error.message}`);
+              }
+            }
+
+      - name: Create cleanup summary
+        if: steps.check_consolidation.outputs.is_consolidation == 'true'
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            
+            // Add comment to the merged PR summarizing cleanup
+            await github.rest.issues.createComment({
+              owner,
+              repo,
+              issue_number: context.issue.number,
+              body: `## 🧹 Post-Merge Cleanup Complete\n\n` +
+                    `✅ Consolidated PRs have been closed\n` +
+                    `✅ Obsolete branches have been deleted\n\n` +
+                    `The repository is now clean and ready for future development.`
+            });

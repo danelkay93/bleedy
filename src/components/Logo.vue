@@ -1,17 +1,27 @@
 <template>
-<svg ref="svg" viewBox="0 0 100 120" width="100%" height="100%"></svg>
+  <svg
+    ref="svg"
+    viewBox="0 0 100 120"
+    width="100%"
+    height="100%"
+  />
 </template>
 
-<script>
-import { onMounted, ref } from 'vue';
-import rough from 'roughjs/bundled/rough.esm.js';
+<script lang="ts">
+import {onMounted, ref} from 'vue'
+import rough from 'roughjs/bundled/rough.esm.js'
 
 export default {
+  name: 'BloodLogo',
   setup() {
-    const svg = ref(null);
+    const svg = ref<SVGSVGElement | null>(null)
 
     onMounted(() => {
-      const rc = rough.svg(svg.value);
+      if (!svg.value) {
+        return
+      }
+
+      const rc = rough.svg(svg.value)
 
       const path = rc.path('M50,110 C20,110 0,90 50,10 C100,90 80,110 50,110 Z', {
         fill: 'red',
@@ -20,17 +30,17 @@ export default {
         fillStyle: 'hachure',
         fillWeight: 3,
         hachureGap: 8,
-        hachureAngle: 60,
-      });
+        hachureAngle: 60
+      })
 
-      svg.value.appendChild(path);
-    });
+      svg.value.appendChild(path)
+    })
 
     return {
-      svg,
-    };
-  },
-};
+      svg
+    }
+  }
+}
 </script>
 
 <style scoped>
@@ -39,5 +49,4 @@ svg {
   margin: 0; /* Remove margins */
   padding: 0; /* Ensure no padding */
 }
-
 </style>

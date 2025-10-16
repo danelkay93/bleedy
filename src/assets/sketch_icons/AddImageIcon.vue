@@ -3,7 +3,6 @@
     height="512"
     viewBox="0 0 60 60"
     width="512"
-    xmlns="http://www.w3.org/2000/svg"
   >
     <g
       id="022---Add-Image"
@@ -83,24 +82,6 @@
 
 <script lang="ts">
 export default {
-  name: 'ImageSelectionIcon',
-  props: {
-    height: {
-      type: String,
-      default: '60'
-    },
-    width: {
-      type: String,
-      default: '60'
-    },
-    label: {
-      type: String,
-      default: 'Image selection'
-    }
-  }
+  name: 'AddImageIcon'
 }
 </script>
-
-<style scoped>
-/* Icon specific styles if necessary */
-</style>

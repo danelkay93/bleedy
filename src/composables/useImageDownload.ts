@@ -1,4 +1,4 @@
-import { saveAs } from 'file-saver'
+import {saveAs} from 'file-saver'
 import JSZip from 'jszip'
 
 export function useImageDownload() {
@@ -9,19 +9,19 @@ export function useImageDownload() {
   }
 
   async function downloadZip(images: string[] | readonly string[]) {
+    // TODO: Implement ZIP saving logic here
     const zip = new JSZip()
     const imageArray = Array.from(images)
-    
-    await Promise.all(imageArray.map(async (imageUrl, index) => {
-      const response = await fetch(imageUrl)
-      const blob = await response.blob()
-      zip.file(
-        `processed-image-${index + 1}.${blob.type.split('/')[1]}`,
-        blob
-      )
-    }))
-    
-    const content = await zip.generateAsync({ type: 'blob' })
+
+    await Promise.all(
+      imageArray.map(async (imageUrl, index) => {
+        const response = await fetch(imageUrl)
+        const blob = await response.blob()
+        zip.file(`processed-image-${index + 1}.${blob.type.split('/')[1]}`, blob)
+      })
+    )
+
+    const content = await zip.generateAsync({type: 'blob'})
     saveAs(content, 'processed-images.zip')
   }
 
