@@ -3,31 +3,17 @@
   <el-row justify="center">
     <el-col :span="20">
       <div class="image-selection">
-        <SearchToolbar
-          v-model:search-query="searchQuery"
-          @browse="openFilePicker"
-        />
+        <SearchToolbar v-model:search-query="searchQuery" @browse="openFilePicker" />
 
         <!-- Status Messages -->
-        <div
-          v-if="activeStep === 0"
-          class="status-messages"
-        >
-          <div
-            v-if="images.length === 0"
-            class="no-images"
-          >
+        <div v-if="activeStep === 0" class="status-messages">
+          <div v-if="images.length === 0" class="no-images">
             <p>No images selected.</p>
             <p>Click the "Browse" button to select images.</p>
           </div>
           <div v-else>
-            <p v-if="filteredFiles.length === 0">
-              No images match the current search filter.
-            </p>
-            <p
-              v-else
-              class="selection-counter"
-            >
+            <p v-if="filteredFiles.length === 0">No images match the current search filter.</p>
+            <p v-else class="selection-counter">
               {{
                 searchQuery.trim()
                   ? `${filteredFiles.length}/${images.length} images displayed`
@@ -38,18 +24,14 @@
         </div>
 
         <!-- Image Grid -->
-        <div
-          v-if="activeStep === 0 && filteredFiles.length > 0"
-          class="image-grid"
-        >
+        <div v-if="activeStep === 0 && filteredFiles.length > 0" class="image-grid">
           <ImageGalleryItem
             v-for="image in filteredFiles"
             :key="image.id"
             :image="image"
             :selected="selectedImages.includes(image.id)"
             :search-query="searchQuery"
-            @remove="removeImage(image.id)"
-          />
+            @remove="removeImage(image.id)" />
         </div>
       </div>
     </el-col>

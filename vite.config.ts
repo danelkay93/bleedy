@@ -22,7 +22,7 @@ export default defineConfig({
         manualChunks: {
           'element-plus': ['element-plus', '@element-plus/icons-vue'],
           'vue-vendor': ['vue', 'vue-router', 'pinia'],
-          'utilities': ['file-saver', 'jszip']
+          utilities: ['file-saver', 'jszip']
         }
       }
     },

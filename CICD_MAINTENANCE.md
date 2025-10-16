@@ -45,6 +45,7 @@ Handles deployment to Azure Static Web Apps:
 - **On PR Close**: Removes staging environment
 
 **Features**:
+
 - Lock file validation before build
 - Retry logic for npm ci (up to 3 attempts)
 - Deployment summary in GitHub Actions
@@ -61,6 +62,7 @@ Automated cleanup of unused staging environments:
 - **Logic**: Removes staging environments for closed PRs
 
 **Configuration Required**:
+
 - `AZURE_CREDENTIALS` secret (service principal)
 - `AZURE_RESOURCE_GROUP` secret (optional, defaults to 'bleedy-rg')
 
@@ -85,6 +87,7 @@ A validation script runs before every build:
 **Location**: `scripts/validate-lockfile.sh`
 
 **What it checks**:
+
 - Lock file exists
 - Lock file is in sync with package.json
 - npm ci can run successfully
@@ -94,12 +97,14 @@ A validation script runs before every build:
 #### Issue: Lock file out of sync
 
 **Symptoms**:
+
 ```
 npm ci fails with "package-lock.json" error
 Validation script reports "Lock file is NOT in sync"
 ```
 
 **Fix**:
+
 ```bash
 # Remove the lock file
 rm package-lock.json
@@ -115,12 +120,14 @@ git commit -m "chore: regenerate package-lock.json"
 #### Issue: Different npm versions
 
 **Symptoms**:
+
 ```
 Lock file format changes between developers
 Frequent lock file conflicts
 ```
 
 **Fix**:
+
 - Ensure all developers use npm 11.0.0+ (specified in package.json)
 - Use `corepack enable` to enforce package manager version
 - Never manually edit `package-lock.json`
@@ -155,12 +162,14 @@ build: {
 ```
 
 **Benefits**:
+
 - Better caching (vendor code changes less frequently)
 - Faster initial loads
 - Improved parallel loading
 - Smaller individual chunks
 
 **Chunks**:
+
 - `element-plus.js` (~880KB) - UI framework
 - `vue-vendor.js` (~190KB) - Vue core and state management
 - `utilities.js` (~100KB) - File handling utilities
@@ -175,7 +184,7 @@ build: {
 import MyComponent from './MyComponent.vue'
 
 export default {
-  components: { MyComponent }
+  components: {MyComponent}
 }
 ```
 
@@ -254,11 +263,13 @@ az ad sp create-for-rbac \
 **Symptoms**: Build fails at dependency installation
 
 **Check**:
+
 1. Is lock file in sync? Run `scripts/validate-lockfile.sh`
 2. Are there network issues? Check npm registry status
 3. Is cache corrupted? Retry the workflow
 
 **The workflow includes**:
+
 - Automatic retry (up to 3 attempts)
 - 5-second delay between retries
 - Detailed error messages
@@ -268,11 +279,13 @@ az ad sp create-for-rbac \
 **Symptoms**: Build succeeds but deployment fails
 
 **Common causes**:
+
 1. Invalid Azure token
 2. Too many staging environments (cleanup needed)
 3. Build output location mismatch
 
 **Solutions**:
+
 1. Verify `AZURE_STATIC_WEB_APPS_API_TOKEN` secret
 2. Run staging cleanup workflow
 3. Ensure `output_location: 'dist'` matches build output
@@ -282,6 +295,7 @@ az ad sp create-for-rbac \
 **Symptoms**: Slow builds, timeouts
 
 **Solutions**:
+
 1. Check if dependencies need updates
 2. Review chunk splitting configuration
 3. Consider increasing workflow timeout
@@ -292,6 +306,7 @@ az ad sp create-for-rbac \
 **Symptoms**: Merge conflicts in package-lock.json
 
 **Resolution**:
+
 ```bash
 # Accept either version
 git checkout --theirs package-lock.json
@@ -351,17 +366,20 @@ git commit -m "chore: resolve lock file conflict"
 ## Maintenance Checklist
 
 ### Weekly
+
 - [ ] Review failed workflow runs
 - [ ] Check staging environment count
 - [ ] Review dependency security alerts
 
 ### Monthly
+
 - [ ] Update GitHub Actions versions
 - [ ] Review and update dependencies
 - [ ] Check Azure resource usage
 - [ ] Review build performance metrics
 
 ### Quarterly
+
 - [ ] Audit Azure permissions
 - [ ] Rotate service principal secrets
 - [ ] Review and update documentation

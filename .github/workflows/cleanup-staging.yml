@@ -20,7 +20,7 @@ jobs:
   cleanup-staging:
     name: Clean up unused staging environments
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -34,18 +34,18 @@ jobs:
         id: cleanup
         run: |
           echo "🔍 Checking for staging environments to clean up..."
-          
+
           DRY_RUN="${{ github.event.inputs.dry_run || 'false' }}"
-          
+
           # Get the Static Web App name from the workflow file
           # This assumes the resource name matches the subdomain in the URL
           SWA_NAME="thankful-mushroom-08ecc5d1e"
           RESOURCE_GROUP="${{ secrets.AZURE_RESOURCE_GROUP || 'bleedy-rg' }}"
-          
+
           echo "Static Web App: $SWA_NAME"
           echo "Resource Group: $RESOURCE_GROUP"
           echo "Dry Run Mode: $DRY_RUN"
-          
+
           # List all environments for this Static Web App
           echo "Fetching environment list..."
           ENVIRONMENTS=$(az staticwebapp environment list \
@@ -53,7 +53,7 @@ jobs:
             --resource-group "$RESOURCE_GROUP" \
             --query "[].{name:name, kind:kind, hostname:hostname}" \
             -o json 2>/dev/null || echo "[]")
-          
+
           if [ "$ENVIRONMENTS" = "[]" ]; then
             echo "⚠️ Could not fetch environments. This might be due to:"
             echo "   1. Missing AZURE_CREDENTIALS secret"
@@ -65,20 +65,20 @@ jobs:
             echo "   - AZURE_RESOURCE_GROUP: Resource group name (optional, defaults to 'bleedy-rg')"
             exit 1
           fi
-          
+
           echo "Found environments:"
           echo "$ENVIRONMENTS" | jq -r '.[] | "  - \(.name) (\(.kind))"'
-          
+
           # Get list of open PRs
           echo ""
           echo "Fetching open pull requests..."
           OPEN_PRS=$(gh pr list --json number --jq '.[].number' | tr '\n' ' ')
           echo "Open PRs: $OPEN_PRS"
-          
+
           # Track cleanup actions
           CLEANED=0
           KEPT=0
-          
+
           # Process each staging environment
           echo ""
           echo "Processing environments..."
@@ -121,20 +121,20 @@ jobs:
               CLEANED=$((CLEANED + 1))
             fi
           done
-          
+
           echo ""
           echo "## 🧹 Cleanup Summary" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          
+
           if [ "$DRY_RUN" = "true" ]; then
             echo "**Mode**: Dry Run (no actual deletions)" >> $GITHUB_STEP_SUMMARY
           else
             echo "**Mode**: Live Cleanup" >> $GITHUB_STEP_SUMMARY
           fi
-          
+
           echo "- **Environments kept**: $KEPT" >> $GITHUB_STEP_SUMMARY
           echo "- **Environments cleaned**: $CLEANED" >> $GITHUB_STEP_SUMMARY
-          
+
           if [ $CLEANED -gt 0 ]; then
             echo "" >> $GITHUB_STEP_SUMMARY
             echo "✅ Successfully cleaned up $CLEANED staging environment(s)" >> $GITHUB_STEP_SUMMARY
