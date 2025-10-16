@@ -1,45 +1,23 @@
 <template>
   <div class="image-gallery">
     <!-- Search bar -->
-    <input
-      v-model="searchQuery"
-      placeholder="Search images..."
-      class="search-bar"
-    >
+    <input v-model="searchQuery" placeholder="Search images..." class="search-bar" />
 
     <!-- File picker button -->
-    <el-button @click="openFilePicker">
-      Select Images
-    </el-button>
+    <el-button @click="openFilePicker">Select Images</el-button>
 
     <!-- Draggable image thumbnails -->
-    <draggable
-      v-model="filteredImages"
-      class="image-list"
-      @end="onEnd"
-    >
+    <draggable v-model="filteredImages" class="image-list" @end="onEnd">
       <template #item="{element}">
         <div class="image-item">
-          <img
-            :src="element.url"
-            alt="image"
-            @click="openLightbox(element.url)"
-          >
-          <el-button
-            type="danger"
-            @click="removeImage(element)"
-          >
-            Remove
-          </el-button>
+          <img :src="element.url" alt="image" @click="openLightbox(element.url)" />
+          <el-button type="danger" @click="removeImage(element)">Remove</el-button>
         </div>
       </template>
     </draggable>
 
     <!-- Lightbox component for image preview -->
-    <vue-preview
-      ref="lightbox"
-      :images="lightboxImages"
-    />
+    <vue-preview ref="lightbox" :images="lightboxImages" />
   </div>
 </template>
 
