@@ -88,13 +88,19 @@ This document explains the automated workflows and configurations set up for the
 
 **Purpose**: Run code quality checks before commits and pushes to catch issues early.
 
-**Configuration**: `.huskyrc.json`
+**Status**: Husky v9.1.7 is installed but hooks are not yet configured.
 
-**Hooks**:
+**Current State**:
+- Husky is installed in devDependencies
+- `prepare` script is configured in package.json
+- `.huskyrc.json` exists (legacy v4 format, not used by Husky v9)
+- `.husky/` directory does not exist yet
+
+**Intended Hooks** (from `.huskyrc.json`):
 
 #### Pre-commit
 
-Runs before each commit:
+Should run before each commit:
 
 ```bash
 npm run format:check  # Verify code formatting
@@ -103,38 +109,34 @@ npm run lint -- --no-fix  # Check for linting issues
 
 #### Pre-push
 
-Runs before pushing to remote:
+Should run before pushing to remote:
 
 ```bash
 npm run type-check  # Verify TypeScript types
 npm run build  # Ensure project builds successfully
 ```
 
-**Setup Instructions**:
+**Setup Instructions** (To enable hooks):
 
-1. Install Husky (if not already installed):
-
-```bash
-npm install --save-dev husky
-```
-
-2. Initialize Husky:
+1. Initialize Husky v9:
 
 ```bash
-npx husky install
+npx husky init
 ```
 
-3. Add Husky setup to package.json (automatic with .huskyrc.json):
+2. Create hook scripts in `.husky/` directory:
 
-```json
-{
-  "scripts": {
-    "prepare": "husky install"
-  }
-}
+```bash
+# Create pre-commit hook
+echo "npm run format:check && npm run lint -- --no-fix" > .husky/pre-commit
+chmod +x .husky/pre-commit
+
+# Create pre-push hook
+echo "npm run type-check && npm run build" > .husky/pre-push
+chmod +x .husky/pre-push
 ```
 
-4. The hooks will automatically run based on `.huskyrc.json` configuration
+3. The hooks will run automatically on commit/push after setup
 
 ### PyScript Version Check Hook
 
@@ -147,10 +149,11 @@ npx husky install
 **To Integrate**:
 
 1. Complete the version parsing logic in the script
-2. Add to Husky pre-commit hook:
+2. After Husky hooks are configured, add to pre-commit hook:
 
 ```bash
-npx husky add .husky/pre-commit "bash scripts/check-pyscript-version.sh"
+# After initializing Husky, append to .husky/pre-commit
+echo "bash scripts/check-pyscript-version.sh" >> .husky/pre-commit
 ```
 
 **Future Work**: See `TODO.md` for full implementation plan
@@ -237,11 +240,11 @@ npm update <package-name>
 
 ### Setup Required
 
-1. **Husky hooks**: Run once by any developer:
+1. **Husky hooks**: Not yet active. To enable:
 
 ```bash
-npm install
-npx husky install
+npx husky init
+# Then create hook scripts in .husky/ directory (see Pre-commit Hooks section)
 ```
 
 2. **PyScript version check**: Complete script implementation (see TODO.md)
@@ -289,11 +292,13 @@ Edit `.github/dependabot.yml`:
 
 ### Customizing Husky Hooks
 
-Edit `.huskyrc.json`:
+After initializing Husky and creating hook scripts in `.husky/` directory:
 
-- Add new hooks (`commit-msg`, `post-merge`, etc.)
-- Modify existing hook commands
-- Add custom scripts
+- Add new hooks by creating files in `.husky/` (e.g., `commit-msg`, `post-merge`)
+- Modify existing hook scripts in `.husky/` directory
+- Add custom scripts to hook files
+
+Note: `.huskyrc.json` is not used by Husky v9
 
 ## 🐛 Troubleshooting
 
@@ -327,15 +332,18 @@ Edit `.huskyrc.json`:
 
 **Possible causes**:
 
-- Husky not installed
+- Husky hooks not yet configured (`.husky/` directory doesn't exist)
 - Git hooks not initialized
 - Script execution permissions
 
 **Solution**:
 
 ```bash
-npm install
-npx husky install
+# Initialize Husky v9
+npx husky init
+
+# Create hook scripts (see Pre-commit Hooks section)
+# Make them executable
 chmod +x .husky/*
 ```
 

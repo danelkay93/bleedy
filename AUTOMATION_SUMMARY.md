@@ -50,18 +50,31 @@ This commit adds comprehensive automation infrastructure to handle post-merge ac
 
 ### 3. Pre-commit Hooks
 
-#### `.huskyrc.json`
+#### Husky Configuration
 
-**Purpose**: Run code quality checks before commits and pushes
+**Status**: Husky v9.1.7 is installed but hooks are not yet configured.
 
-**Hooks configured**:
+**Current state**:
+
+- `husky` package is in devDependencies
+- `prepare` script configured in package.json
+- `.huskyrc.json` exists (legacy v4 format, not used by Husky v9)
+- `.husky/` directory does not exist yet
+
+**To enable hooks**, run:
+
+```bash
+npm install
+npx husky init
+# Then create hook scripts in .husky/ directory
+```
+
+**Intended hooks** (from `.huskyrc.json`):
 
 - **pre-commit**: Format check + lint (no auto-fix)
 - **pre-push**: Type check + build
 
-**Setup required**: Developers must run `npm install && npx husky install` once
-
-**Benefit**: Catches issues before they reach CI
+**Benefit**: Once configured, catches issues before they reach CI
 
 ### 4. Documentation
 
@@ -119,11 +132,13 @@ This commit adds comprehensive automation infrastructure to handle post-merge ac
 
 ### Requires One-Time Setup (Per Developer)
 
-1. **Husky hooks**: Any developer who clones the repo should run:
+1. **Husky hooks** (Not yet active): Husky is installed but hooks need to be configured:
    ```bash
-   npm install  # Automatically runs husky install
+   npm install
+   npx husky init
+   # Create hook scripts in .husky/ directory based on .huskyrc.json
    ```
-   Hooks will then run on every commit/push
+   Once configured, hooks will run on every commit/push
 
 ## 🎯 Benefits
 
@@ -226,10 +241,10 @@ Complete the implementation in `scripts/check-pyscript-version.sh`:
 
 ### If Husky hooks don't work:
 
-1. Run `npm install` in repository
-2. Run `npx husky install` manually
-3. Check `.husky/` directory was created
-4. Verify `chmod +x .husky/*`
+1. Hooks are not yet configured - `.husky/` directory needs to be created
+2. Run `npx husky init` to initialize Husky v9
+3. Create hook scripts in `.husky/` directory (currently only `.huskyrc.json` exists, which is not used by Husky v9)
+4. Verify `chmod +x .husky/*` after creating hooks
 
 ## 📚 Documentation References
 
