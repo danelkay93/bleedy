@@ -25,6 +25,54 @@ jobs:
           sudo chown -R $(whoami) .git
           sudo chmod -R u+w .git
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          cache: 'npm'
+
+      - name: Validate package-lock.json
+        id: validate-lockfile
+        run: |
+          echo "Validating lock file sync..."
+          if bash scripts/validate-lockfile.sh; then
+            echo "validation=success" >> $GITHUB_OUTPUT
+          else
+            echo "validation=failed" >> $GITHUB_OUTPUT
+            echo "::error::Lock file validation failed. Please regenerate package-lock.json by running 'npm install'"
+            exit 1
+          fi
+
+      - name: Install dependencies with retry
+        id: npm-install
+        run: |
+          MAX_ATTEMPTS=3
+          ATTEMPT=1
+          
+          while [ $ATTEMPT -le $MAX_ATTEMPTS ]; do
+            echo "📦 Attempt $ATTEMPT of $MAX_ATTEMPTS: Running npm ci..."
+            
+            if npm ci; then
+              echo "✅ npm ci succeeded"
+              exit 0
+            else
+              echo "❌ npm ci failed on attempt $ATTEMPT"
+              
+              if [ $ATTEMPT -eq $MAX_ATTEMPTS ]; then
+                echo "::error::npm ci failed after $MAX_ATTEMPTS attempts"
+                echo "::error::This might indicate:"
+                echo "::error::  1. Lock file is out of sync (run validate-lockfile.sh locally)"
+                echo "::error::  2. Network issues with npm registry"
+                echo "::error::  3. Corrupted cache"
+                exit 1
+              fi
+              
+              echo "Retrying in 5 seconds..."
+              sleep 5
+              ATTEMPT=$((ATTEMPT + 1))
+            fi
+          done
+
       - name: Build And Deploy
         id: builddeploy
         uses: Azure/static-web-apps-deploy@v1
@@ -38,6 +86,15 @@ jobs:
           api_location: '' # Api source code path - optional
           output_location: 'dist' # Built app content directory - optional
           ###### End of Repository/Build Configurations ######
+
+      - name: Deployment Summary
+        if: always()
+        run: |
+          echo "## 🚀 Deployment Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- **Lock File Validation**: ${{ steps.validate-lockfile.outputs.validation }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **npm ci**: ${{ steps.npm-install.outcome }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Build and Deploy**: ${{ steps.builddeploy.outcome }}" >> $GITHUB_STEP_SUMMARY
 
   close_pull_request_job:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'
