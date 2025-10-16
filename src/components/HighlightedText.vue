@@ -13,6 +13,11 @@
 <script lang="ts">
 import {defineComponent, computed} from 'vue'
 
+interface TextPart {
+  text: string
+  highlight: boolean
+}
+
 export default defineComponent({
   name: 'HighlightedText',
   props: {
@@ -26,7 +31,7 @@ export default defineComponent({
     }
   },
   setup(props) {
-    const parts = computed(() => {
+    const parts = computed<TextPart[]>(() => {
       if (!props.query) {
         return [{text: props.text, highlight: false}]
       }
