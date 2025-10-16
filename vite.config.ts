@@ -65,5 +65,24 @@ export default defineConfig({
   },
   ssr: {
     noExternal: ['element-plus']
+  },
+  build: {
+    // Increase chunk size warning limit to 1000 kB for PyScript dependencies
+    chunkSizeWarningLimit: 1000,
+    rollupOptions: {
+      output: {
+        // Manual chunking strategy to optimize bundle size
+        manualChunks: {
+          // Vendor chunk for core frameworks
+          'vendor-vue': ['vue', 'vue-router', 'pinia'],
+          // UI library chunk
+          'vendor-ui': ['element-plus', '@element-plus/icons-vue'],
+          // Image processing utilities
+          'vendor-utils': ['file-saver', 'jszip'],
+          // Rough.js and wired elements for sketchy UI
+          'vendor-sketchy': ['roughjs', 'wired-elements']
+        }
+      }
+    }
   }
 })
