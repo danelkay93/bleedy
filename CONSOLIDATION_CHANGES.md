@@ -108,9 +108,29 @@ For future AI agents working on this codebase:
 4. **CI/CD**: Use the comprehensive `.github/workflows/ci.yml` for validation
 5. **Documentation**: Update this file when making significant changes to track evolution
 
+## 🤖 Automated Post-Merge Actions
+
+**NEW in commit ddcc433**: Comprehensive automation infrastructure added
+
+### What's Automated:
+- ✅ **PR Cleanup**: Automatic closing of consolidated PRs (#1, #7, #8, #10, #12, #14, #15)
+- ✅ **Branch Deletion**: Automatic deletion of obsolete branches
+- ✅ **Dependency Updates**: Weekly Dependabot PRs for security updates
+- ✅ **Pre-commit Checks**: Husky hooks for code quality
+
+### Documentation:
+- `AUTOMATION_SETUP.md` - Complete automation guide
+- `REVIEW_RESOLUTION.md` - Review dismissal instructions
+- `AUTOMATION_SUMMARY.md` - Quick automation overview
+
+**When this PR merges to master, all post-merge actions happen automatically.** 🎉
+
+---
+
 ## 📞 Support and Questions
 
 For questions about removed functionality or migration recommendations, refer to:
+- `AUTOMATION_SETUP.md` for automation infrastructure
 - `FUTURE_WORK.md` for planned improvements
 - `TODO.md` for specific technical tasks
 - `.github/copilot-instructions.md` for development guidelines
