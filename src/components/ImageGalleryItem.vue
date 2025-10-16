@@ -1,20 +1,37 @@
 <template>
-  <div class="image-card" :class="{'selected-card': selected}">
-    <img :src="image.preview" :alt="image.name" :title="image.name" class="image-thumbnail" />
+  <div
+    class="image-card"
+    :class="{'selected-card': selected}"
+  >
+    <img
+      :src="image.preview"
+      :alt="image.name"
+      :title="image.name"
+      class="image-thumbnail"
+    >
 
     <div class="file-info">
-      <div v-for="(value, key) in fileInfo" :key="key">
+      <div
+        v-for="(value, key) in fileInfo"
+        :key="key"
+      >
         <small>
           {{ key }}:
           <HighlightedText
             v-if="key === 'Filename' || key === 'Type'"
             :text="value"
-            :query="searchQuery" />
+            :query="searchQuery"
+          />
           <span v-else>{{ value }}</span>
         </small>
       </div>
     </div>
-    <wired-button v-if="selected" class="remove-button" elevation="2" @click.stop="$emit('remove')">
+    <wired-button
+      v-if="selected"
+      class="remove-button"
+      elevation="2"
+      @click.stop="$emit('remove')"
+    >
       ✕
     </wired-button>
   </div>

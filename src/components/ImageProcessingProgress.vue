@@ -1,7 +1,13 @@
 <template>
-  <wired-card elevation="2" class="progress-card">
+  <wired-card
+    elevation="2"
+    class="progress-card"
+  >
     <div class="progress-content">
-      <wired-progress :value="progress" :max="100" />
+      <wired-progress
+        :value="progress"
+        :max="100"
+      />
 
       <div class="status-details">
         <div class="status-row files">
