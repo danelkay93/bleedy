@@ -61,7 +61,7 @@ jobs:
           sleep 10
           
           # Check if dev server is responding
-          docker-compose exec -T web wget --spider http://localhost:5173 || true
+          docker-compose exec -T web wget --spider http://localhost:5173
 
       - name: Stop services
         if: always()
