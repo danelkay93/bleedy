@@ -163,7 +163,8 @@ jobs:
         uses: pulumi/actions@v5
         with:
           command: up
-          stack-name: production
+          # Use 'dev' stack for PRs, 'production' for pushes to master
+          stack-name: ${{ github.event_name == 'pull_request' && 'dev' || 'production' }}
           work-dir: infrastructure
         env:
           PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
