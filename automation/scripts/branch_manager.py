@@ -172,20 +172,22 @@ def protect_branch(
     try:
         branch = repo.get_branch(branch_name)
         
-        protection_kwargs = {
+        required_status_checks = {
             "strict": True,
             "contexts": ["CI Checks and Build"] if require_ci else []
         }
-        
-        if require_reviews > 0:
-            protection_kwargs["required_approving_review_count"] = require_reviews
         
         if dry_run:
             print(f"[DRY RUN] Would apply protection with settings:")
             print(f"  - Required reviews: {require_reviews}")
             print(f"  - Required CI: {require_ci}")
         else:
-            branch.edit_protection(**protection_kwargs)
+            kwargs = {
+                "required_status_checks": required_status_checks
+            }
+            if require_reviews > 0:
+                kwargs["required_approving_review_count"] = require_reviews
+            branch.edit_protection(**kwargs)
             print(f"✅ Branch protection applied successfully")
             
     except GithubException as e:
