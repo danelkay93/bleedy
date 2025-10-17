@@ -63,19 +63,8 @@ jobs:
           PR_NUMBER="${{ github.event.pull_request.number || github.event.inputs.pr_number }}"
           python automation/scripts/post_merge_cleanup.py --pr-number "$PR_NUMBER"
 
-      - name: Run Python cleanup script
-        if: steps.check_consolidation.outputs.is_consolidation == 'true'
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GITHUB_REPOSITORY: ${{ github.repository }}
-        run: |
-          PR_NUMBER="${{ github.event.pull_request.number || github.event.inputs.pr_number }}"
-          python automation/scripts/post_merge_cleanup.py --pr-number "$PR_NUMBER"
-
       # Fallback: Original JavaScript-based cleanup (kept for reference)
       - name: Close consolidated PRs (Fallback)
-        if: false # Disabled in favor of Python script
-        uses: actions/github-script@v7
         if: false # Disabled in favor of Python script
         uses: actions/github-script@v7
         with:
