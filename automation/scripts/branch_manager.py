@@ -284,7 +284,7 @@ def main():
     protect_parser.add_argument(
         '--require-ci',
         action='store_true',
-        default=True,
+        default=False,
         help='Require CI checks to pass'
     )
     protect_parser.add_argument(
