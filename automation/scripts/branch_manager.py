@@ -58,6 +58,32 @@ def get_repository_name() -> str:
     return repo
 
 
+def detect_default_branch(remote: str = 'origin') -> str:
+    """Detect the default branch name for the given remote.
+
+    Falls back to common branch names or the current HEAD if the remote
+    symbolic reference is unavailable. This helps keep environments that
+    rely on shallow snapshots aligned with the canonical default branch.
+    """
+
+    try:
+        symbolic_ref = git('symbolic-ref', f'refs/remotes/{remote}/HEAD').strip()
+        return symbolic_ref.split('/')[-1]
+    except Exception:
+        for candidate in ('main', 'master', 'trunk'):
+            try:
+                git('show-ref', '--verify', f'refs/remotes/{remote}/{candidate}')
+                return candidate
+            except Exception:
+                continue
+
+    try:
+        return git('rev-parse', '--abbrev-ref', 'HEAD').strip()
+    except Exception:
+        # Final fallback used when no branch data is present at all.
+        return 'master'
+
+
 def list_branches(
     gh: Github,
     repo_name: str,
@@ -113,6 +139,10 @@ def cleanup_branches(
     now = datetime.now(timezone.utc)
     cutoff_date = now - timedelta(days=older_than_days)
     exclude = exclude or ['master', 'main', 'develop', 'staging', 'production']
+
+    default_branch = repo.default_branch
+    if default_branch and default_branch not in exclude:
+        exclude.append(default_branch)
     
     print(f"🗑️  Cleaning up branches older than {older_than_days} days\n")
     if dry_run:
@@ -207,11 +237,18 @@ def protect_branch(
 
 def sync_branch(
     branch_name: str,
-    upstream_branch: str = "master",
+    upstream_branch: Optional[str] = None,
     dry_run: bool = False
 ) -> None:
-    """Sync branch with upstream."""
-    print(f"🔄 Syncing branch '{branch_name}' with '{upstream_branch}'\n")
+    """Sync branch with upstream.
+
+    When no upstream branch is provided we attempt to detect the remote's
+    default branch so that environments created from repository snapshots
+    keep up with the canonical history.
+    """
+
+    detected_upstream = upstream_branch or detect_default_branch()
+    print(f"🔄 Syncing branch '{branch_name}' with '{detected_upstream}'\n")
     if dry_run:
         print("⚠️  DRY RUN MODE - No actual changes will be made")
     
@@ -230,10 +267,12 @@ def sync_branch(
         
         # Merge upstream
         if dry_run:
-            print(f"[DRY RUN] Would merge origin/{upstream_branch} into {branch_name}")
+            print(
+                f"[DRY RUN] Would merge origin/{detected_upstream} into {branch_name}"
+            )
         else:
-            git['merge', f'origin/{upstream_branch}'] & FG
-            print(f"✅ Successfully synced {branch_name} with {upstream_branch}")
+            git['merge', f'origin/{detected_upstream}'] & FG
+            print(f"✅ Successfully synced {branch_name} with {detected_upstream}")
             
     except Exception as e:
         print(f"❌ Error during sync: {e}")
@@ -315,8 +354,7 @@ def main():
     )
     sync_parser.add_argument(
         '--upstream',
-        default='master',
-        help='Upstream branch to sync with'
+        help='Upstream branch to sync with (defaults to detected remote head)'
     )
     sync_parser.add_argument(
         '--dry-run',

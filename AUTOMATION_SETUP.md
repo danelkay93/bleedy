@@ -183,6 +183,25 @@ npx husky add .husky/pre-commit "bash scripts/check-pyscript-version.sh"
 - Fix issues: `npm audit fix`
 - For breaking changes: `npm audit fix --force` (review carefully)
 
+## 🧭 Default Branch Visibility in Repository Snapshots
+
+Some of our automation (and GitHub itself) assumes the repository snapshot
+contains the canonical default branch. Before packaging the repo for local
+automation or agent workspaces:
+
+1. Run `git fetch origin --prune` to ensure the latest remote references are
+   available locally.
+2. Run `git remote set-head origin --auto` so that `origin/HEAD` points at the
+   correct default branch (typically `main` or `master`).
+3. Confirm the branch exists with `git branch -a | grep "origin/$(git rev-parse --abbrev-ref origin/HEAD | cut -d/ -f2)"`.
+
+If @copilot is preparing the snapshot, ask it to include those commands in the
+preparation flow. Should the default branch still be missing, rerun the steps
+manually and regenerate the snapshot so subsequent agents can rely on a
+complete history. The updated `branch_manager.py sync` command will use the
+detected default branch automatically, but it still needs the reference to be
+present locally.
+
 ## 📋 Manual Post-Merge Actions
 
 Some actions cannot be fully automated and require manual intervention:

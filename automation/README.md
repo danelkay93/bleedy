@@ -93,12 +93,19 @@ python scripts/branch_manager.py protect --branch develop \
 #### Sync Branch
 
 ```bash
-# Sync feature branch with master
-python scripts/branch_manager.py sync --branch feature/my-feature --upstream master
+# Sync feature branch with the detected default branch (auto-detects main/master)
+python scripts/branch_manager.py sync --branch feature/my-feature
+
+# Explicitly target a different upstream branch
+python scripts/branch_manager.py sync --branch feature/my-feature --upstream release/2024-10
 
 # Dry run
 python scripts/branch_manager.py sync --branch feature/my-feature --dry-run
 ```
+
+The `sync` command now discovers the remote's default branch automatically. This
+keeps local snapshots aligned with whichever branch GitHub designates as the
+source of truth (usually `main` or `master`).
 
 **Required Environment Variables:**
 
@@ -155,6 +162,10 @@ python scripts/branch_manager.py cleanup --older-than 180 --dry-run
 - Use Plumbum for command execution instead of `subprocess`
 - Follow PEP 8 style guidelines
 - Add type hints for better code maintainability
+- Before exporting repository snapshots, run `git fetch origin --prune` and
+  `git remote set-head origin --auto` so that `origin/main` or `origin/master`
+  exists locally. When @copilot prepares snapshots, ensure those commands are
+  part of the preparation workflow to keep the default branch available.
 
 ## Troubleshooting
 
