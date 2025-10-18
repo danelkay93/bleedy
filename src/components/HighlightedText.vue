@@ -1,6 +1,9 @@
 <template>
   <span>
-    <template v-for="(part, index) in parts" :key="index">
+    <template
+      v-for="(part, index) in parts"
+      :key="index"
+    >
       <mark v-if="part.highlight">{{ part.text }}</mark>
       <template v-else>{{ part.text }}</template>
     </template>

@@ -1,13 +1,20 @@
 <template>
   <div class="toolbar">
-    <el-button class="browse-button" type="primary" @click="$emit('browse')">Browse</el-button>
+    <el-button
+      class="browse-button"
+      type="primary"
+      @click="$emit('browse')"
+    >
+      Browse
+    </el-button>
 
     <el-input
       :model-value="searchQuery"
       placeholder="Search Images..."
       class="search-input"
       clearable
-      @update:model-value="$emit('update:searchQuery', $event)">
+      @update:model-value="$emit('update:searchQuery', $event)"
+    >
       <template #prefix>
         <el-icon><Search /></el-icon>
       </template>

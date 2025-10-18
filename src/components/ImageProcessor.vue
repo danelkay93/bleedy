@@ -3,7 +3,8 @@
     <StepManager
       v-model="activeStep"
       :steps="processorSteps.map((step) => ({title: step.title}))"
-      :is-next-disabled="activeStep === 0 && selectedImages.length === 0">
+      :is-next-disabled="activeStep === 0 && selectedImages.length === 0"
+    >
       <template #default="{currentStep}">
         <div class="step-content">
           <h2 class="step-title">
@@ -14,14 +15,22 @@
               <ImageSelection
                 v-if="currentStep === 0"
                 :active-step="currentStep"
-                @update:selected-images="updateSelectedImages" />
-              <BleedAdjustment v-else-if="currentStep === 1" v-model="bleedAmount" />
+                @update:selected-images="updateSelectedImages"
+              />
+              <BleedAdjustment
+                v-else-if="currentStep === 1"
+                v-model="bleedAmount"
+              />
               <ProcessImages
                 v-else-if="currentStep === 2"
                 :images="selectedImages"
                 :bleed-amount="bleedAmount"
-                @process-complete="handleProcessComplete" />
-              <ReviewResults v-else-if="currentStep === 3" :images="processedImages" />
+                @process-complete="handleProcessComplete"
+              />
+              <ReviewResults
+                v-else-if="currentStep === 3"
+                :images="processedImages"
+              />
             </div>
           </wired-card>
         </div>
