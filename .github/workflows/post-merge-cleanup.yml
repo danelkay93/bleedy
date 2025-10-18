@@ -19,7 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     # Only run if PR was merged (not just closed) or manually triggered
     if: github.event.pull_request.merged == true || github.event_name == 'workflow_dispatch'
-    
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -44,7 +44,7 @@ jobs:
           # Check if PR title or description mentions consolidation
           PR_TITLE="${{ github.event.pull_request.title }}"
           PR_BODY="${{ github.event.pull_request.body }}"
-          
+
           if [[ "$PR_TITLE" == *"Consolidate"* ]] || [[ "$PR_TITLE" == *"consolidate"* ]] || \
              [[ "$PR_BODY" == *"PRs Consolidated"* ]] || [[ "$PR_BODY" == *"consolidat"* ]]; then
             echo "is_consolidation=true" >> $GITHUB_OUTPUT
@@ -72,10 +72,10 @@ jobs:
           script: |
             const owner = context.repo.owner;
             const repo = context.repo.repo;
-            
+
             // List of PR numbers to close (from consolidation)
             const prsToClose = [1, 7, 8, 10, 12, 14, 15];
-            
+
             // Add comment and close each PR
             for (const prNumber of prsToClose) {
               try {
@@ -120,7 +120,7 @@ jobs:
           script: |
             const owner = context.repo.owner;
             const repo = context.repo.repo;
-            
+
             // List of branches to delete (from consolidation)
             const branchesToDelete = [
               'refactor-cleanup',
@@ -130,7 +130,7 @@ jobs:
               'snyk-upgrade-element-plus-2.9.5',
               'snyk-upgrade-element-plus-2.10.5'
             ];
-            
+
             for (const branch of branchesToDelete) {
               try {
                 await github.rest.git.deleteRef({
@@ -152,7 +152,7 @@ jobs:
           script: |
             const owner = context.repo.owner;
             const repo = context.repo.repo;
-            
+
             // Add comment to the merged PR summarizing cleanup
             await github.rest.issues.createComment({
               owner,

@@ -17,6 +17,7 @@ pip install -r requirements.txt
 Automates cleanup of consolidated PRs and their branches after a consolidation PR has been merged.
 
 **Usage:**
+
 ```bash
 # Basic usage
 python scripts/post_merge_cleanup.py --pr-number 18
@@ -31,10 +32,12 @@ python scripts/post_merge_cleanup.py --pr-number 18 \
 ```
 
 **Required Environment Variables:**
+
 - `GITHUB_TOKEN`: GitHub personal access token with `repo` permissions
 - `GITHUB_REPOSITORY`: Repository in format "owner/repo" (auto-detected from git remote if not set)
 
 **Features:**
+
 - Closes consolidated PRs with explanatory comments
 - Deletes obsolete branches
 - Adds cleanup summary comment to consolidation PR
@@ -47,6 +50,7 @@ Comprehensive branch management tool for listing, cleaning up, protecting, and s
 **Commands:**
 
 #### List Branches
+
 ```bash
 # List all branches
 python scripts/branch_manager.py list
@@ -59,6 +63,7 @@ python scripts/branch_manager.py list --pattern "feature/"
 ```
 
 #### Cleanup Stale Branches
+
 ```bash
 # Delete branches older than 180 days
 python scripts/branch_manager.py cleanup --older-than 180
@@ -74,6 +79,7 @@ python scripts/branch_manager.py cleanup --older-than 90 \
 ```
 
 #### Protect Branch
+
 ```bash
 # Protect master branch with default settings
 python scripts/branch_manager.py protect --branch master
@@ -85,6 +91,7 @@ python scripts/branch_manager.py protect --branch develop \
 ```
 
 #### Sync Branch
+
 ```bash
 # Sync feature branch with master
 python scripts/branch_manager.py sync --branch feature/my-feature --upstream master
@@ -94,6 +101,7 @@ python scripts/branch_manager.py sync --branch feature/my-feature --dry-run
 ```
 
 **Required Environment Variables:**
+
 - `GITHUB_TOKEN`: GitHub personal access token with `repo` permissions
 - `GITHUB_REPOSITORY`: Repository in format "owner/repo" (auto-detected if not set)
 
@@ -102,6 +110,7 @@ python scripts/branch_manager.py sync --branch feature/my-feature --dry-run
 These scripts are designed to be used in GitHub Actions workflows. See the workflows in `.github/workflows/` for examples.
 
 Example workflow usage:
+
 ```yaml
 - name: Run post-merge cleanup
   env:
@@ -150,22 +159,29 @@ python scripts/branch_manager.py cleanup --older-than 180 --dry-run
 ## Troubleshooting
 
 ### "GITHUB_TOKEN environment variable not set"
+
 Set your GitHub token:
+
 ```bash
 export GITHUB_TOKEN="ghp_your_token_here"
 ```
 
 ### "Could not determine repository name"
+
 Set the repository explicitly:
+
 ```bash
 export GITHUB_REPOSITORY="owner/repo"
 ```
 
 ### Permission Denied Errors
+
 Ensure your GitHub token has `repo` scope permissions.
 
 ### Branch Not Found Errors
+
 The branch may have already been deleted. Check branch existence with:
+
 ```bash
 python scripts/branch_manager.py list
 ```

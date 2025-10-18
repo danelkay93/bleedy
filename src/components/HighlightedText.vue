@@ -1,9 +1,6 @@
 <template>
   <span>
-    <template
-      v-for="(part, index) in parts"
-      :key="index"
-    >
+    <template v-for="(part, index) in parts" :key="index">
       <mark v-if="part.highlight">{{ part.text }}</mark>
       <template v-else>{{ part.text }}</template>
     </template>
@@ -11,7 +8,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from 'vue'
+import {defineComponent, computed} from 'vue'
 
 export default defineComponent({
   name: 'HighlightedText',
@@ -28,20 +25,20 @@ export default defineComponent({
   setup(props) {
     const parts = computed(() => {
       if (!props.query) {
-        return [{ text: props.text, highlight: false }]
+        return [{text: props.text, highlight: false}]
       }
       const regex = new RegExp(`(${props.query})`, 'gi')
       const result = []
       let lastIndex = 0
       props.text.replace(regex, (match, _, index) => {
         if (index > lastIndex) {
-          result.push({ text: props.text.substring(lastIndex, index), highlight: false })
+          result.push({text: props.text.substring(lastIndex, index), highlight: false})
         }
-        result.push({ text: match, highlight: true })
+        result.push({text: match, highlight: true})
         lastIndex = index + match.length
       })
       if (lastIndex < props.text.length) {
-        result.push({ text: props.text.substring(lastIndex), highlight: false })
+        result.push({text: props.text.substring(lastIndex), highlight: false})
       }
       return result
     })

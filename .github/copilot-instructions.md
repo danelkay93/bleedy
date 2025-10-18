@@ -5,6 +5,7 @@
 **Bleedy** is a web application for adding bleed margins to images, built with Vue 3, Vite, TypeScript, and PyScript. It allows users to upload images and automatically add professional bleed margins using Python image processing in the browser.
 
 ### Key Technologies
+
 - **Frontend**: Vue 3 + TypeScript + Vite
 - **UI Framework**: Element Plus with custom wired-elements for sketchy aesthetics
 - **Python Integration**: PyScript 2025.5.1 with PIL (Pillow) for image processing
@@ -16,6 +17,7 @@
 ## Build and Development Commands
 
 ### Environment Setup
+
 **ALWAYS run `npm install` first** - this project uses patched dependencies and requires proper installation.
 
 ```bash
@@ -25,58 +27,72 @@ npm install
 ### Development Commands
 
 #### Start Development Server
+
 ```bash
 npm run dev
 ```
+
 - Starts Vite dev server on http://localhost:5173/
 - Includes hot reload for Vue components
 - Takes ~1-2 seconds to start
 - PyScript loads asynchronously in browser
 
 #### Build for Production
+
 ```bash
 npm run build
 ```
+
 - **Time required**: ~8-10 seconds
 - Creates `dist/` directory with production build
 - Includes PyScript files and assets
 - Warning about chunk sizes is expected (large PyScript dependencies)
 
 #### Type Checking
+
 ```bash
 npm run type-check
 ```
+
 - **Known Issues**: Currently fails with 4 TypeScript errors in components
 - Errors relate to missing method references and type mismatches
 - Build still succeeds despite type errors
 
 #### Preview Production Build
+
 ```bash
 npm run preview
 ```
+
 - Serves production build locally for testing
 
 ### Linting and Formatting
 
 #### ESLint (BROKEN - Needs Fix)
+
 ```bash
 npm run lint
 ```
+
 - **Status**: Currently broken due to ESLint 9.x flat config migration
 - **Issue**: `eslint.config.js` uses old CommonJS format but project is ES modules
 - **Workaround**: Use `npx eslint . --fix` after converting config to ES modules format
 
 #### Prettier
+
 ```bash
 npm run format
 ```
+
 - Formats source files in `src/` directory
 - Configuration in `.prettierrc.json`
 
 ### Testing
+
 ```bash
 npm run test:unit
 ```
+
 - **Status**: No tests currently exist
 - Uses Vitest with jsdom environment
 - Configuration ready in `vitest.config.ts`
@@ -84,6 +100,7 @@ npm run test:unit
 ## Project Architecture
 
 ### Directory Structure
+
 ```
 /
 ├── src/
@@ -108,6 +125,7 @@ npm run test:unit
 ```
 
 ### Key Configuration Files
+
 - `vite.config.ts` - Vite build configuration with Vue, Element Plus, and custom elements
 - `tsconfig.*.json` - TypeScript configuration split across multiple files
 - `vitest.config.ts` - Test configuration (inherits from Vite config)
@@ -115,6 +133,7 @@ npm run test:unit
 - `.prettierrc.json` - Code formatting rules
 
 ### PyScript Integration
+
 - **Python Version**: Pyodide 0.26.1
 - **Python Packages**: Pillow (PIL) for image processing
 - **Communication**: Custom event system between Python and Vue
@@ -126,18 +145,21 @@ npm run test:unit
 ## Dependencies and Patches
 
 ### Critical Dependencies
+
 - `vue@^3.5.13` - Core framework
 - `element-plus@^2.9.5` - UI components
 - `typescript@~5.7.2` - Type checking
 - `vite@^6.0.6` - Build tool
 
 ### Patched Dependencies
+
 **IMPORTANT**: This project patches two dependencies. Running `npm install` applies these patches automatically.
 
 1. `roughjs@4.6.6.patch` - Fixes rendering issues
 2. `wired-elements@3.0.0-rc.6.patch` - Fixes compatibility with modern browsers
 
 ### Known Dependency Issues
+
 - **wired-elements**: Using old RC version (3.0.0-rc.6) that's no longer maintained
 - **ESLint**: Configuration needs migration to flat config format
 - **Browserslist**: Data is 7 months old (warning during build)
@@ -145,6 +167,7 @@ npm run test:unit
 ## Continuous Integration
 
 ### GitHub Workflows
+
 1. **Azure Static Web Apps CI/CD** (`.github/workflows/azure-static-web-apps-*.yml`)
    - Deploys to Azure on pushes to master
    - Uses standard Node.js build process
@@ -156,55 +179,66 @@ npm run test:unit
    - Currently only runs SonarCloud scan
 
 ### Pre-commit Hooks (Planned)
+
 - `scripts/check-pyscript-version.sh` - Validates PyScript version consistency
 - Currently not integrated with Husky
 
 ## Common Issues and Solutions
 
 ### TypeScript Errors
+
 - **Issue**: 4 type errors in components (missing methods, type mismatches)
 - **Impact**: Build succeeds, but `npm run type-check` fails
 - **Solution**: Fix component type definitions and method references
 
 ### ESLint Configuration
+
 - **Issue**: Config uses old format, incompatible with ESLint 9.x
 - **Solution**: Convert `eslint.config.js` to ES modules format, remove `root` property
 
 ### PyScript Loading
+
 - **Issue**: PyScript loads asynchronously, may cause timing issues
 - **Solution**: Use event listeners for Python-JavaScript communication
 
 ### Build Warnings
+
 - Large bundle size warnings are expected due to PyScript/Pyodide dependencies
 - Chunk size limit warnings can be ignored for this use case
 
 ## Development Guidelines
 
 ### Making Changes
+
 1. **Always run `npm install`** after pulling changes (patches may update)
 2. **Test in development mode first**: `npm run dev`
 3. **Check build**: `npm run build` (ignore type check failures for now)
 4. **Verify functionality**: Test image upload and processing in browser
 
 ### Component Development
+
 - Vue 3 Composition API with `<script setup>` syntax
 - TypeScript for type safety
 - Element Plus components for standard UI
 - Wired Elements for sketchy aesthetic components
 
 ### Python Development
+
 - Edit files in `public/pyscript/`
 - Use `console.log()` for debugging (accessible in browser dev tools)
 - Follow existing event-driven communication pattern with JavaScript
 
 ### Styling
+
 - Uses Element Plus theme
 - Custom CSS in `src/assets/`
 - Doodle.css and paper-css for hand-drawn aesthetics
 - Google Fonts: Cabin Sketch
 
 ## Trust These Instructions
+
 These instructions are comprehensive and tested. Only search for additional information if:
+
 1. Commands documented here fail unexpectedly
 2. You need to understand implementation details not covered
 3. Requirements change beyond current scope

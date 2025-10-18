@@ -36,7 +36,7 @@ jobs:
   branch-management:
     name: Automated Branch Management
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -78,17 +78,17 @@ jobs:
           OLDER_THAN="${{ github.event.inputs.older_than_days || '180' }}"
           PATTERN="${{ github.event.inputs.branch_pattern }}"
           DRY_RUN="${{ github.event.inputs.dry_run || 'true' }}"
-          
+
           CMD="python automation/scripts/branch_manager.py cleanup --older-than $OLDER_THAN"
-          
+
           if [ -n "$PATTERN" ]; then
             CMD="$CMD --pattern $PATTERN"
           fi
-          
+
           if [ "$DRY_RUN" = "true" ]; then
             CMD="$CMD --dry-run"
           fi
-          
+
           echo "Running: $CMD"
           eval $CMD
 
@@ -100,13 +100,13 @@ jobs:
         run: |
           BRANCH="${{ github.event.inputs.branch_name || 'master' }}"
           DRY_RUN="${{ github.event.inputs.dry_run || 'true' }}"
-          
+
           CMD="python automation/scripts/branch_manager.py protect --branch $BRANCH --require-reviews 1 --require-ci"
-          
+
           if [ "$DRY_RUN" = "true" ]; then
             CMD="$CMD --dry-run"
           fi
-          
+
           echo "Running: $CMD"
           eval $CMD
 
@@ -132,15 +132,15 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             const fs = require('fs');
-            
+
             // Check if report.md exists and has stale branches
             if (!fs.existsSync('report.md')) {
               console.log('No report file found');
               return;
             }
-            
+
             const report = fs.readFileSync('report.md', 'utf8');
-            
+
             // Create an issue with the report
             const issue = await github.rest.issues.create({
               owner: context.repo.owner,
@@ -149,5 +149,5 @@ jobs:
               body: report,
               labels: ['automation', 'maintenance']
             });
-            
+
             console.log(`Created issue #${issue.data.number}`);

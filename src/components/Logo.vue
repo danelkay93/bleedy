@@ -1,10 +1,5 @@
 <template>
-  <svg
-    ref="svg"
-    viewBox="0 0 100 120"
-    width="100%"
-    height="100%"
-  />
+  <svg ref="svg" viewBox="0 0 100 120" width="100%" height="100%" />
 </template>
 
 <script lang="ts">

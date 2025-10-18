@@ -17,7 +17,7 @@ jobs:
   docker-compose-test:
     name: Test Docker Compose Setup
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -40,7 +40,7 @@ jobs:
       - name: Start services
         run: |
           docker-compose up -d web
-          
+
       - name: Wait for services to be ready
         run: |
           echo "Waiting for web service to be ready..."
@@ -51,7 +51,7 @@ jobs:
         run: |
           echo "Checking web service..."
           docker-compose logs web
-          
+
           # Check if the service is running
           docker-compose ps | grep web | grep Up
 
@@ -59,7 +59,7 @@ jobs:
         run: |
           # Wait a bit for Vite dev server to fully start
           sleep 10
-          
+
           # Check if dev server is responding
           docker-compose exec -T web wget --spider http://localhost:5173
 
@@ -88,7 +88,7 @@ jobs:
   docker-security-scan:
     name: Security Scan Docker Images
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4

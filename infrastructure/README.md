@@ -16,25 +16,27 @@ Bleedy is currently deployed to Azure Static Web Apps. This Pulumi project provi
 ## Prerequisites
 
 1. **Install Pulumi CLI:**
+
    ```bash
    curl -fsSL https://get.pulumi.com | sh
    ```
 
 2. **Install Python Dependencies:**
+
    ```bash
    pip install -r requirements.txt
    ```
 
 3. **Configure Pulumi Backend:**
-   
+
    You can use either:
    - Pulumi Cloud (default): Sign up at [app.pulumi.com](https://app.pulumi.com)
    - Self-managed backend: File system, Azure Blob, AWS S3, etc.
-   
+
    ```bash
    # Login to Pulumi Cloud
    pulumi login
-   
+
    # Or use local backend
    pulumi login --local
    ```
@@ -148,17 +150,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      
+
       - name: Install dependencies
         run: |
           cd infrastructure
           pip install -r requirements.txt
-      
+
       - name: Pulumi up
         uses: pulumi/actions@v5
         with:
@@ -272,6 +274,7 @@ pulumi stack import --file stack-backup.json
 ### "no credentials" Error
 
 Ensure you're logged into Pulumi:
+
 ```bash
 pulumi login
 ```
@@ -279,6 +282,7 @@ pulumi login
 ### Azure Authentication Issues
 
 Re-authenticate with Azure:
+
 ```bash
 az login
 az account set --subscription "your-subscription-id"
@@ -287,6 +291,7 @@ az account set --subscription "your-subscription-id"
 ### State Conflicts
 
 If you encounter state conflicts:
+
 ```bash
 pulumi cancel  # Cancel any pending operations
 pulumi refresh # Sync state with actual infrastructure
@@ -295,6 +300,7 @@ pulumi refresh # Sync state with actual infrastructure
 ### Stack Locked
 
 If a stack is locked from a previous operation:
+
 ```bash
 pulumi stack export | pulumi stack import --force
 ```

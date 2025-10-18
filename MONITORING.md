@@ -5,6 +5,7 @@ This document outlines the monitoring and observability requirements for the Ble
 ## Overview
 
 Monitoring and observability are critical for:
+
 - Understanding application health and performance
 - Detecting and diagnosing issues quickly
 - Making data-driven decisions about scaling and optimization
@@ -13,6 +14,7 @@ Monitoring and observability are critical for:
 ## Current State
 
 Bleedy is currently deployed to Azure Static Web Apps with:
+
 - ✅ Basic Azure monitoring (included with Azure Static Web Apps)
 - ✅ GitHub Actions workflow monitoring
 - ❌ No custom application performance monitoring (APM)
@@ -24,6 +26,7 @@ Bleedy is currently deployed to Azure Static Web Apps with:
 ### 1. Infrastructure Monitoring
 
 **What to Monitor:**
+
 - Azure Static Web Apps health and availability
 - CDN performance and cache hit rates
 - SSL certificate expiration
@@ -31,6 +34,7 @@ Bleedy is currently deployed to Azure Static Web Apps with:
 - Build and deployment success/failure rates
 
 **Recommended Tools:**
+
 - **Azure Monitor** (Built-in, free tier available)
   - Already included with Azure Static Web Apps
   - Provides basic metrics and logs
@@ -43,6 +47,7 @@ Bleedy is currently deployed to Azure Static Web Apps with:
 ### 2. Application Performance Monitoring (APM)
 
 **What to Monitor:**
+
 - Page load times
 - PyScript initialization time
 - Image processing performance
@@ -53,6 +58,7 @@ Bleedy is currently deployed to Azure Static Web Apps with:
 **Recommended Tools:**
 
 #### Option A: Datadog (Comprehensive, Enterprise)
+
 - **Pros:**
   - Unified platform for metrics, logs, and traces
   - Real User Monitoring (RUM) for frontend
@@ -66,12 +72,26 @@ Bleedy is currently deployed to Azure Static Web Apps with:
   ```html
   <!-- Add to index.html -->
   <script>
-    (function(h,o,u,n,d) {
-      h=h[d]=h[d]||{q:[],onReady:function(c){h.q.push(c)}}
-      d=o.createElement(u);d.async=1;d.src=n
-      n=o.getElementsByTagName(u)[0];n.parentNode.insertBefore(d,n)
-    })(window,document,'script','https://www.datadoghq-browser-agent.com/datadog-rum.js','DD_RUM')
-    DD_RUM.onReady(function() {
+    ;(function (h, o, u, n, d) {
+      h = h[d] = h[d] || {
+        q: [],
+        onReady: function (c) {
+          h.q.push(c)
+        }
+      }
+      d = o.createElement(u)
+      d.async = 1
+      d.src = n
+      n = o.getElementsByTagName(u)[0]
+      n.parentNode.insertBefore(d, n)
+    })(
+      window,
+      document,
+      'script',
+      'https://www.datadoghq-browser-agent.com/datadog-rum.js',
+      'DD_RUM'
+    )
+    DD_RUM.onReady(function () {
       DD_RUM.init({
         clientToken: '<CLIENT_TOKEN>',
         applicationId: '<APPLICATION_ID>',
@@ -87,6 +107,7 @@ Bleedy is currently deployed to Azure Static Web Apps with:
   ```
 
 #### Option B: Sentry (Error Tracking Focus)
+
 - **Pros:**
   - Excellent error tracking and debugging
   - Free tier available
@@ -97,23 +118,25 @@ Bleedy is currently deployed to Azure Static Web Apps with:
   - Limited performance monitoring on free tier
   - Focused primarily on error tracking
 - **Implementation:**
+
   ```javascript
   // In src/main.ts
-  import * as Sentry from "@sentry/vue";
-  
+  import * as Sentry from '@sentry/vue'
+
   Sentry.init({
     app,
-    dsn: "https://your-dsn@sentry.io/project-id",
+    dsn: 'https://your-dsn@sentry.io/project-id',
     integrations: [
       new Sentry.BrowserTracing({
-        routingInstrumentation: Sentry.vueRouterInstrumentation(router),
-      }),
+        routingInstrumentation: Sentry.vueRouterInstrumentation(router)
+      })
     ],
-    tracesSampleRate: 1.0,
-  });
+    tracesSampleRate: 1.0
+  })
   ```
 
 #### Option C: Google Analytics + Web Vitals (Free, Basic)
+
 - **Pros:**
   - Free forever
   - Easy setup
@@ -128,16 +151,19 @@ Bleedy is currently deployed to Azure Static Web Apps with:
   <!-- Global site tag (gtag.js) - Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
   <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-XXXXXXXXXX');
+    window.dataLayer = window.dataLayer || []
+    function gtag() {
+      dataLayer.push(arguments)
+    }
+    gtag('js', new Date())
+    gtag('config', 'G-XXXXXXXXXX')
   </script>
   ```
 
 ### 3. Log Management
 
 **What to Log:**
+
 - Application errors and warnings
 - PyScript initialization events
 - Image processing events
@@ -145,6 +171,7 @@ Bleedy is currently deployed to Azure Static Web Apps with:
 - Performance bottlenecks
 
 **Recommended Tools:**
+
 - **Azure Log Analytics** (Integrated with Azure)
 - **Datadog Logs** (If using Datadog for APM)
 - **Console logs** + Browser DevTools (Development only)
@@ -152,12 +179,14 @@ Bleedy is currently deployed to Azure Static Web Apps with:
 ### 4. Synthetic Monitoring
 
 **What to Monitor:**
+
 - Availability from different geographic locations
 - Critical user flows (upload → process → download)
 - Page load times
 - API endpoint availability (when added)
 
 **Recommended Tools:**
+
 - **Datadog Synthetics** (Comprehensive)
 - **Azure Monitor Availability Tests** (Basic)
 - **Pingdom** (Simple uptime monitoring)
@@ -166,12 +195,14 @@ Bleedy is currently deployed to Azure Static Web Apps with:
 ### 5. Security Monitoring
 
 **What to Monitor:**
+
 - Failed authentication attempts (when auth is added)
 - Suspicious user behavior
 - Dependency vulnerabilities
 - Security scanning results
 
 **Recommended Tools:**
+
 - **GitHub Dependabot** (Already enabled)
 - **Snyk** (Security scanning in CI/CD)
 - **Trivy** (Container security scanning)
@@ -180,6 +211,7 @@ Bleedy is currently deployed to Azure Static Web Apps with:
 ## Key Metrics to Track
 
 ### User Experience Metrics
+
 - **Page Load Time:** < 3 seconds (target)
 - **PyScript Initialization:** < 5 seconds (target)
 - **Image Processing Time:** Varies by image size
@@ -187,6 +219,7 @@ Bleedy is currently deployed to Azure Static Web Apps with:
 - **Bounce Rate:** Monitor in analytics
 
 ### Technical Metrics
+
 - **Memory Usage:** Browser memory consumption
 - **CPU Usage:** Client-side processing
 - **Bundle Size:** JavaScript bundle size
@@ -194,6 +227,7 @@ Bleedy is currently deployed to Azure Static Web Apps with:
 - **Build Time:** CI/CD build duration
 
 ### Business Metrics
+
 - **Daily Active Users (DAU)**
 - **Images Processed per Day**
 - **Average Processing Time**
@@ -203,18 +237,21 @@ Bleedy is currently deployed to Azure Static Web Apps with:
 ## Alerting Strategy
 
 ### Critical Alerts (Immediate Response)
+
 - Application completely down
 - Error rate > 10%
 - PyScript initialization failure > 50%
 - Build/deployment failures
 
 ### Warning Alerts (Review within hours)
+
 - Error rate > 5%
 - Page load time > 5 seconds
 - Increased memory consumption
 - Stale branch accumulation
 
 ### Info Alerts (Review weekly)
+
 - Dependency updates available
 - Performance degradation trends
 - Usage pattern changes
@@ -222,6 +259,7 @@ Bleedy is currently deployed to Azure Static Web Apps with:
 ## Implementation Phases
 
 ### Phase 1: Foundation (Immediate)
+
 - [x] Enable GitHub Actions workflow monitoring
 - [ ] Set up Azure Monitor basic alerts
 - [ ] Implement console-based error logging
@@ -229,6 +267,7 @@ Bleedy is currently deployed to Azure Static Web Apps with:
 - [ ] Create monitoring documentation
 
 ### Phase 2: Basic Monitoring (1-2 weeks)
+
 - [ ] Choose and implement error tracking (Sentry recommended)
 - [ ] Add Google Analytics or similar for user tracking
 - [ ] Implement Web Vitals monitoring
@@ -236,6 +275,7 @@ Bleedy is currently deployed to Azure Static Web Apps with:
 - [ ] Create basic dashboards
 
 ### Phase 3: Advanced Monitoring (1-2 months)
+
 - [ ] Implement comprehensive APM (Datadog or similar)
 - [ ] Add custom metrics collection
 - [ ] Set up log aggregation
@@ -243,6 +283,7 @@ Bleedy is currently deployed to Azure Static Web Apps with:
 - [ ] Create detailed dashboards and alerts
 
 ### Phase 4: Optimization (Ongoing)
+
 - [ ] Fine-tune alert thresholds
 - [ ] Add custom metrics based on usage patterns
 - [ ] Implement anomaly detection
@@ -251,30 +292,34 @@ Bleedy is currently deployed to Azure Static Web Apps with:
 
 ## Monitoring Tools Comparison
 
-| Tool | Cost | Setup | Features | Best For |
-|------|------|-------|----------|----------|
-| **Datadog** | $$$ | Medium | Complete platform | Enterprise, all-in-one |
-| **Sentry** | $ | Easy | Error tracking | Error monitoring focus |
-| **Google Analytics** | Free | Easy | User behavior | Basic analytics |
-| **Azure Monitor** | $ | Easy | Infrastructure | Azure deployments |
-| **Prometheus** | Free | Complex | Time-series | Self-hosted, advanced |
-| **UptimeRobot** | Free | Easy | Uptime | Simple availability |
+| Tool                 | Cost | Setup   | Features          | Best For               |
+| -------------------- | ---- | ------- | ----------------- | ---------------------- |
+| **Datadog**          | $$$  | Medium  | Complete platform | Enterprise, all-in-one |
+| **Sentry**           | $    | Easy    | Error tracking    | Error monitoring focus |
+| **Google Analytics** | Free | Easy    | User behavior     | Basic analytics        |
+| **Azure Monitor**    | $    | Easy    | Infrastructure    | Azure deployments      |
+| **Prometheus**       | Free | Complex | Time-series       | Self-hosted, advanced  |
+| **UptimeRobot**      | Free | Easy    | Uptime            | Simple availability    |
 
 ## Cost Considerations
 
 ### Free Tier Options
+
 - **Google Analytics:** Free forever
 - **Sentry:** 5,000 errors/month free
 - **UptimeRobot:** 50 monitors free
 - **Azure Monitor:** Basic metrics included with resources
 
 ### Paid Considerations
+
 - **Datadog:** ~$15-31/host/month + usage
 - **New Relic:** ~$99-349/month
 - **Azure Application Insights:** Pay-as-you-go
 
 ### Recommendation
+
 Start with free tools and upgrade as needed:
+
 1. Begin with Azure Monitor (included)
 2. Add Sentry for error tracking (free tier)
 3. Add Google Analytics for user behavior (free)
@@ -283,12 +328,14 @@ Start with free tools and upgrade as needed:
 ## Security and Privacy
 
 ### Data Privacy
+
 - Anonymize user data in logs and analytics
 - Comply with GDPR/CCPA requirements
 - Avoid logging sensitive information
 - Use privacy-respecting analytics tools
 
 ### Security Best Practices
+
 - Store monitoring credentials in GitHub Secrets
 - Use read-only API keys where possible
 - Implement proper access controls
@@ -298,6 +345,7 @@ Start with free tools and upgrade as needed:
 ## Dashboard Examples
 
 ### Operations Dashboard
+
 - Current error rate
 - Active users
 - Page load times
@@ -306,6 +354,7 @@ Start with free tools and upgrade as needed:
 - Build success rate
 
 ### Performance Dashboard
+
 - Core Web Vitals (LCP, FID, CLS)
 - Bundle size trends
 - API response times (when added)
@@ -313,6 +362,7 @@ Start with free tools and upgrade as needed:
 - Memory usage patterns
 
 ### Business Dashboard
+
 - Daily/Monthly Active Users
 - Images processed
 - Geographic distribution
@@ -322,6 +372,7 @@ Start with free tools and upgrade as needed:
 ## Integration with CI/CD
 
 ### GitHub Actions Integration
+
 ```yaml
 # Add to CI workflow
 - name: Send deployment notification to Datadog
@@ -377,6 +428,7 @@ Start with free tools and upgrade as needed:
 ## Feedback and Updates
 
 This document should be reviewed and updated quarterly or when:
+
 - New monitoring tools are evaluated
 - Significant changes to application architecture
 - New monitoring requirements identified

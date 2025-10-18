@@ -5,6 +5,7 @@ This guide helps you quickly get started with the new infrastructure and automat
 ## What's New?
 
 This PR adds:
+
 - 🏗️ **Infrastructure as Code** with Pulumi
 - 🤖 **Automation Scripts** for repository management
 - 🐳 **Docker** containerization
@@ -25,21 +26,26 @@ npm run dev
 ### 2. Using Docker (Optional)
 
 #### Development Mode
+
 ```bash
 docker-compose up web
 ```
+
 Access at: http://localhost:5173
 
 #### Production Mode
+
 ```bash
 docker-compose build
 docker-compose --profile production up nginx
 ```
+
 Access at: http://localhost:8080
 
 ### 3. Automation Scripts (For Maintainers)
 
 #### List All Branches
+
 ```bash
 cd automation
 pip install -r requirements.txt
@@ -47,6 +53,7 @@ python scripts/branch_manager.py list
 ```
 
 #### Cleanup Stale Branches (Dry Run)
+
 ```bash
 export GITHUB_TOKEN="your-token"
 export GITHUB_REPOSITORY="danelkay93/bleedy"
@@ -54,6 +61,7 @@ python scripts/branch_manager.py cleanup --older-than 180 --dry-run
 ```
 
 #### Post-Merge Cleanup (Dry Run)
+
 ```bash
 python scripts/post_merge_cleanup.py --pr-number 18 --dry-run
 ```
@@ -150,6 +158,7 @@ bleedy/
 ### For Developers
 
 **Normal development** - Nothing changes:
+
 ```bash
 npm install
 npm run dev
@@ -157,6 +166,7 @@ npm run build
 ```
 
 **Test with Docker** - Optional:
+
 ```bash
 docker-compose up web
 ```
@@ -164,6 +174,7 @@ docker-compose up web
 ### For Maintainers
 
 **List branches**:
+
 ```bash
 cd automation
 pip install -r requirements.txt
@@ -171,12 +182,14 @@ python scripts/branch_manager.py list
 ```
 
 **Cleanup old branches** (always dry-run first):
+
 ```bash
 export GITHUB_TOKEN="your-token"
 python scripts/branch_manager.py cleanup --older-than 180 --dry-run
 ```
 
 **Protect important branches**:
+
 ```bash
 python scripts/branch_manager.py protect --branch master --dry-run
 ```
@@ -184,6 +197,7 @@ python scripts/branch_manager.py protect --branch master --dry-run
 ### For DevOps
 
 **Deploy infrastructure**:
+
 ```bash
 cd infrastructure
 pulumi preview  # Always preview first
@@ -191,6 +205,7 @@ pulumi up       # Apply changes
 ```
 
 **Check infrastructure status**:
+
 ```bash
 pulumi stack output
 pulumi stack
@@ -199,17 +214,20 @@ pulumi stack
 ## What Needs Configuration?
 
 ### Minimal Setup (Everything Works)
+
 - Nothing! The PR works out of the box for normal development.
 
 ### Optional Features
 
 #### For Pulumi (Infrastructure Management)
+
 1. Create account at [app.pulumi.com](https://app.pulumi.com)
 2. Get access token
 3. Add `PULUMI_ACCESS_TOKEN` to GitHub secrets
 4. Run `pulumi login` locally
 
 #### For Automation Scripts
+
 1. Generate GitHub personal access token with `repo` scope
 2. Set environment variables:
    ```bash
@@ -218,27 +236,32 @@ pulumi stack
    ```
 
 #### For Monitoring (Future)
+
 See `MONITORING.md` for tool recommendations.
 
 ## Testing Your Changes
 
 ### Test Build
+
 ```bash
 npm run build
 ```
 
 ### Test Python Scripts
+
 ```bash
 python3 -m py_compile automation/scripts/*.py
 ```
 
 ### Test Docker
+
 ```bash
 docker-compose build
 docker-compose up web
 ```
 
 ### Test Workflows (Locally)
+
 ```bash
 # Install act (https://github.com/nektos/act)
 act -l  # List workflows
@@ -248,18 +271,21 @@ act pull_request  # Simulate PR event
 ## Need Help?
 
 ### Documentation
+
 - **Complete infrastructure guide**: [INFRASTRUCTURE.md](INFRASTRUCTURE.md)
 - **Monitoring strategy**: [MONITORING.md](MONITORING.md)
 - **Automation scripts**: [automation/README.md](automation/README.md)
 - **Pulumi setup**: [infrastructure/README.md](infrastructure/README.md)
 
 ### Troubleshooting
+
 - Check GitHub Actions logs for workflow issues
 - Use `--dry-run` flag for all automation scripts
 - Review Docker logs: `docker-compose logs`
 - Check Pulumi state: `pulumi stack`
 
 ### Questions?
+
 - Open an issue in the repository
 - Review documentation in respective directories
 - Check tool-specific documentation

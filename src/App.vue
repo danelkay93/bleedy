@@ -4,39 +4,28 @@
     <el-container>
       <el-header height="6.5">
         <el-row>
-          <div
-            class="header-content"
-            :style="{backgroundImage: svgBackground}"
-          >
+          <div class="header-content" :style="{backgroundImage: svgBackground}">
             <div class="logo-container">
               <Logo class="logo" />
-              <p class="app-name cabin-sketch-bold">
-                bleedy.py
-              </p>
+              <p class="app-name cabin-sketch-bold">bleedy.py</p>
             </div>
           </div>
         </el-row>
       </el-header>
       <el-main>
         <el-row justify="center">
-          <el-col
-            class="step-row"
-            :span="12"
-          >
+          <el-col class="step-row" :span="12">
             <router-view />
           </el-col>
         </el-row>
       </el-main>
       <el-footer>
-        <el-row
-          justify="center"
-          align="middle"
-        >
+        <el-row justify="center" align="middle">
           <div class="footer-content">
             Based on bleedy.py, by North101 and OliviaJuliet.
-            <br>
+            <br />
             Created by Buteremelse.
-            <br>
+            <br />
             This website is not produced, endorsed, supported, or affiliated with Fantasy Flight
             Games.
           </div>
