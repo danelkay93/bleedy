@@ -255,6 +255,61 @@ npm run test:unit
 - Doodle.css and paper-css for hand-drawn aesthetics
 - Google Fonts: Cabin Sketch
 
+## Agent Collaboration
+
+### Working with Other AI Agents
+
+This repository supports collaboration between multiple AI agents (GitHub Copilot, ChatGPT Codex, CodeRabbit, etc.). For comprehensive collaboration guidelines, see `.github/AGENT_COLLABORATION.md`.
+
+### Key Collaboration Points
+
+**Technical Limitations**:
+
+- AI agents cannot access external HTTP/HTTPS URLs (including github.com links)
+- Cannot push directly using `git push` - must use `report_progress` tool
+- Cannot resolve merge conflicts - user must handle these
+- Cannot access files in `.github/agents/` directory
+
+**Communication Best Practices**:
+
+- Use structured templates for handoffs (see AGENT_COLLABORATION.md)
+- Always include context and file paths in discussions
+- Paste full content of review comments when referencing them
+- Report progress frequently using `report_progress`
+
+**Handoff Template** (Brief Version):
+
+```markdown
+@[agent-name]
+
+**Context**: [What you've done]
+**Current State**: [Completed/In Progress/Blocked items]
+**Next Steps**: [What needs to happen]
+**Files Modified**: [List with descriptions]
+**Testing**: [Verification steps]
+```
+
+### Using Issue and PR Templates
+
+This repository provides structured templates for better collaboration:
+
+- **Agent Tasks**: Use `.github/ISSUE_TEMPLATE/agent_task.md` for AI agent assignments
+- **Bug Reports**: Use `.github/ISSUE_TEMPLATE/bug_report.md` for bugs
+- **Feature Requests**: Use `.github/ISSUE_TEMPLATE/feature_request.md` for features
+- **Pull Requests**: Use `.github/PULL_REQUEST_TEMPLATE.md` for all PRs
+
+### Multi-Agent Workflows
+
+When multiple agents work on the same task:
+
+1. **Primary agent** creates initial implementation
+2. **Primary agent** uses handoff template to transfer work
+3. **Secondary agent** acknowledges and continues
+4. **Either agent** can request reviews from others
+5. **Final agent** completes with comprehensive summary
+
+See `.github/AGENT_COLLABORATION.md` for detailed workflow templates and examples.
+
 ## Trust These Instructions
 
 These instructions are comprehensive and tested. Only search for additional information if:
