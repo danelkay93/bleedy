@@ -41,6 +41,11 @@ jobs:
           cd infrastructure
           pip install -r requirements.txt
 
+      - name: Install Pulumi CLI
+        run: |
+          curl -fsSL https://get.pulumi.com | sh
+          echo "${HOME}/.pulumi/bin" >> $GITHUB_PATH
+
       - name: Configure Pulumi
         run: |
           echo "Pulumi version:"
@@ -63,7 +68,7 @@ jobs:
         uses: pulumi/actions@v5
         with:
           command: up
-          stack-name: ${{ github.event.inputs.stack || 'dev' }}
+          stack-name: production
           work-dir: infrastructure
         env:
           PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}

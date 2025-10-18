@@ -24,7 +24,7 @@ Environment Variables:
 
 import argparse
 import sys
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from typing import List, Optional
 
 from plumbum import local, FG
@@ -73,8 +73,9 @@ def list_branches(
     print("-" * 70)
     
     cutoff_date = None
+    now = datetime.now(timezone.utc)
     if older_than_days:
-        cutoff_date = datetime.now() - timedelta(days=older_than_days)
+        cutoff_date = now - timedelta(days=older_than_days)
     
     for branch in branches:
         # Filter by pattern if provided
@@ -82,14 +83,14 @@ def list_branches(
             continue
         
         commit = repo.get_commit(branch.commit.sha)
-        commit_date = commit.commit.author.date
-        
+        commit_date = commit.commit.author.date.astimezone(timezone.utc)
+
         # Filter by age if provided
         if cutoff_date and commit_date > cutoff_date:
             continue
-        
+
         # Format date
-        days_old = (datetime.now() - commit_date.replace(tzinfo=None)).days
+        days_old = (now - commit_date).days
         date_str = f"{days_old} days ago"
         
         protected_str = "Yes" if branch.protected else "No"
@@ -109,7 +110,8 @@ def cleanup_branches(
     repo = gh.get_repo(repo_name)
     branches = repo.get_branches()
     
-    cutoff_date = datetime.now() - timedelta(days=older_than_days)
+    now = datetime.now(timezone.utc)
+    cutoff_date = now - timedelta(days=older_than_days)
     exclude = exclude or ['master', 'main', 'develop', 'staging', 'production']
     
     print(f"🗑️  Cleaning up branches older than {older_than_days} days\n")
@@ -137,9 +139,9 @@ def cleanup_branches(
         
         # Check age
         commit = repo.get_commit(branch.commit.sha)
-        commit_date = commit.commit.author.date
-        
-        if commit_date.replace(tzinfo=None) < cutoff_date:
+        commit_date = commit.commit.author.date.astimezone(timezone.utc)
+
+        if commit_date < cutoff_date:
             if dry_run:
                 print(f"[DRY RUN] Would delete branch: {branch.name}")
             else:
@@ -159,7 +161,7 @@ def protect_branch(
     repo_name: str,
     branch_name: str,
     require_reviews: int = 1,
-    require_ci: bool = True,
+    require_ci: bool = False,
     dry_run: bool = False
 ) -> None:
     """Set up branch protection rules."""
@@ -172,21 +174,30 @@ def protect_branch(
     try:
         branch = repo.get_branch(branch_name)
         
-        required_status_checks = {
-            "strict": True,
-            "contexts": ["CI Checks and Build"] if require_ci else []
-        }
-        
+        required_status_checks = None
+        if require_ci:
+            required_status_checks = {
+                "strict": True,
+                "contexts": ["CI Checks and Build"],
+            }
+
+        required_pull_request_reviews = None
+        if require_reviews > 0:
+            required_pull_request_reviews = {
+                "required_approving_review_count": require_reviews
+            }
+
         if dry_run:
             print(f"[DRY RUN] Would apply protection with settings:")
             print(f"  - Required reviews: {require_reviews}")
             print(f"  - Required CI: {require_ci}")
         else:
-            kwargs = {
-                "required_status_checks": required_status_checks
-            }
-            if require_reviews > 0:
-                kwargs["required_approving_review_count"] = require_reviews
+            kwargs = {}
+            if required_status_checks is not None:
+                kwargs["required_status_checks"] = required_status_checks
+            if required_pull_request_reviews is not None:
+                kwargs["required_pull_request_reviews"] = required_pull_request_reviews
+
             branch.edit_protection(**kwargs)
             print(f"✅ Branch protection applied successfully")
             
