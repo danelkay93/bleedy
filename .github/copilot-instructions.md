@@ -235,6 +235,42 @@ npm run test:unit
 - Doodle.css and paper-css for hand-drawn aesthetics
 - Google Fonts: Cabin Sketch
 
+## Agent Collaboration
+
+### Technical Limitations
+
+**IMPORTANT**: GitHub Copilot and most AI agents operate in sandboxed environments with these constraints:
+
+1. **No HTTP/HTTPS Access**: Cannot make requests to ANY URLs, including:
+   - github.com URLs (even for this repository)
+   - Pull request review links
+   - External documentation
+   - API endpoints
+
+2. **Repository Access**: Direct file system access to:
+   - Cloned repository at `/home/runner/work/bleedy/bleedy`
+   - All git-tracked files
+   - Build artifacts
+
+3. **Git Operations**: Can read git history but cannot directly:
+   - Execute `git commit`, `git push`, `git merge`
+   - Force push or rebase
+   - Merge PRs (requires manual approval)
+
+### Workarounds
+
+**For Review Comments**: Instead of sharing review URLs, paste the actual comment text:
+```markdown
+**File**: src/components/Example.vue
+**Line**: 45
+**Comment**: "This function should handle null values"
+**Suggestion**: [code snippet]
+```
+
+**For Collaboration**: See `.github/AGENT_COLLABORATION.md` for detailed agent collaboration guidelines.
+
+**For Tasks**: Use issue templates in `.github/ISSUE_TEMPLATE/` for structured task creation.
+
 ## Trust These Instructions
 
 These instructions are comprehensive and tested. Only search for additional information if:
