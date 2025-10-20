@@ -105,6 +105,7 @@ bash scripts/validate-lockfile.sh
 ### Development Container (Future)
 
 A devcontainer configuration is planned for future implementation to provide:
+
 - Consistent development environment
 - Pre-configured tools and extensions
 - Automated setup and dependencies
@@ -141,6 +142,7 @@ The Docker CI workflow is the **single source of truth** for comprehensive CI ch
 **Location**: `.github/workflows/docker-compose.yml`
 
 **Features**:
+
 - Integrated lock file validation
 - Retry mechanism for npm ci (3 attempts)
 - Comprehensive code quality checks
@@ -148,6 +150,7 @@ The Docker CI workflow is the **single source of truth** for comprehensive CI ch
 - Build artifact upload
 
 **Triggers**:
+
 - Push to master
 - Pull requests
 - Manual dispatch
@@ -173,12 +176,14 @@ The Docker CI workflow is the **single source of truth** for comprehensive CI ch
 Validates that `package-lock.json` is in sync with `package.json`.
 
 **Features**:
+
 - Checks lock file exists and is valid JSON
 - Verifies lock file version
 - Performs dry-run install check
 - Provides actionable error messages
 
 **Usage**:
+
 ```bash
 # Validate manually
 bash scripts/validate-lockfile.sh
@@ -192,6 +197,7 @@ git commit -m "chore: regenerate package-lock.json"
 
 **Automatic Sync**:
 The `lockfile-sync.yml` workflow automatically:
+
 - Detects out-of-sync lock files on PRs
 - Regenerates lock file if needed
 - Commits and pushes changes
@@ -200,17 +206,21 @@ The `lockfile-sync.yml` workflow automatically:
 ### Build Configuration
 
 #### Node.js Version
+
 - Primary: **20.x**
 - Specified in all workflows
 - Matches `@tsconfig/node20` configuration
 
 #### Caching Strategy
+
 - npm cache enabled in all workflows
 - Improves build times by ~30-50%
 - Cache key based on `package-lock.json`
 
 #### Retry Mechanism
+
 All workflows use retry logic for `npm ci`:
+
 - Maximum 3 attempts
 - 30-second delay between attempts
 - Cache cleaning on retry
@@ -233,11 +243,13 @@ All workflows use retry logic for `npm ci`:
 ### Workflow Behavior
 
 **On Pull Requests**:
+
 - Runs `pulumi preview` to show planned changes
 - Does not apply changes
 - Provides visibility into infrastructure modifications
 
 **On Master Push**:
+
 - Runs `pulumi up --yes` to apply changes
 - Exports stack output
 - Uploads output as artifact
@@ -284,6 +296,7 @@ pulumi config set azure-native:location EastUS
 **Purpose**: Automated branch and Azure staging environment management
 
 **Features**:
+
 - Branch lifecycle management
 - Stale branch detection
 - Azure Static Web App staging cleanup
@@ -310,6 +323,7 @@ python3 automation/branch_manager.py
 ```
 
 **GitHub Actions Integration**:
+
 - Workflow: `.github/workflows/branch-management.yml`
 - Schedule: Weekly on Sundays at 3 AM UTC
 - Manual trigger: Available via workflow_dispatch
@@ -321,16 +335,19 @@ Azure Static Web Apps free tier has a limit of 10 staging environments (one per 
 
 **Solution**:
 The branch manager:
+
 - Tracks open PRs and their staging environments
 - Identifies orphaned environments from closed PRs
 - Creates alerts when approaching limits
 - Provides visibility into active environments
 
 **Alert Thresholds**:
+
 - **Warning**: 7+ active staging environments
 - **Critical**: 9+ active staging environments
 
 **Best Practices**:
+
 - Keep concurrent open PRs ≤ 8
 - Close or merge PRs promptly
 - Use draft PRs for work-in-progress
@@ -339,6 +356,7 @@ The branch manager:
 ### Deprecated Workflows
 
 **`azure-staging-cleanup.yml`**: DEPRECATED
+
 - Replaced by `branch-management.yml`
 - Scheduled execution disabled
 - Manual trigger still available (but not recommended)
@@ -346,6 +364,7 @@ The branch manager:
 
 **Reason for Deprecation**:
 The Python-based `branch_manager.py` provides:
+
 - More comprehensive tracking
 - Better integration with GitHub CLI
 - Single script for multiple automation tasks
@@ -357,21 +376,21 @@ The Python-based `branch_manager.py` provides:
 
 ### Active Workflows
 
-| Workflow | Purpose | Trigger | Status |
-|----------|---------|---------|--------|
-| `docker-compose.yml` | **Primary CI** - Build, test, security | Push, PR | ✅ Active (Primary) |
-| `ci.yml` | Quick validation checks | Push, PR | ✅ Active (Lightweight) |
-| `branch-management.yml` | Branch and environment automation | Weekly, Manual | ✅ Active |
-| `pulumi.yml` | Infrastructure as Code | Push (infra changes), PR | ✅ Active |
-| `lockfile-sync.yml` | Lock file synchronization | PR (package changes) | ✅ Active |
-| `azure-static-web-apps-*.yml` | Azure deployment | Push, PR | ✅ Active |
-| `sonarcloud.yml` | Code quality analysis | Push, PR | ✅ Active |
-| `post-merge-cleanup.yml` | Post-merge automation | PR merge | ✅ Active |
+| Workflow                      | Purpose                                | Trigger                  | Status                  |
+| ----------------------------- | -------------------------------------- | ------------------------ | ----------------------- |
+| `docker-compose.yml`          | **Primary CI** - Build, test, security | Push, PR                 | ✅ Active (Primary)     |
+| `ci.yml`                      | Quick validation checks                | Push, PR                 | ✅ Active (Lightweight) |
+| `branch-management.yml`       | Branch and environment automation      | Weekly, Manual           | ✅ Active               |
+| `pulumi.yml`                  | Infrastructure as Code                 | Push (infra changes), PR | ✅ Active               |
+| `lockfile-sync.yml`           | Lock file synchronization              | PR (package changes)     | ✅ Active               |
+| `azure-static-web-apps-*.yml` | Azure deployment                       | Push, PR                 | ✅ Active               |
+| `sonarcloud.yml`              | Code quality analysis                  | Push, PR                 | ✅ Active               |
+| `post-merge-cleanup.yml`      | Post-merge automation                  | PR merge                 | ✅ Active               |
 
 ### Deprecated Workflows
 
-| Workflow | Replaced By | Status |
-|----------|-------------|--------|
+| Workflow                    | Replaced By             | Status        |
+| --------------------------- | ----------------------- | ------------- |
 | `azure-staging-cleanup.yml` | `branch-management.yml` | ⚠️ Deprecated |
 
 ### Workflow Relationships
@@ -393,21 +412,25 @@ Azure Deployment
 ### Regular Tasks
 
 #### Daily
+
 - Monitor workflow runs for failures
 - Review security alerts
 
 #### Weekly
+
 - Review and merge Dependabot PRs
 - Check branch management summary
 - Monitor staging environment usage
 
 #### Monthly
+
 - Update dependencies: `npm update`
 - Review and address moderate security vulnerabilities
 - Check for outdated GitHub Actions versions
 - Review and optimize build performance
 
 #### Quarterly
+
 - Major dependency updates (Vue, Vite, etc.)
 - Review and update workflow configurations
 - Audit and clean up unused workflows
@@ -417,12 +440,12 @@ Azure Deployment
 
 #### Key Metrics
 
-| Metric | Target | Current |
-|--------|--------|---------|
-| Build Success Rate | > 95% | Monitor |
-| Average Build Time | < 10 minutes | ~7-8s (build only) |
-| Deployment Success Rate | > 98% | Monitor |
-| Security Vulnerabilities | 0 critical/high | 5 moderate |
+| Metric                   | Target          | Current            |
+| ------------------------ | --------------- | ------------------ |
+| Build Success Rate       | > 95%           | Monitor            |
+| Average Build Time       | < 10 minutes    | ~7-8s (build only) |
+| Deployment Success Rate  | > 98%           | Monitor            |
+| Security Vulnerabilities | 0 critical/high | 5 moderate         |
 
 #### Alerts to Configure
 
@@ -443,6 +466,7 @@ Azure Deployment
 #### Ignored Major Updates
 
 Major version updates require manual review:
+
 - `vue`
 - `element-plus`
 - `vite`
@@ -463,18 +487,21 @@ npm audit fix --force
 ### Pre-commit Hooks (Planned)
 
 #### Current Status
+
 - Husky v9.1.7 installed but hooks not configured
 - `.huskyrc.json` exists (legacy format, not used by Husky v9)
 
 #### Planned Hooks
 
 **Pre-commit**:
+
 ```bash
 npm run format:check
 npm run lint -- --no-fix
 ```
 
 **Pre-push**:
+
 ```bash
 npm run type-check
 npm run build
@@ -504,11 +531,13 @@ chmod +x .husky/pre-push
 #### Build Failures
 
 **Symptoms**:
+
 - TypeScript errors
 - Missing dependencies
 - Import resolution failures
 
 **Solutions**:
+
 1. Pull latest changes: `git pull`
 2. Clean install: `rm -rf node_modules && npm install`
 3. Verify patches applied: Check for `patches/` directory
@@ -517,11 +546,13 @@ chmod +x .husky/pre-push
 #### npm ci Failures
 
 **Symptoms**:
+
 - "ENOLOCK: no package-lock.json found"
 - "Invalid package-lock.json"
 - Network timeout errors
 
 **Solutions**:
+
 1. Let retry mechanism complete (automatic in CI)
 2. If persistent, regenerate lock file locally:
    ```bash
@@ -534,10 +565,12 @@ chmod +x .husky/pre-push
 #### Lock File Out of Sync
 
 **Symptoms**:
+
 - `lockfile-sync` workflow creates commits
 - npm ci fails with hash mismatch
 
 **Solutions**:
+
 - **Automatic**: Workflow fixes and commits changes
 - **Manual prevention**: Always commit lock file with package.json
 - **Verification**: Run `bash scripts/validate-lockfile.sh`
@@ -545,11 +578,13 @@ chmod +x .husky/pre-push
 #### Deployment Failures
 
 **Symptoms**:
+
 - Azure deployment timeout
 - "Staging limit reached" error
 - Build output validation failure
 
 **Solutions**:
+
 1. Check staging environment count
    ```bash
    python3 automation/branch_manager.py --action staging
@@ -561,10 +596,12 @@ chmod +x .husky/pre-push
 #### Staging Environment Limit
 
 **Symptoms**:
+
 - Cannot create new PR staging environment
 - "Staging limit reached" message
 
 **Solutions**:
+
 1. Check current usage:
    ```bash
    python3 automation/branch_manager.py --action status
@@ -578,10 +615,12 @@ chmod +x .husky/pre-push
 #### Security Audit Failures
 
 **Symptoms**:
+
 - CI fails on security-audit job
 - Critical/high severity vulnerabilities found
 
 **Solutions**:
+
 1. Review vulnerability details in workflow logs
 2. Check for available patches: `npm audit fix`
 3. Update vulnerable dependencies
@@ -617,6 +656,7 @@ Enable detailed logging in workflows:
 ### Package Management
 
 #### DO ✅
+
 - Always run `npm install` after pulling changes
 - Commit `package-lock.json` with `package.json` updates
 - Use `npm ci` in CI/CD pipelines (faster and more reliable)
@@ -624,6 +664,7 @@ Enable detailed logging in workflows:
 - Run lock file validation before committing
 
 #### DON'T ❌
+
 - Never manually edit `package-lock.json`
 - Don't ignore lock file changes in git
 - Don't use `npm install` in CI/CD pipelines
@@ -644,6 +685,7 @@ Enable detailed logging in workflows:
 #### Commit Messages
 
 Follow conventional commits:
+
 ```
 type(scope): subject
 
@@ -731,6 +773,7 @@ build: {
 ```
 
 **Guidelines**:
+
 - Keep vendor chunks separate from application code
 - Group related libraries
 - Monitor chunk sizes after adding dependencies
@@ -741,6 +784,7 @@ build: {
 ## Additional Resources
 
 ### Documentation
+
 - [GitHub Actions Documentation](https://docs.github.com/en/actions)
 - [Azure Static Web Apps Documentation](https://docs.microsoft.com/en-us/azure/static-web-apps/)
 - [Pulumi Documentation](https://www.pulumi.com/docs/)
@@ -748,6 +792,7 @@ build: {
 - [Vite Build Documentation](https://vitejs.dev/guide/build.html)
 
 ### Project Documentation
+
 - `README.md` - Project overview
 - `.github/copilot-instructions.md` - Development guidelines
 - `.github/AGENT_COLLABORATION.md` - Multi-agent collaboration
@@ -755,6 +800,7 @@ build: {
 - `infrastructure/README.md` - IaC details
 
 ### Tools
+
 - [GitHub CLI](https://cli.github.com/)
 - [Pulumi CLI](https://www.pulumi.com/docs/install/)
 - [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli)
@@ -768,12 +814,14 @@ build: {
 **Created**: Initial consolidated documentation
 
 **Consolidated from**:
+
 - CI/CD guide and quick reference
 - Implementation checklist
 - Automation setup guide
 - Various workflow documentation
 
 **New Features Documented**:
+
 - Docker-based CI as primary CI
 - Python automation with branch_manager.py
 - Pulumi IaC workflow

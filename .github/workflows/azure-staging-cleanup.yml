@@ -56,7 +56,7 @@ jobs:
               repo: context.repo.repo,
               state: 'open'
             });
-            
+
             const prNumbers = prs.map(pr => pr.number);
             console.log(`Found ${prNumbers.length} open PRs: ${prNumbers.join(', ')}`);
             core.setOutput('pr_numbers', JSON.stringify(prNumbers));
@@ -69,18 +69,18 @@ jobs:
         with:
           script: |
             const openPRs = JSON.parse('${{ steps.open_prs.outputs.pr_numbers }}');
-            
+
             // Note: Azure Static Web Apps staging environments are automatically named
             // based on PR numbers. We identify which ones can be cleaned up.
             // This is a simplified version - actual implementation would query Azure API
-            
+
             console.log('Open PRs that have staging environments:', openPRs);
-            
+
             // Create a summary
             let summary = '## Staging Environment Cleanup Analysis\n\n';
             summary += `- Open PRs with active staging: ${openPRs.length}\n`;
             summary += `- Dry run mode: ${{ inputs.dry_run || 'false' }}\n\n`;
-            
+
             if (openPRs.length === 0) {
               summary += '✅ No open PRs found - all staging environments can be cleaned up\n';
             } else {
@@ -89,10 +89,10 @@ jobs:
                 summary += `- PR #${pr}\n`;
               });
             }
-            
+
             core.summary.addRaw(summary);
             await core.summary.write();
-            
+
             return summary;
 
       - name: Log cleanup action
@@ -116,7 +116,7 @@ jobs:
         with:
           script: |
             const openPRCount = ${{ steps.open_prs.outputs.pr_count }};
-            
+
             if (openPRCount > 5) {
               const issueBody = `## ⚠️ High Number of Active Staging Environments\n\n` +
                 `**Current Status:**\n` +

@@ -9,6 +9,7 @@ This directory contains automation scripts for managing the Bleedy project infra
 Python script for automated branch and environment management.
 
 **Features:**
+
 - Branch lifecycle management (creation, deletion, stale detection)
 - Azure Static Web App staging environment cleanup
 - PR-based staging environment tracking
@@ -34,12 +35,14 @@ python3 automation/branch_manager.py --action staging
 ```
 
 **Requirements:**
+
 - Python 3.8+
 - GitHub CLI (`gh`) installed and authenticated
 
 **GitHub Actions Integration:**
 
 This script is integrated with the `branch-management.yml` workflow that runs:
+
 - Weekly on Sundays at 3 AM UTC (automated)
 - On-demand via workflow_dispatch
 

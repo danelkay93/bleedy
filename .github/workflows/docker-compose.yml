@@ -12,7 +12,7 @@ jobs:
   docker-ci:
     name: Docker CI Build and Test
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -45,7 +45,7 @@ jobs:
           MAX_ATTEMPTS=3
           ATTEMPT=0
           SUCCESS=false
-          
+
           while [ $ATTEMPT -lt $MAX_ATTEMPTS ]; do
             ATTEMPT=$((ATTEMPT + 1))
             echo "Attempt $ATTEMPT of $MAX_ATTEMPTS..."
@@ -65,7 +65,7 @@ jobs:
               fi
             fi
           done
-          
+
           if [ "$SUCCESS" = false ]; then
             exit 1
           fi
@@ -93,7 +93,7 @@ jobs:
     name: Security Scan
     runs-on: ubuntu-latest
     needs: docker-ci
-    
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -112,17 +112,17 @@ jobs:
         run: |
           echo "Running npm audit..."
           npm audit --json > audit-results.json || true
-          
+
           CRITICAL=$(jq '.metadata.vulnerabilities.critical // 0' audit-results.json)
           HIGH=$(jq '.metadata.vulnerabilities.high // 0' audit-results.json)
           MODERATE=$(jq '.metadata.vulnerabilities.moderate // 0' audit-results.json)
           LOW=$(jq '.metadata.vulnerabilities.low // 0' audit-results.json)
-          
+
           echo "critical=$CRITICAL" >> $GITHUB_OUTPUT
           echo "high=$HIGH" >> $GITHUB_OUTPUT
           echo "moderate=$MODERATE" >> $GITHUB_OUTPUT
           echo "low=$LOW" >> $GITHUB_OUTPUT
-          
+
           echo "### Security Audit Results" >> $GITHUB_STEP_SUMMARY
           echo "- Critical: $CRITICAL" >> $GITHUB_STEP_SUMMARY
           echo "- High: $HIGH" >> $GITHUB_STEP_SUMMARY

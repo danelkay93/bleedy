@@ -5,6 +5,7 @@ This document outlines the tasks and features that should be implemented in a su
 ## Context
 
 This preliminary PR establishes:
+
 - ✅ Accurate Copilot instructions for the repository
 - ✅ Working ESLint configuration with proper ignore patterns
 - ✅ Consistent code formatting across the codebase
@@ -23,21 +24,25 @@ The following items should be addressed in the next major implementation PR afte
 #### Issues to Address (46+ TypeScript errors)
 
 **a) ImageSelection.vue - Array Type Inference**
+
 - Fix `never[]` type inference issues
 - Add proper type annotations for image arrays
 - Define interfaces for image data structures
 
 **b) Window API Types - File System Access API**
+
 - Add type declarations for experimental File System Access API
 - Define proper types for `showOpenFilePicker` and related methods
 - Consider creating a custom type definition file
 
 **c) RoughJS Module Declarations**
+
 - Add TypeScript declarations for RoughJS library
 - Either contribute types to DefinitelyTyped or create local declarations
 - Ensure SVG rendering components have proper RoughJS types
 
 **d) Other Component Type Issues**
+
 - Review and fix implicit `any` types across components
 - Add proper type guards where needed
 - Ensure all refs and reactive data are properly typed
@@ -48,6 +53,7 @@ The following items should be addressed in the next major implementation PR afte
 **Estimated Effort**: Small
 
 #### Tasks
+
 - Run `npx husky init` to create `.husky/` directory
 - Create pre-commit hook script:
   ```bash
@@ -69,6 +75,7 @@ The following items should be addressed in the next major implementation PR afte
 **Estimated Effort**: Small
 
 #### Tasks
+
 - Complete implementation in `scripts/check-pyscript-version.sh`
 - Add version parsing logic for:
   - `public/pyscript/config.toml`
@@ -84,6 +91,7 @@ The following items should be addressed in the next major implementation PR afte
 **Estimated Effort**: Small-Medium
 
 #### Tasks
+
 - Address 5 moderate npm security vulnerabilities
 - Run `npm audit` to review all vulnerabilities
 - Attempt `npm audit fix` for automatic fixes
@@ -97,6 +105,7 @@ The following items should be addressed in the next major implementation PR afte
 **Estimated Effort**: Medium
 
 #### Tasks
+
 - Create initial test files using Vitest
 - Add component tests for key components:
   - ImageSelection.vue
@@ -113,6 +122,7 @@ The following items should be addressed in the next major implementation PR afte
 **Estimated Effort**: Small
 
 #### Tasks
+
 - Investigate Prettier cache false positives
 - Consider adding `.prettierignore` if needed
 - Update CI workflow to use `--cache=false` flag
@@ -125,6 +135,7 @@ The following items should be addressed in the next major implementation PR afte
 **Estimated Effort**: Small
 
 #### Tasks
+
 - Add CONTRIBUTING.md with development workflow
 - Create component documentation in Storybook or similar
 - Document PyScript bridge communication protocol
@@ -134,21 +145,25 @@ The following items should be addressed in the next major implementation PR afte
 ## Implementation Strategy
 
 ### Phase 1: Foundation (Immediate)
+
 1. TypeScript type safety improvements (most impactful)
 2. Security vulnerability fixes (critical)
 3. Pre-commit hooks setup (quick win)
 
 ### Phase 2: Quality & Testing (Soon After)
+
 4. Test infrastructure setup
 5. PyScript version check implementation
 
 ### Phase 3: Polish (Later)
+
 6. Prettier cache investigation
 7. Documentation enhancements
 
 ## Success Criteria
 
 The subsequent PR should:
+
 - ✅ Reduce TypeScript errors from 46+ to <10
 - ✅ Have all security vulnerabilities addressed or documented
 - ✅ Include at least 20 unit tests with >70% coverage
@@ -166,13 +181,14 @@ The subsequent PR should:
 ## Related Work
 
 This subsequent PR will complement:
+
 - PR #30: Infrastructure as Code and CI/CD improvements
 - PR #31: This preliminary setup PR (Copilot instructions)
 
 ## Timeline Estimate
 
 - **Phase 1**: 1-2 weeks
-- **Phase 2**: 1 week  
+- **Phase 2**: 1 week
 - **Phase 3**: 1 week
 
 **Total estimated effort**: 3-4 weeks of development work

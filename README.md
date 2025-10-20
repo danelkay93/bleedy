@@ -63,4 +63,3 @@ Please see the [CI/CD Guide](./docs/CI_CD_GUIDE.md).
 - **Azure deployment**: Automatic with staging environment management
 
 For more details, consult the comprehensive [CI/CD documentation](./docs/CI_CD_GUIDE.md).
-

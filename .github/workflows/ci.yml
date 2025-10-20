@@ -24,17 +24,17 @@ jobs:
       - name: Check for common issues
         run: |
           echo "Running quick validation checks..."
-          
+
           # Check for TODO/FIXME comments in committed code
           if git diff --cached --name-only | xargs grep -n "TODO\|FIXME" 2>/dev/null; then
             echo "::warning::Found TODO/FIXME comments in changes"
           fi
-          
+
           # Check for large files
           if git diff --cached --name-only | xargs du -h 2>/dev/null | awk '$1 ~ /M$/ && $1 > 1'; then
             echo "::warning::Found large files in changes"
           fi
-          
+
           echo "✅ Quick validation complete"
 
       - name: Report status

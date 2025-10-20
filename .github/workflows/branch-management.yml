@@ -33,7 +33,7 @@ jobs:
       contents: write
       pull-requests: read
       issues: write
-    
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -57,20 +57,20 @@ jobs:
           if [ "${{ inputs.dry_run || 'true' }}" = "true" ]; then
             DRY_RUN_FLAG="--dry-run"
           fi
-          
+
           ACTION="${{ inputs.action || 'cleanup' }}"
-          
+
           echo "Running branch manager..."
           echo "Action: $ACTION"
           echo "Dry run: ${{ inputs.dry_run || 'true' }}"
-          
+
           python3 automation/branch_manager.py \
             --owner "${{ github.repository_owner }}" \
             --repo "${{ github.event.repository.name }}" \
             --action "$ACTION" \
             $DRY_RUN_FLAG \
             > branch-mgr-results.json
-          
+
           cat branch-mgr-results.json
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -84,7 +84,7 @@ jobs:
           echo "**Dry Run:** ${{ inputs.dry_run || 'true' }}" >> $GITHUB_STEP_SUMMARY
           echo "**Time:** $(date -u)" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          
+
           if [ -f branch-mgr-results.json ]; then
             echo "### Results" >> $GITHUB_STEP_SUMMARY
             echo "\`\`\`json" >> $GITHUB_STEP_SUMMARY
@@ -118,17 +118,19 @@ jobs:
                 gh issue list --label "infrastructure,staging-limit" --state open --limit 1 > existing_issues.txt
                 
                 if [ ! -s existing_issues.txt ]; then
+                  ISSUE_BODY="Active staging environments: $ACTIVE_COUNT
+
+          Azure Static Web Apps free tier has a limit of 10 staging environments.
+
+          **Action Required:**
+          - Review and close stale PRs
+          - Merge or close PRs that are ready
+
+          **Current Status:** Automatically detected by branch management workflow"
+                  
                   gh issue create \
                     --title "⚠️ Staging Environment Limit Approaching ($ACTIVE_COUNT/10)" \
-                    --body "Active staging environments: $ACTIVE_COUNT
-
-Azure Static Web Apps free tier has a limit of 10 staging environments.
-
-**Action Required:**
-- Review and close stale PRs
-- Merge or close PRs that are ready
-
-**Current Status:** Automatically detected by branch management workflow" \
+                    --body "$ISSUE_BODY" \
                     --label "infrastructure,staging-limit,automated"
                   
                   echo "Created alert issue"

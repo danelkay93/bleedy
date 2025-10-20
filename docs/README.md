@@ -9,6 +9,7 @@ This directory contains historical documentation for the Bleedy project.
 ### 📖 [DEVCONTAINER_AND_AUTOMATION.md](../DEVCONTAINER_AND_AUTOMATION.md)
 
 This comprehensive guide includes:
+
 - **Development Environment**: Setup, verification, and devcontainer info
 - **CI/CD Pipeline**: Docker CI, workflows, lock file management
 - **Infrastructure as Code**: Pulumi configuration and deployment

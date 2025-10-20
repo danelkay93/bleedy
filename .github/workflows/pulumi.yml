@@ -18,7 +18,7 @@ jobs:
     name: Pulumi Preview
     runs-on: ubuntu-latest
     if: github.event_name == 'pull_request'
-    
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -68,7 +68,7 @@ jobs:
     name: Pulumi Deployment
     runs-on: ubuntu-latest
     if: github.event_name == 'push' && github.ref == 'refs/heads/master'
-    
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
