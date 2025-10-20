@@ -1,15 +1,21 @@
-name: Azure Staging Cleanup
+name: Azure Staging Cleanup (Deprecated)
+
+# DEPRECATED: This workflow is being replaced by branch-management.yml
+# which uses the Python-based automation/branch_manager.py script
+# for more comprehensive branch and environment management.
+#
+# This workflow will be removed in a future update.
 
 on:
-  schedule:
-    # Run weekly on Sundays at 2 AM UTC
-    - cron: '0 2 * * 0'
+  # Disabled - use branch-management.yml instead
+  # schedule:
+  #   - cron: '0 2 * * 0'
   workflow_dispatch:
     inputs:
       dry_run:
-        description: 'Dry run mode (list environments without deleting)'
+        description: 'Dry run mode (list environments without deleting) - DEPRECATED: Use branch-management workflow'
         required: false
-        default: 'false'
+        default: 'true'
         type: choice
         options:
           - 'true'
@@ -17,13 +23,26 @@ on:
 
 jobs:
   cleanup-staging:
-    name: Cleanup Unused Staging Environments
+    name: Cleanup Unused Staging Environments (Deprecated)
     runs-on: ubuntu-latest
     permissions:
       pull-requests: read
       issues: write
 
     steps:
+      - name: Deprecation Notice
+        run: |
+          echo "::warning::This workflow is deprecated"
+          echo "::warning::Please use the branch-management workflow instead"
+          echo "::warning::This workflow will be removed in a future update"
+          echo ""
+          echo "The new branch-management workflow provides:"
+          echo "- Python-based automation (automation/branch_manager.py)"
+          echo "- More comprehensive environment tracking"
+          echo "- Better integration with GitHub CLI"
+          echo ""
+          echo "To use the new workflow:"
+          echo "  Actions -> Branch Management -> Run workflow"
       - name: Checkout repository
         uses: actions/checkout@v4
 

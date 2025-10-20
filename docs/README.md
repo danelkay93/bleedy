@@ -1,55 +1,47 @@
 # Documentation
 
-This directory contains comprehensive documentation for the Bleedy project.
+This directory contains historical documentation for the Bleedy project.
 
-## Available Guides
+## ⚠️ Important: Documentation Consolidated
 
-### [CI/CD Guide](./CI_CD_GUIDE.md)
-Comprehensive guide to understanding, maintaining, and troubleshooting the CI/CD pipelines.
+**All DevOps, CI/CD, infrastructure, and automation documentation has been consolidated into a single source of truth:**
 
-**Contents:**
-- Workflow descriptions and configurations
-- Best practices for package management
-- Security audit procedures
-- Troubleshooting common issues
-- Maintenance schedules
-- Emergency procedures
+### 📖 [DEVCONTAINER_AND_AUTOMATION.md](../DEVCONTAINER_AND_AUTOMATION.md)
 
-**Target audience:** All developers, DevOps engineers, maintainers
+This comprehensive guide includes:
+- **Development Environment**: Setup, verification, and devcontainer info
+- **CI/CD Pipeline**: Docker CI, workflows, lock file management
+- **Infrastructure as Code**: Pulumi configuration and deployment
+- **Automation**: Python-based branch and environment management
+- **Workflows Reference**: Complete workflow documentation
+- **Troubleshooting**: Solutions to common issues
+- **Best Practices**: Package management, git workflow, security
 
-### [CI/CD Quick Reference](./CI_CD_QUICK_REFERENCE.md)
-Quick reference for common CI/CD tasks and commands.
+## Legacy Documentation (Archived)
 
-**Contents:**
-- Daily operation commands
-- Workflow management
-- Common troubleshooting steps
-- Useful aliases
-- Emergency procedures
+The following files are maintained for historical reference but are superseded by the consolidated guide:
 
-**Target audience:** Developers working with the project daily
+- `CI_CD_GUIDE.md` - Original CI/CD documentation (see [DEVCONTAINER_AND_AUTOMATION.md](../DEVCONTAINER_AND_AUTOMATION.md) sections: CI/CD Pipeline, Workflows Reference, Troubleshooting)
+- `CI_CD_QUICK_REFERENCE.md` - Quick reference (see [DEVCONTAINER_AND_AUTOMATION.md](../DEVCONTAINER_AND_AUTOMATION.md) section: Best Practices)
+- `IMPLEMENTATION_CHECKLIST.md` - Implementation tracking (see project management tools)
 
-## Quick Links
+## Quick Links for New Developers
 
-### For New Developers
 1. Start with the main [README](../README.md)
-2. Review the [CI/CD Guide](./CI_CD_GUIDE.md) - sections: Overview, Workflows, Best Practices
-3. Bookmark the [Quick Reference](./CI_CD_QUICK_REFERENCE.md)
-
-### For Debugging CI Issues
-1. Check the [Troubleshooting section](./CI_CD_GUIDE.md#troubleshooting) in CI/CD Guide
-2. Use the [Quick Reference](./CI_CD_QUICK_REFERENCE.md) for commands
-
-### For Maintenance
-1. Follow the [Maintenance section](./CI_CD_GUIDE.md#maintenance) in CI/CD Guide
-2. Review workflow files in `.github/workflows/`
+2. Read [DEVCONTAINER_AND_AUTOMATION.md](../DEVCONTAINER_AND_AUTOMATION.md) - especially:
+   - Development Environment section
+   - CI/CD Pipeline section
+   - Best Practices section
+3. Review [.github/copilot-instructions.md](../.github/copilot-instructions.md) for development guidelines
 
 ## Additional Resources
 
-- [Main README](../README.md) - Project setup and basic commands
-- [FUTURE_WORK.md](../FUTURE_WORK.md) - Planned enhancements
-- [TODO.md](../TODO.md) - Current tasks and priorities
-- [GitHub Actions Workflows](../.github/workflows/) - Actual workflow files
+- [Main README](../README.md) - Project overview and setup
+- [DEVCONTAINER_AND_AUTOMATION.md](../DEVCONTAINER_AND_AUTOMATION.md) - **Primary DevOps documentation**
+- [.github/copilot-instructions.md](../.github/copilot-instructions.md) - Development guidelines
+- [.github/AGENT_COLLABORATION.md](../.github/AGENT_COLLABORATION.md) - Multi-agent collaboration
+- [automation/README.md](../automation/README.md) - Automation scripts
+- [infrastructure/README.md](../infrastructure/README.md) - IaC details
 
 ## Contributing
 
