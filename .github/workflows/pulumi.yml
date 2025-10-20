@@ -1,0 +1,132 @@
+name: Pulumi Infrastructure
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - 'infrastructure/**'
+      - '.github/workflows/pulumi.yml'
+  pull_request:
+    paths:
+      - 'infrastructure/**'
+      - '.github/workflows/pulumi.yml'
+  workflow_dispatch:
+
+jobs:
+  pulumi-preview:
+    name: Pulumi Preview
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          cache: 'npm'
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Pulumi CLI
+        uses: pulumi/actions@v5
+
+      - name: Check for infrastructure code
+        id: check
+        run: |
+          if [ -d "infrastructure" ] && [ -f "infrastructure/Pulumi.yaml" ]; then
+            echo "has_infrastructure=true" >> $GITHUB_OUTPUT
+          else
+            echo "has_infrastructure=false" >> $GITHUB_OUTPUT
+            echo "::notice::No Pulumi infrastructure code found. Skipping preview."
+          fi
+
+      - name: Install dependencies
+        if: steps.check.outputs.has_infrastructure == 'true'
+        working-directory: infrastructure
+        run: |
+          if [ -f "requirements.txt" ]; then
+            pip install -r requirements.txt
+          elif [ -f "package.json" ]; then
+            npm install
+          fi
+
+      - name: Pulumi Preview
+        if: steps.check.outputs.has_infrastructure == 'true'
+        working-directory: infrastructure
+        run: pulumi preview --non-interactive
+        env:
+          PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
+
+  pulumi-up:
+    name: Pulumi Deployment
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          cache: 'npm'
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Pulumi CLI
+        uses: pulumi/actions@v5
+
+      - name: Check for infrastructure code
+        id: check
+        run: |
+          if [ -d "infrastructure" ] && [ -f "infrastructure/Pulumi.yaml" ]; then
+            echo "has_infrastructure=true" >> $GITHUB_OUTPUT
+          else
+            echo "has_infrastructure=false" >> $GITHUB_OUTPUT
+            echo "::notice::No Pulumi infrastructure code found. Skipping deployment."
+          fi
+
+      - name: Install dependencies
+        if: steps.check.outputs.has_infrastructure == 'true'
+        working-directory: infrastructure
+        run: |
+          if [ -f "requirements.txt" ]; then
+            pip install -r requirements.txt
+          elif [ -f "package.json" ]; then
+            npm install
+          fi
+
+      - name: Pulumi Up
+        if: steps.check.outputs.has_infrastructure == 'true'
+        working-directory: infrastructure
+        run: pulumi up --yes --non-interactive
+        env:
+          PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
+
+      - name: Export stack output
+        if: steps.check.outputs.has_infrastructure == 'true'
+        working-directory: infrastructure
+        run: |
+          pulumi stack output --json > stack-output.json
+          cat stack-output.json
+        env:
+          PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
+
+      - name: Upload stack output
+        if: steps.check.outputs.has_infrastructure == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: pulumi-stack-output
+          path: infrastructure/stack-output.json
+          retention-days: 30
