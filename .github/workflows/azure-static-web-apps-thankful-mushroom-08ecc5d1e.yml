@@ -36,7 +36,7 @@ jobs:
           MAX_ATTEMPTS=3
           ATTEMPT=0
           SUCCESS=false
-          
+
           while [ $ATTEMPT -lt $MAX_ATTEMPTS ]; do
             ATTEMPT=$((ATTEMPT + 1))
             echo "Attempt $ATTEMPT of $MAX_ATTEMPTS..."
@@ -56,7 +56,7 @@ jobs:
               fi
             fi
           done
-          
+
           if [ "$SUCCESS" = false ]; then
             exit 1
           fi
@@ -71,12 +71,12 @@ jobs:
             echo "::error::Build failed - dist directory not found"
             exit 1
           fi
-          
+
           if [ ! -f "dist/index.html" ]; then
             echo "::error::Build failed - index.html not found in dist"
             exit 1
           fi
-          
+
           echo "✅ Build validation passed"
           echo "build_valid=true" >> $GITHUB_OUTPUT
 

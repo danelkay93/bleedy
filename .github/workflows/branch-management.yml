@@ -1,0 +1,142 @@
+name: Branch Management
+
+on:
+  schedule:
+    # Run weekly on Sundays at 3 AM UTC
+    - cron: '0 3 * * 0'
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Dry run mode (no changes will be made)'
+        required: false
+        default: 'true'
+        type: choice
+        options:
+          - 'true'
+          - 'false'
+      action:
+        description: 'Action to perform'
+        required: false
+        default: 'cleanup'
+        type: choice
+        options:
+          - 'cleanup'
+          - 'status'
+          - 'branches'
+          - 'staging'
+
+jobs:
+  branch-management:
+    name: Branch and Environment Management
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: read
+      issues: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Setup GitHub CLI
+        run: |
+          # GitHub CLI is pre-installed on GitHub Actions runners
+          gh --version
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Run branch manager
+        id: branch_mgr
+        run: |
+          DRY_RUN_FLAG=""
+          if [ "${{ inputs.dry_run || 'true' }}" = "true" ]; then
+            DRY_RUN_FLAG="--dry-run"
+          fi
+
+          ACTION="${{ inputs.action || 'cleanup' }}"
+
+          echo "Running branch manager..."
+          echo "Action: $ACTION"
+          echo "Dry run: ${{ inputs.dry_run || 'true' }}"
+
+          python3 automation/branch_manager.py \
+            --owner "${{ github.repository_owner }}" \
+            --repo "${{ github.event.repository.name }}" \
+            --action "$ACTION" \
+            $DRY_RUN_FLAG \
+            > branch-mgr-results.json
+
+          cat branch-mgr-results.json
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Generate summary
+        if: always()
+        run: |
+          echo "## Branch Management Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Action:** ${{ inputs.action || 'cleanup' }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Dry Run:** ${{ inputs.dry_run || 'true' }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Time:** $(date -u)" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          if [ -f branch-mgr-results.json ]; then
+            echo "### Results" >> $GITHUB_STEP_SUMMARY
+            echo "\`\`\`json" >> $GITHUB_STEP_SUMMARY
+            cat branch-mgr-results.json >> $GITHUB_STEP_SUMMARY
+            echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+          fi
+
+      - name: Upload results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: branch-management-results
+          path: branch-mgr-results.json
+          retention-days: 30
+
+      - name: Create alert if staging limit approaching
+        if: inputs.action == 'cleanup' || github.event.schedule
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # Check if we have staging environment data
+          if [ -f branch-mgr-results.json ]; then
+            ACTIVE_COUNT=$(jq -r '.staging.active_environments // 0' branch-mgr-results.json)
+            
+            if [ "$ACTIVE_COUNT" -gt 7 ]; then
+              echo "::warning::High number of staging environments: $ACTIVE_COUNT"
+              echo "Approaching Azure Static Web Apps free tier limit (10)"
+              
+              # Create or update issue if not in dry run
+              if [ "${{ inputs.dry_run || 'true' }}" = "false" ]; then
+                gh issue list --label "infrastructure,staging-limit" --state open --limit 1 > existing_issues.txt
+                
+                if [ ! -s existing_issues.txt ]; then
+                  ISSUE_BODY="Active staging environments: $ACTIVE_COUNT
+
+          Azure Static Web Apps free tier has a limit of 10 staging environments.
+
+          **Action Required:**
+          - Review and close stale PRs
+          - Merge or close PRs that are ready
+
+          **Current Status:** Automatically detected by branch management workflow"
+                  
+                  gh issue create \
+                    --title "⚠️ Staging Environment Limit Approaching ($ACTIVE_COUNT/10)" \
+                    --body "$ISSUE_BODY" \
+                    --label "infrastructure,staging-limit,automated"
+                  
+                  echo "Created alert issue"
+                else
+                  echo "Alert issue already exists"
+                fi
+              fi
+            fi
+          fi
