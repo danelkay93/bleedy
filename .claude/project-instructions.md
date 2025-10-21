@@ -268,12 +268,14 @@ npm run test:unit
 Claude Code is one of several AI agents supporting this project. It has advanced capabilities but also usage limits and costs, making it ideal for complex tasks that other agents cannot handle efficiently.
 
 **When to use Claude Code:**
+
 - Complex multi-file refactoring requiring systematic planning
 - Deep debugging across multiple files
 - Feature implementation with intricate dependencies
 - CI/CD workflow development with advanced git/bash operations
 
 **When to use other agents instead:**
+
 - Simple fixes → GitHub Copilot (unlimited usage)
 - Quick edits → GitHub Copilot
 - Code review → CodeRabbit (automated, unlimited)
@@ -325,6 +327,7 @@ When making commits:
 2. Stage appropriate files
 3. Create descriptive commit messages that explain WHY, not just WHAT
 4. Always end commits with:
+
    ```
    Generated with [Claude Code](https://claude.com/claude-code)
 
@@ -343,12 +346,14 @@ When creating PRs:
 Claude Code operates with certain constraints:
 
 **Technical Limitations:**
+
 - Cannot access external HTTP/HTTPS URLs directly
 - Uses tools for all file and git operations
 - Cannot run interactive commands (like `git rebase -i`)
 - Works within the repository directory only
 
 **Usage Constraints:**
+
 - **Usage limits** - Has rate limits and quotas, use strategically
 - **Higher cost** - More expensive than unlimited agents like Copilot
 - **Not for simple tasks** - Overkill for quick fixes and basic edits
@@ -368,6 +373,7 @@ Claude Code integrates seamlessly with other AI agents in this repository:
 5. **Respect branch ownership**: Don't force push to branches owned by other agents
 
 **Working with GitHub Copilot**:
+
 - **Copilot is the primary agent** for most day-to-day tasks (unlimited usage)
 - Copilot has access to GitHub MCP tools for repository operations
 - Copilot uses `report_progress` for committing (Claude Code uses git directly)
@@ -375,12 +381,14 @@ Claude Code integrates seamlessly with other AI agents in this repository:
 - Both agents follow the same code style and commit message conventions
 
 **Working with CodeRabbit**:
+
 - **CodeRabbit reviews all PRs** (automated, unlimited)
 - Address CodeRabbit's feedback before requesting human review
 - Tag with `@coderabbitai review full` for comprehensive review
 - CodeRabbit complements both Copilot and Claude Code work
 
 **Agent Selection Priority:**
+
 1. **Copilot** - Try first for most tasks (no limits)
 2. **CodeRabbit** - Use for all PR reviews (automated)
 3. **Claude Code** - Use when tasks exceed other agents' capabilities
@@ -393,6 +401,7 @@ Claude Code integrates seamlessly with other AI agents in this repository:
 **Context**: [What you've done]
 
 **Current State**:
+
 - Completed: [List]
 - In Progress: [List]
 - Blocked: [List]
@@ -400,6 +409,7 @@ Claude Code integrates seamlessly with other AI agents in this repository:
 **Next Steps**: [What needs to happen]
 
 **Files Modified**:
+
 - `path/file` - Description
 
 **Testing**: [How to verify]

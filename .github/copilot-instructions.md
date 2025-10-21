@@ -315,6 +315,7 @@ When multiple agents work on the same task:
 5. **Final agent** completes with comprehensive summary
 
 **Collaborating with Claude Code**:
+
 - Claude Code excels at multi-file refactoring and systematic implementation tasks
 - Uses TodoWrite for task tracking (you'll see structured todo lists in issues/PRs)
 - Has direct git access and can create commits/PRs independently

@@ -468,6 +468,7 @@ Each agent has its own configuration and instruction files:
 - **All Agents**: This file (`.github/AGENT_COLLABORATION.md`) - Universal collaboration guide
 
 When working on the project, agents should:
+
 1. Read their agent-specific documentation first
 2. Refer to this collaboration guide for multi-agent workflows
 3. Follow the templates and patterns documented here
@@ -477,19 +478,20 @@ When working on the project, agents should:
 
 Each agent has unique strengths and trade-offs. Consider capabilities, usage limits, and costs when selecting:
 
-| Task Type | Recommended Agent | Why This Agent | Trade-offs |
-|-----------|------------------|----------------|------------|
-| Quick code fixes | GitHub Copilot | Fast, unlimited usage | Less systematic for complex tasks |
-| Inline completions | GitHub Copilot | Real-time IDE integration | Not suitable for large refactors |
-| Code review | CodeRabbit | Automated, unlimited | Less context-aware than human review |
-| Multi-file refactoring | Claude Code | Strong file ops, task planning | Usage limits, higher cost |
-| Complex debugging | Claude Code | Systematic investigation | Use when other agents can't solve it |
-| Feature implementation | Claude Code or Copilot | Depends on complexity | Claude for complex, Copilot for simple |
-| Documentation updates | Any agent | All capable | Use Copilot first (no usage limits) |
-| CI/CD workflow development | Claude Code | Direct git/bash access | Consider if Copilot can handle first |
-| Security analysis | CodeRabbit | Specialized focus | Automated, not deep investigation |
+| Task Type                  | Recommended Agent      | Why This Agent                 | Trade-offs                             |
+| -------------------------- | ---------------------- | ------------------------------ | -------------------------------------- |
+| Quick code fixes           | GitHub Copilot         | Fast, unlimited usage          | Less systematic for complex tasks      |
+| Inline completions         | GitHub Copilot         | Real-time IDE integration      | Not suitable for large refactors       |
+| Code review                | CodeRabbit             | Automated, unlimited           | Less context-aware than human review   |
+| Multi-file refactoring     | Claude Code            | Strong file ops, task planning | Usage limits, higher cost              |
+| Complex debugging          | Claude Code            | Systematic investigation       | Use when other agents can't solve it   |
+| Feature implementation     | Claude Code or Copilot | Depends on complexity          | Claude for complex, Copilot for simple |
+| Documentation updates      | Any agent              | All capable                    | Use Copilot first (no usage limits)    |
+| CI/CD workflow development | Claude Code            | Direct git/bash access         | Consider if Copilot can handle first   |
+| Security analysis          | CodeRabbit             | Specialized focus              | Automated, not deep investigation      |
 
 **General Strategy:**
+
 - **Start with unlimited agents** (Copilot, CodeRabbit) for most tasks
 - **Escalate to Claude Code** when tasks require systematic multi-step work or advanced capabilities
 - **Consider cost vs. value** - use Claude Code when its capabilities justify the usage cost
