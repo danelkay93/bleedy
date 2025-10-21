@@ -337,33 +337,47 @@ I don't have access to changes made by other agents unless they're in the curren
   - Task management via TodoWrite tool
   - Web search and fetch capabilities
 - **Strengths**:
-  - Excellent for multi-step refactoring and implementation tasks
+  - Multi-step refactoring and implementation tasks
   - Strong planning and task decomposition via TodoWrite
   - Direct git integration with retry logic
   - Comprehensive file editing with exact string matching
+  - Systematic investigation and debugging
 - **Limitations**:
+  - **Usage limits and cost** - Use judiciously for tasks that need its capabilities
   - Cannot access external HTTP/HTTPS URLs directly (uses WebFetch tool)
   - Cannot run interactive commands (like `git rebase -i`)
   - All operations use tools (no direct system access)
-- **Best Use Cases**:
-  - Feature implementation with multiple files
-  - Complex refactoring tasks
-  - Documentation updates
-  - CI/CD workflow development
-  - Bug fixes requiring systematic investigation
+- **Optimal Use Cases** (when other agents can't handle it):
+  - Complex multi-file refactoring
+  - Feature implementation requiring systematic planning
+  - Deep debugging that needs investigation across multiple files
+  - CI/CD workflow development with git/bash complexity
+- **When NOT to use**: Simple fixes, quick edits, tasks Copilot can handle
 - **Attribution**: Commits include "Generated with Claude Code" footer
 
 ### GitHub Copilot Agent
 
 - **Configuration**: Uses `.github/copilot-instructions.md` for project-specific instructions
-- Has access to GitHub MCP tools for repository operations
-- Can read issues, PRs, and comments via API
-- Uses `report_progress` for committing changes
-- Cannot access external URLs (HTTP/HTTPS)
-- **Best Use Cases**:
-  - Quick code completions
-  - Inline suggestions
+- **Capabilities**:
+  - GitHub MCP tools for repository operations
+  - Can read issues, PRs, and comments via API
+  - Uses `report_progress` for committing changes
+  - Real-time IDE integration
+- **Strengths**:
+  - **No usage limits** - Use freely for most tasks
+  - Fast inline suggestions
+  - Excellent for quick fixes and simple features
+  - Good context awareness in IDE
+- **Limitations**:
+  - Cannot access external URLs (HTTP/HTTPS)
+  - Less systematic for complex multi-file refactoring
+  - Less powerful for deep investigation tasks
+- **Optimal Use Cases**:
+  - Quick code completions and fixes
+  - Simple feature implementation
   - Chat-based problem solving
+  - Most day-to-day development tasks
+- **When to escalate**: Complex refactoring, deep debugging, systematic multi-step tasks
 
 ### ChatGPT Codex Connector
 
@@ -374,14 +388,25 @@ I don't have access to changes made by other agents unless they're in the curren
 
 ### CodeRabbit
 
-- Provides automated code reviews
-- Can be triggered with `@coderabbitai review full`
-- Focuses on code quality and best practices
-- Can suggest improvements and identify issues
-- **Best Use Cases**:
-  - Automated PR reviews
+- **Capabilities**:
+  - Automated code reviews
+  - Can be triggered with `@coderabbitai review full`
   - Security vulnerability detection
   - Code quality assessment
+- **Strengths**:
+  - **Automated and unlimited** - Use for all PRs
+  - Fast analysis
+  - Consistent quality checks
+  - Good at spotting common issues
+- **Limitations**:
+  - Less context-aware than manual review
+  - May miss architectural issues
+  - Cannot implement fixes directly
+- **Optimal Use Cases**:
+  - Automated PR reviews (use on every PR)
+  - Security vulnerability detection
+  - Code quality and best practices verification
+  - Pre-merge checks
 
 ### Other Agents
 
@@ -450,18 +475,25 @@ When working on the project, agents should:
 
 ## Choosing the Right Agent for the Task
 
-Different agents excel at different types of tasks:
+Each agent has unique strengths and trade-offs. Consider capabilities, usage limits, and costs when selecting:
 
-| Task Type | Recommended Agent | Reason |
-|-----------|------------------|---------|
-| Multi-file refactoring | Claude Code | Strong file operations, task planning |
-| Quick code fixes | GitHub Copilot | Fast inline suggestions |
-| Feature implementation | Claude Code | TodoWrite tracking, systematic approach |
-| Code review | CodeRabbit | Automated analysis, security focus |
-| Documentation updates | Claude Code | Comprehensive file editing |
-| CI/CD workflow development | Claude Code | Direct git/bash access |
-| Inline completions | GitHub Copilot | Real-time IDE integration |
-| Complex debugging | Claude Code | Systematic investigation tools |
+| Task Type | Recommended Agent | Why This Agent | Trade-offs |
+|-----------|------------------|----------------|------------|
+| Quick code fixes | GitHub Copilot | Fast, unlimited usage | Less systematic for complex tasks |
+| Inline completions | GitHub Copilot | Real-time IDE integration | Not suitable for large refactors |
+| Code review | CodeRabbit | Automated, unlimited | Less context-aware than human review |
+| Multi-file refactoring | Claude Code | Strong file ops, task planning | Usage limits, higher cost |
+| Complex debugging | Claude Code | Systematic investigation | Use when other agents can't solve it |
+| Feature implementation | Claude Code or Copilot | Depends on complexity | Claude for complex, Copilot for simple |
+| Documentation updates | Any agent | All capable | Use Copilot first (no usage limits) |
+| CI/CD workflow development | Claude Code | Direct git/bash access | Consider if Copilot can handle first |
+| Security analysis | CodeRabbit | Specialized focus | Automated, not deep investigation |
+
+**General Strategy:**
+- **Start with unlimited agents** (Copilot, CodeRabbit) for most tasks
+- **Escalate to Claude Code** when tasks require systematic multi-step work or advanced capabilities
+- **Consider cost vs. value** - use Claude Code when its capabilities justify the usage cost
+- **Leverage strengths** - each agent has optimal use cases where it excels
 
 ---
 

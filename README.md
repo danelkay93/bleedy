@@ -46,12 +46,17 @@ npm run lint
 
 ## Multi-Agent Development
 
-This project supports collaboration between multiple AI agents for enhanced development workflows:
+This project uses multiple AI agents, each with different strengths and trade-offs:
 
-- **Claude Code**: Complex refactoring, feature implementation, documentation
-- **GitHub Copilot**: Quick fixes, inline suggestions, chat assistance
-- **CodeRabbit**: Automated code reviews, security analysis
+- **GitHub Copilot**: Primary agent for most tasks (unlimited usage)
+  - Quick fixes, inline suggestions, simple features, day-to-day development
+- **CodeRabbit**: Automated code reviews (unlimited, use on all PRs)
+  - Security analysis, code quality checks, best practices verification
+- **Claude Code**: Complex tasks requiring advanced capabilities (usage limits, higher cost)
+  - Multi-file refactoring, deep debugging, systematic feature implementation
 - **ChatGPT Codex**: GitHub-integrated task automation
+
+**Strategy:** Start with Copilot for most work, use CodeRabbit for all reviews, escalate to Claude Code only when tasks require its advanced capabilities.
 
 For comprehensive agent collaboration guidelines, see [AGENT_COLLABORATION.md](./.github/AGENT_COLLABORATION.md).
 

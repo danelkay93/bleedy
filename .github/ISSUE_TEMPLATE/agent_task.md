@@ -89,15 +89,18 @@ assignees: ''
 
 **Priority**: <!-- Low / Medium / High / Critical -->
 
-**Task Type Recommendations**:
-- Multi-file refactoring → Claude Code
-- Quick fixes → GitHub Copilot
-- Feature implementation → Claude Code
-- Code review → CodeRabbit
-- Documentation → Claude Code
-- Complex debugging → Claude Code
+**Task Type Recommendations** (consider usage limits and costs):
+- Quick fixes → GitHub Copilot (unlimited, use first)
+- Simple features → GitHub Copilot (unlimited, use first)
+- Code review → CodeRabbit (automated, unlimited)
+- Documentation → GitHub Copilot first, Claude Code if complex
+- Multi-file refactoring → Claude Code (when Copilot can't handle)
+- Complex debugging → Claude Code (when Copilot can't solve)
+- Feature implementation → Copilot first, escalate to Claude Code if needed
 
-See `.github/AGENT_COLLABORATION.md` for agent capabilities matrix.
+**General Strategy:** Start with Copilot (unlimited), escalate to Claude Code (limited/costly) only when needed.
+
+See `.github/AGENT_COLLABORATION.md` for detailed agent capabilities and trade-offs.
 
 ---
 
