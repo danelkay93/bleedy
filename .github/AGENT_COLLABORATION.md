@@ -2,7 +2,7 @@
 
 ## Overview
 
-This guide provides comprehensive information for AI agents (GitHub Copilot, ChatGPT Codex, CodeRabbit, etc.) working on the Bleedy project. It clarifies technical constraints, communication patterns, and best practices for effective collaboration.
+This guide provides comprehensive information for AI agents (GitHub Copilot, Claude Code, ChatGPT Codex, CodeRabbit, etc.) working on the Bleedy project. It clarifies technical constraints, communication patterns, and best practices for effective collaboration.
 
 ## Table of Contents
 
@@ -41,10 +41,12 @@ All AI agents operate in sandboxed environments with specific limitations:
 
 - ✅ Read and modify files in the repository
 - ✅ Run commands via bash/shell tools
-- ✅ Use `report_progress` to commit and push changes
+- ✅ Use `report_progress` to commit and push changes (Copilot, Codex)
+- ✅ Use git commands directly for commit and push (Claude Code)
 - ✅ Access GitHub API via MCP tools (if available)
 - ✅ Create and modify issues/PRs (via tools, not direct git)
 - ✅ Run builds, tests, and linters locally
+- ✅ Use specialized tools for task management (TodoWrite in Claude Code)
 
 ## Communication Patterns
 
@@ -325,12 +327,43 @@ I don't have access to changes made by other agents unless they're in the curren
 
 ## Tool-Specific Notes
 
+### Claude Code
+
+- **Configuration**: Uses `.claude/project-instructions.md` for project-specific instructions
+- **Capabilities**:
+  - Direct file operations (Read, Write, Edit tools)
+  - Bash commands with full shell access
+  - Git operations (commit, push, PR creation via gh CLI)
+  - Task management via TodoWrite tool
+  - Web search and fetch capabilities
+- **Strengths**:
+  - Excellent for multi-step refactoring and implementation tasks
+  - Strong planning and task decomposition via TodoWrite
+  - Direct git integration with retry logic
+  - Comprehensive file editing with exact string matching
+- **Limitations**:
+  - Cannot access external HTTP/HTTPS URLs directly (uses WebFetch tool)
+  - Cannot run interactive commands (like `git rebase -i`)
+  - All operations use tools (no direct system access)
+- **Best Use Cases**:
+  - Feature implementation with multiple files
+  - Complex refactoring tasks
+  - Documentation updates
+  - CI/CD workflow development
+  - Bug fixes requiring systematic investigation
+- **Attribution**: Commits include "Generated with Claude Code" footer
+
 ### GitHub Copilot Agent
 
+- **Configuration**: Uses `.github/copilot-instructions.md` for project-specific instructions
 - Has access to GitHub MCP tools for repository operations
 - Can read issues, PRs, and comments via API
 - Uses `report_progress` for committing changes
 - Cannot access external URLs (HTTP/HTTPS)
+- **Best Use Cases**:
+  - Quick code completions
+  - Inline suggestions
+  - Chat-based problem solving
 
 ### ChatGPT Codex Connector
 
@@ -345,6 +378,10 @@ I don't have access to changes made by other agents unless they're in the curren
 - Can be triggered with `@coderabbitai review full`
 - Focuses on code quality and best practices
 - Can suggest improvements and identify issues
+- **Best Use Cases**:
+  - Automated PR reviews
+  - Security vulnerability detection
+  - Code quality assessment
 
 ### Other Agents
 
@@ -397,7 +434,36 @@ This guide is a living document. If you discover:
 
 Please update this guide in your PR with a clear explanation of the addition.
 
+## Agent-Specific Documentation
+
+Each agent has its own configuration and instruction files:
+
+- **Claude Code**: `.claude/project-instructions.md` - Comprehensive project guide with Claude Code specific features
+- **GitHub Copilot**: `.github/copilot-instructions.md` - Copilot-specific configuration and guidelines
+- **All Agents**: This file (`.github/AGENT_COLLABORATION.md`) - Universal collaboration guide
+
+When working on the project, agents should:
+1. Read their agent-specific documentation first
+2. Refer to this collaboration guide for multi-agent workflows
+3. Follow the templates and patterns documented here
+4. Update documentation when discovering new patterns or issues
+
+## Choosing the Right Agent for the Task
+
+Different agents excel at different types of tasks:
+
+| Task Type | Recommended Agent | Reason |
+|-----------|------------------|---------|
+| Multi-file refactoring | Claude Code | Strong file operations, task planning |
+| Quick code fixes | GitHub Copilot | Fast inline suggestions |
+| Feature implementation | Claude Code | TodoWrite tracking, systematic approach |
+| Code review | CodeRabbit | Automated analysis, security focus |
+| Documentation updates | Claude Code | Comprehensive file editing |
+| CI/CD workflow development | Claude Code | Direct git/bash access |
+| Inline completions | GitHub Copilot | Real-time IDE integration |
+| Complex debugging | Claude Code | Systematic investigation tools |
+
 ---
 
-**Last Updated**: 2025-10-18
-**Maintained by**: GitHub Copilot, ChatGPT Codex, and community contributors
+**Last Updated**: 2025-10-21
+**Maintained by**: Claude Code, GitHub Copilot, ChatGPT Codex, and community contributors

@@ -44,6 +44,22 @@ npm run test:unit
 npm run lint
 ```
 
+## Multi-Agent Development
+
+This project supports collaboration between multiple AI agents for enhanced development workflows:
+
+- **Claude Code**: Complex refactoring, feature implementation, documentation
+- **GitHub Copilot**: Quick fixes, inline suggestions, chat assistance
+- **CodeRabbit**: Automated code reviews, security analysis
+- **ChatGPT Codex**: GitHub-integrated task automation
+
+For comprehensive agent collaboration guidelines, see [AGENT_COLLABORATION.md](./.github/AGENT_COLLABORATION.md).
+
+### Agent-Specific Documentation
+
+- **Claude Code**: [.claude/project-instructions.md](./.claude/project-instructions.md)
+- **GitHub Copilot**: [.github/copilot-instructions.md](./.github/copilot-instructions.md)
+
 ## CI/CD Pipeline
 
 This project uses GitHub Actions for continuous integration and deployment. For detailed information about our CI/CD pipelines, including:

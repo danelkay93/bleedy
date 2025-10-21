@@ -83,12 +83,24 @@ assignees: ''
 
 ## Agent Assignment
 
-**Preferred Agent**: @[agent-name] <!-- e.g., @copilot, @codex -->
+**Preferred Agent**: @[agent-name] <!-- e.g., @copilot, @claude, @codex -->
 
 **Estimated Complexity**: <!-- Low / Medium / High / Unknown -->
 
 **Priority**: <!-- Low / Medium / High / Critical -->
 
+**Task Type Recommendations**:
+- Multi-file refactoring → Claude Code
+- Quick fixes → GitHub Copilot
+- Feature implementation → Claude Code
+- Code review → CodeRabbit
+- Documentation → Claude Code
+- Complex debugging → Claude Code
+
+See `.github/AGENT_COLLABORATION.md` for agent capabilities matrix.
+
 ---
 
 **For the assigned agent**: Please acknowledge this task and outline your implementation plan before starting work. Use the templates in `.github/AGENT_COLLABORATION.md` for status updates.
+
+**For Claude Code**: Use TodoWrite to track progress and keep this issue updated with your task list.

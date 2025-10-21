@@ -178,6 +178,9 @@ npm run test:unit
 
 **For AI Agents**: If this PR was created or modified by an AI agent, please include:
 
-- Agent name (e.g., @copilot, @codex)
+- Agent name (e.g., @copilot, @claude, @codex)
 - Task tracking link (if applicable)
 - Any special considerations or limitations encountered
+- For Claude Code: Include todo list summary if TodoWrite was used
+
+**Multi-Agent Collaboration**: If multiple agents worked on this PR, list all contributors and their roles. See `.github/AGENT_COLLABORATION.md` for handoff templates.

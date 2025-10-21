@@ -1,4 +1,4 @@
-# Copilot Instructions for Bleedy
+# Claude Code Instructions for Bleedy
 
 ## Project Overview
 
@@ -128,6 +128,11 @@ npm run test:unit
 ├── patches/                 # npm patches for dependencies
 │   ├── roughjs@4.6.6.patch
 │   └── wired-elements@3.0.0-rc.6.patch
+├── .claude/                 # Claude Code configuration
+│   └── project-instructions.md # This file
+├── .github/                 # GitHub configuration
+│   ├── AGENT_COLLABORATION.md # Multi-agent collaboration guide
+│   └── copilot-instructions.md # Copilot configuration
 └── dist/                    # Production build output
 ```
 
@@ -188,10 +193,11 @@ npm run test:unit
 4. **Post-Merge Cleanup** (`.github/workflows/post-merge-cleanup.yml`)
    - Cleanup tasks after merge
 
-### Pre-commit Hooks (Planned)
+5. **Lockfile Sync** (`.github/workflows/lockfile-sync.yml`)
+   - Keeps package-lock.json in sync
 
-- `scripts/check-pyscript-version.sh` - Validates PyScript version consistency
-- Currently not integrated with Husky
+6. **Azure Staging Cleanup** (`.github/workflows/azure-staging-cleanup.yml`)
+   - Cleans up staging environments
 
 ## Common Issues and Solutions
 
@@ -255,73 +261,161 @@ npm run test:unit
 - Doodle.css and paper-css for hand-drawn aesthetics
 - Google Fonts: Cabin Sketch
 
-## Agent Collaboration
+## Claude Code Specific Features
 
-### Working with Other AI Agents
+### Capabilities
 
-This repository supports collaboration between multiple AI agents (GitHub Copilot, Claude Code, ChatGPT Codex, CodeRabbit, etc.). For comprehensive collaboration guidelines, see `.github/AGENT_COLLABORATION.md`.
+Claude Code provides powerful tools for software development:
 
-### Agent-Specific Documentation
+1. **File Operations**:
+   - Read, Write, Edit files with precise control
+   - Glob patterns for finding files
+   - Grep for searching code content
 
-- **GitHub Copilot**: This file (`.github/copilot-instructions.md`)
-- **Claude Code**: `.claude/project-instructions.md`
-- **All Agents**: `.github/AGENT_COLLABORATION.md`
+2. **Code Execution**:
+   - Bash commands for running builds, tests, and tools
+   - Background process management for long-running tasks
 
-### Key Collaboration Points
+3. **Git Integration**:
+   - Create commits with proper messages
+   - Push to branches with retry logic
+   - Create pull requests via gh CLI
 
-**Technical Limitations**:
+4. **Task Management**:
+   - TodoWrite tool for tracking multi-step tasks
+   - Proactive task planning and execution
 
-- AI agents cannot access external HTTP/HTTPS URLs (including github.com links)
-- Cannot push directly using `git push` - must use `report_progress` tool
-- Cannot resolve merge conflicts - user must handle these
-- Cannot access files in `.github/agents/` directory
+5. **Multi-Agent Collaboration**:
+   - Can work alongside Copilot, CodeRabbit, and other agents
+   - Follows structured handoff templates
+   - Reports progress transparently
 
-**Communication Best Practices**:
+### Best Practices for Claude Code
 
-- Use structured templates for handoffs (see AGENT_COLLABORATION.md)
-- Always include context and file paths in discussions
-- Paste full content of review comments when referencing them
-- Report progress frequently using `report_progress`
+1. **Always use TodoWrite for multi-step tasks** - This helps track progress and ensures nothing is missed
+2. **Read files before editing** - Use Read tool to understand context
+3. **Test changes locally** - Run `npm run build` and `npm run lint` before committing
+4. **Use structured commit messages** - Follow the format in `.github/AGENT_COLLABORATION.md`
+5. **Coordinate with other agents** - Check for ongoing work and use handoff templates
 
-**Handoff Template** (Brief Version):
+### Git Workflow
+
+When making commits:
+
+1. Review changes with `git status` and `git diff`
+2. Stage appropriate files
+3. Create descriptive commit messages that explain WHY, not just WHAT
+4. Always end commits with:
+   ```
+   Generated with [Claude Code](https://claude.com/claude-code)
+
+   Co-Authored-By: Claude <noreply@anthropic.com>
+   ```
+
+When creating PRs:
+
+1. Use `gh pr create` with structured title and body
+2. Include summary of changes (not just latest commit)
+3. Add test plan with verification steps
+4. End with Claude Code attribution
+
+### Limitations
+
+Claude Code operates with certain constraints:
+
+- Cannot access external HTTP/HTTPS URLs directly
+- Uses tools for all file and git operations
+- Cannot run interactive commands (like `git rebase -i`)
+- Works within the repository directory only
+
+### Multi-Agent Collaboration
+
+Claude Code integrates seamlessly with other AI agents in this repository:
+
+**Collaboration Guidelines**:
+
+1. **Check for active work**: Review open issues and PRs before starting
+2. **Use handoff templates**: See `.github/AGENT_COLLABORATION.md` for structured communication
+3. **Report progress frequently**: Update issues/PRs with status
+4. **Coordinate major changes**: Tag other agents when significant architectural changes are planned
+5. **Respect branch ownership**: Don't force push to branches owned by other agents
+
+**Working with GitHub Copilot**:
+- Copilot has access to GitHub MCP tools for repository operations
+- Copilot uses `report_progress` for committing (Claude Code uses git directly)
+- Both agents should follow the same code style and commit message conventions
+
+**Working with CodeRabbit**:
+- CodeRabbit provides automated code reviews
+- Address CodeRabbit's feedback before requesting human review
+- Tag with `@coderabbitai review full` for comprehensive review
+
+**Handoff Template** (when passing work to another agent):
 
 ```markdown
 @[agent-name]
 
 **Context**: [What you've done]
-**Current State**: [Completed/In Progress/Blocked items]
+
+**Current State**:
+- Completed: [List]
+- In Progress: [List]
+- Blocked: [List]
+
 **Next Steps**: [What needs to happen]
-**Files Modified**: [List with descriptions]
-**Testing**: [Verification steps]
+
+**Files Modified**:
+- `path/file` - Description
+
+**Testing**: [How to verify]
 ```
 
-### Using Issue and PR Templates
+### Documentation Standards
 
-This repository provides structured templates for better collaboration:
+When updating documentation:
+
+1. Keep markdown clean and well-formatted
+2. Include code examples with language hints
+3. Update "Last Updated" dates
+4. Cross-reference related docs
+5. Keep technical accuracy paramount
+
+## Multi-Agent Workflows
+
+### Working with Other AI Agents
+
+This repository supports collaboration between multiple AI agents. For comprehensive collaboration guidelines, see `.github/AGENT_COLLABORATION.md`.
+
+### Key Collaboration Points
+
+**Communication Best Practices**:
+
+- Use structured templates for handoffs
+- Always include context and file paths in discussions
+- Report progress frequently
+- Tag relevant agents when needed
+
+**Using Issue and PR Templates**:
 
 - **Agent Tasks**: Use `.github/ISSUE_TEMPLATE/agent_task.md` for AI agent assignments
-- **Bug Reports**: Use `.github/ISSUE_TEMPLATE/bug_report.md` for bugs
-- **Feature Requests**: Use `.github/ISSUE_TEMPLATE/feature_request.md` for features
 - **Pull Requests**: Use `.github/PULL_REQUEST_TEMPLATE.md` for all PRs
+- Include agent name and task tracking info in PRs
 
-### Multi-Agent Workflows
+## References
 
-When multiple agents work on the same task:
+### Documentation
 
-1. **Primary agent** creates initial implementation
-2. **Primary agent** uses handoff template to transfer work
-3. **Secondary agent** acknowledges and continues
-4. **Either agent** can request reviews from others
-5. **Final agent** completes with comprehensive summary
+- [AGENT_COLLABORATION.md](../.github/AGENT_COLLABORATION.md) - Comprehensive multi-agent collaboration guide
+- [Copilot Instructions](../.github/copilot-instructions.md) - GitHub Copilot configuration
+- [CI/CD Guide](../docs/CI_CD_GUIDE.md) - Complete CI/CD documentation
+- [CI/CD Quick Reference](../docs/CI_CD_QUICK_REFERENCE.md) - Common CI/CD tasks
 
-**Collaborating with Claude Code**:
-- Claude Code excels at multi-file refactoring and systematic implementation tasks
-- Uses TodoWrite for task tracking (you'll see structured todo lists in issues/PRs)
-- Has direct git access and can create commits/PRs independently
-- Best for complex features requiring multiple steps
-- Coordinates via the same handoff templates in `.github/AGENT_COLLABORATION.md`
+### Templates
 
-See `.github/AGENT_COLLABORATION.md` for detailed workflow templates and examples.
+- [Pull Request Template](../.github/PULL_REQUEST_TEMPLATE.md)
+- [Agent Task Template](../.github/ISSUE_TEMPLATE/agent_task.md)
+- [Bug Report Template](../.github/ISSUE_TEMPLATE/bug_report.md)
+- [Feature Request Template](../.github/ISSUE_TEMPLATE/feature_request.md)
 
 ## Trust These Instructions
 
@@ -332,3 +426,8 @@ These instructions are comprehensive and tested. Only search for additional info
 3. Requirements change beyond current scope
 
 Always prefer the documented commands and configurations over exploration.
+
+---
+
+**Last Updated**: 2025-10-21
+**Maintained by**: Claude Code and multi-agent collaboration team
