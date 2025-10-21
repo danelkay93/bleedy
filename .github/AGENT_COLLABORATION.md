@@ -21,9 +21,12 @@ All AI agents operate in sandboxed environments with specific limitations:
 
 #### Network Access
 
-- **Cannot access external HTTP/HTTPS URLs** - This includes GitHub.com URLs, even for this repository
-- **Workaround**: Paste review comments or specific content directly into PR/issue comments
-- **Note**: Some agents may have internal APIs for GitHub operations (use MCP tools when available)
+- **External URLs**: Cannot access external HTTP/HTTPS URLs (e.g., github.com, external documentation)
+- **Internal Repository API**: Should be able to access internal repository API paths, but the exact path format may vary by environment
+  - Example attempted paths: `/api/repos/owner/repo/pulls`, `/repos/owner/repo/pulls`
+  - If API access fails with "Invalid path format", request information directly from users
+- **Workaround**: When API access is unavailable, paste review comments or PR content directly into issue/PR comments
+- **Note**: Some agents may have GitHub MCP tools for repository operations (Claude Code uses git directly, Copilot uses `report_progress` and may have MCP tools)
 
 #### Git Operations
 
