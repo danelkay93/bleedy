@@ -33,7 +33,6 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { DEFAULT_BLEED_AMOUNT } from '../config/appConfig'
 import StepManager from './StepManager.vue'
 import ImageSelection from './ImageSelection.vue'
 import BleedAdjustment from './steps/BleedAdjustment.vue'
@@ -43,7 +42,7 @@ import { processorSteps } from '../config/processorSteps'
 import { WiredCard } from 'wired-elements'
 
 const activeStep = ref(0)
-const bleedAmount = ref(DEFAULT_BLEED_AMOUNT)
+const bleedAmount = ref(50)
 const processedImages = ref<string[]>([])
 const selectedImages = ref<File[]>([])
 
@@ -55,7 +54,10 @@ const handleProcessComplete = (images: string[]) => {
   processedImages.value = images
 }
 
-// Removed unused saveAsZip method
+const saveAsZip = () => {
+  console.log('Saving processed images as ZIP')
+  // Implement ZIP saving logic here
+}
 </script>
 
 <style scoped>
