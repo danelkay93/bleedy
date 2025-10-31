@@ -51,6 +51,7 @@ export default {
   text-align: center;
   margin-top: 20px;
 }
+
 button {
   margin-top: 10px;
 }
