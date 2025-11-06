@@ -8,9 +8,10 @@ const passthroughArgs = [];
 
 /**
  * Parse a string into arguments, respecting quoted substrings.
- * Handles both single and double quotes.
+ * Handles both single and double quotes, and supports escaped quotes.
  * @param {string} str - The string to parse
  * @returns {string[]} Array of parsed arguments
+ * @throws {Error} If the string contains unclosed quotes
  */
 function parseQuotedArgs(str) {
   const result = [];
@@ -19,9 +20,14 @@ function parseQuotedArgs(str) {
   
   for (let i = 0; i < str.length; i++) {
     const char = str[i];
+    const nextChar = str[i + 1];
     
     if (inQuote) {
-      if (char === inQuote) {
+      // Handle escaped quotes within quoted strings
+      if (char === '\\' && nextChar === inQuote) {
+        current += nextChar;
+        i++; // Skip the next character
+      } else if (char === inQuote) {
         inQuote = null;
       } else {
         current += char;
@@ -38,6 +44,11 @@ function parseQuotedArgs(str) {
     }
   }
   
+  // Check for unclosed quotes
+  if (inQuote) {
+    throw new Error(`Unclosed quote in arguments: expected closing ${inQuote}`);
+  }
+  
   if (current) {
     result.push(current);
   }
@@ -52,7 +63,12 @@ for (const arg of args) {
   }
   if (arg.startsWith('--test-args=')) {
     const argsString = arg.replace('--test-args=', '');
-    passthroughArgs.push(...parseQuotedArgs(argsString));
+    try {
+      passthroughArgs.push(...parseQuotedArgs(argsString));
+    } catch (error) {
+      console.error(`Error parsing test arguments: ${error.message}`);
+      process.exit(1);
+    }
     continue;
   }
   if (arg === '--with-typecheck' || arg === '--skip-tests' || arg === '--skip-build' || arg === '--skip-lint') {
