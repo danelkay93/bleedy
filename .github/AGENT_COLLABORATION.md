@@ -34,8 +34,7 @@ All AI agents operate in sandboxed environments with specific limitations:
 
 #### Network Access
 
-- **Limited outbound HTTP/HTTPS access is available** – agents can usually contact public APIs (including GitHub) when authenti
-cated tooling is configured.
+- **Limited outbound HTTP/HTTPS access is available** – agents can usually contact public APIs (including GitHub) when authenticated tooling is configured.
 - **Prefer repository-provided tools** – use MCP helpers or curated scripts before resorting to ad-hoc `curl`/`wget` calls.
 - **Mind rate limits** – cache responses when practical and avoid unnecessary polling.
 
