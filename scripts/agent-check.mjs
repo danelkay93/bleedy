@@ -6,13 +6,53 @@ const args = process.argv.slice(2);
 const flagSet = new Set();
 const passthroughArgs = [];
 
+/**
+ * Parse a string into arguments, respecting quoted substrings.
+ * Handles both single and double quotes.
+ * @param {string} str - The string to parse
+ * @returns {string[]} Array of parsed arguments
+ */
+function parseQuotedArgs(str) {
+  const result = [];
+  let current = '';
+  let inQuote = null;
+  
+  for (let i = 0; i < str.length; i++) {
+    const char = str[i];
+    
+    if (inQuote) {
+      if (char === inQuote) {
+        inQuote = null;
+      } else {
+        current += char;
+      }
+    } else if (char === '"' || char === "'") {
+      inQuote = char;
+    } else if (char === ' ') {
+      if (current) {
+        result.push(current);
+        current = '';
+      }
+    } else {
+      current += char;
+    }
+  }
+  
+  if (current) {
+    result.push(current);
+  }
+  
+  return result;
+}
+
 for (const arg of args) {
   if (arg === '--help' || arg === '-h') {
     printHelp();
     process.exit(0);
   }
   if (arg.startsWith('--test-args=')) {
-    passthroughArgs.push(...arg.replace('--test-args=', '').split(' ').filter(Boolean));
+    const argsString = arg.replace('--test-args=', '');
+    passthroughArgs.push(...parseQuotedArgs(argsString));
     continue;
   }
   if (arg === '--with-typecheck' || arg === '--skip-tests' || arg === '--skip-build' || arg === '--skip-lint') {
