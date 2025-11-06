@@ -11,17 +11,12 @@ for (const arg of args) {
     printHelp();
     process.exit(0);
   }
-  if (arg.startsWith('--test-args=')) {
-    passthroughArgs.push(...arg.replace('--test-args=', '').split(' ').filter(Boolean));
-    continue;
-  }
   if (arg === '--with-typecheck' || arg === '--skip-tests' || arg === '--skip-build' || arg === '--skip-lint') {
     flagSet.add(arg);
     continue;
   }
-  console.error(`Unknown option: ${arg}`);
-  printHelp();
-  process.exit(1);
+  // Treat unknown arguments as passthrough args for vitest
+  passthroughArgs.push(arg);
 }
 
 const steps = [];
@@ -93,5 +88,5 @@ for (const step of steps) {
 console.log('\n✅  All selected checks passed!');
 
 function printHelp() {
-  console.log(`Bleedy Agent QA Helper\n\nUsage: npm run qa [options]\n\nOptions:\n  --with-typecheck   Include the slower vue-tsc type checking step\n  --skip-lint        Skip the ESLint run\n  --skip-build       Skip the Vite production build\n  --skip-tests       Skip the Vitest suite\n  --test-args=<...>  Pass additional arguments directly to Vitest\n  -h, --help         Show this help message\n\nExamples:\n  npm run qa\n  npm run qa -- --with-typecheck\n  npm run qa -- --skip-tests\n  npm run qa -- --test-args='--run --coverage'\n`);
+  console.log(`Bleedy Agent QA Helper\n\nUsage: npm run qa [options] [-- [vitest-options]]\n\nOptions:\n  --with-typecheck   Include the slower vue-tsc type checking step\n  --skip-lint        Skip the ESLint run\n  --skip-build       Skip the Vite production build\n  --skip-tests       Skip the Vitest suite\n  -h, --help         Show this help message\n\nAll other arguments after -- are passed directly to Vitest.\n\nExamples:\n  npm run qa\n  npm run qa -- --with-typecheck\n  npm run qa -- --skip-tests\n  npm run qa -- --run --coverage\n  npm run qa -- --grep "my test pattern"\n`);
 }
