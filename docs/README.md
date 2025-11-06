@@ -4,6 +4,16 @@ This directory contains comprehensive documentation for the Bleedy project.
 
 ## Available Guides
 
+### [Consolidated Task Guide](../CONSOLIDATED_TASK_GUIDE.md)
+Unified summary of the seven-PR consolidation, automation suite, review resolution steps, and post-merge checklist.
+
+**Contents:**
+- Consolidation outcomes and validation snapshot
+- Automation workflows and local Husky setup
+- Review dismissal templates and post-merge checklist
+
+**Target audience:** Maintainers and collaborators continuing the consolidation workstream
+
 ### [CI/CD Guide](./CI_CD_GUIDE.md)
 Comprehensive guide to understanding, maintaining, and troubleshooting the CI/CD pipelines.
 
@@ -28,6 +38,16 @@ Quick reference for common CI/CD tasks and commands.
 - Emergency procedures
 
 **Target audience:** Developers working with the project daily
+
+### [Agent Toolkit Quickstart](./AGENT_TOOLKIT.md)
+Condensed command and collaboration reference for AI and human contributors, aligned with GitHub Copilot Agent, ChatGPT Codex, Gemini Code Assist, Claude Code, and Google Jules conventions.
+
+**Contents:**
+- Frequently used validation commands (including the `npm run qa` helper)
+- Branch and PR awareness tips
+- Collaboration and troubleshooting checklists
+
+**Target audience:** Multi-agent collaborators and reviewers
 
 ## Quick Links
 
@@ -82,4 +102,4 @@ If you find documentation issues:
 
 ---
 
-**Last Updated:** 2025-10-16
+**Last Updated:** 2025-10-29

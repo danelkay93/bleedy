@@ -135,9 +135,7 @@ For future AI agents working on this codebase:
 
 ### Documentation:
 
-- `AUTOMATION_SETUP.md` - Complete automation guide
-- `REVIEW_RESOLUTION.md` - Review dismissal instructions
-- `AUTOMATION_SUMMARY.md` - Quick automation overview
+- `CONSOLIDATED_TASK_GUIDE.md` - Single-source playbook for automation, review handling, and readiness details
 
 **When this PR merges to master, all post-merge actions happen automatically.** 🎉
 
@@ -147,7 +145,7 @@ For future AI agents working on this codebase:
 
 For questions about removed functionality or migration recommendations, refer to:
 
-- `AUTOMATION_SETUP.md` for automation infrastructure
+- `CONSOLIDATED_TASK_GUIDE.md` for automation, review resolution, and readiness context
 - `FUTURE_WORK.md` for planned improvements
 - `TODO.md` for specific technical tasks
 - `.github/copilot-instructions.md` for development guidelines

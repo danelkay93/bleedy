@@ -44,6 +44,22 @@ npm run test:unit
 npm run lint
 ```
 
+### Unified Quality Checks for Agents
+
+```sh
+npm run qa
+```
+
+- Runs ESLint, builds the project, and executes the Vitest suite in one command
+- Accepts additional options (for example `npm run qa -- --with-typecheck`) to include slower checks when needed
+- Designed to simplify common validation workflows for multi-agent collaboration
+
+## Consolidation & Automation Playbook
+
+- Review the [Consolidated Task Guide](./CONSOLIDATED_TASK_GUIDE.md) for a single-source summary of the seven-PR merge, automation setup, review resolution steps, and post-merge expectations.
+- Pair it with the quick commands in [docs/AGENT_TOOLKIT.md](./docs/AGENT_TOOLKIT.md) when coordinating across multiple agents.
+- Consult [`.github/AGENT_COLLABORATION.md`](./.github/AGENT_COLLABORATION.md) for cross-platform agent guidance covering GitHub Copilot Agent, ChatGPT Codex, Gemini Code Assist, Claude Code, and Google Jules workflows.
+
 ## CI/CD Pipeline
 
 This project uses GitHub Actions for continuous integration and deployment. For detailed information about our CI/CD pipelines, including:
