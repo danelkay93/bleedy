@@ -118,7 +118,7 @@ All issues raised in this review have been addressed:
 - ✅ Type safety + accessibility fixes (commit 5999327; see CODERABBIT_FIXES.md)
 - ✅ Dependency versions verified (commit 4f8ba7a; see CONSOLIDATION_CHANGES.md)
 - ✅ Documentation & automation updates (commit b682a60; see CONSOLIDATED_TASK_GUIDE.md)
-  Please re-review and approve when convenient.
+Please re-review and approve when convenient.
 ```
 
 ---
