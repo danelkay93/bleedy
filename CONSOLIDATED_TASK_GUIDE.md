@@ -16,35 +16,39 @@ This playbook merges the most useful guidance from the automation setup, automat
 
 ## Key Outcomes from the Consolidation
 
-| Area | Highlights |
-| --- | --- |
-| **Merged PRs** | #1 `refactor-cleanup`, #7 `phase1-refactor-pyscript-deps`, #8 `fix/eslint-errors` (base), #10 reverse-conflict resolution, #12 `snyk-upgrade-element-plus-2.9.1`, #14 `snyk-upgrade-element-plus-2.9.5`, #15 `snyk-upgrade-element-plus-2.10.5`. |
-| **Dependency Health** | `element-plus` 2.11.4, `vue` 3.5.22, `vue-router` 4.5.1, PyScript 2025.5.1/Pyodide 0.26.1. |
-| **Type Safety** | SVG typing and null guards in `Logo.vue`, missing imports and emit typing fixes in `App.vue` and `ImageSelection.vue`, ref typing cleanup in `ImageGallery.vue`. |
-| **Accessibility** | Replaced global `outline: none` with WCAG-compliant `:focus-visible` styles, improving keyboard navigation. |
-| **Configuration Modernization** | ESLint 9 flat config, comprehensive `.github/workflows/ci.yml`, documented `npm run qa` helper, refreshed Copilot instructions. |
-| **Documentation** | `CONSOLIDATION_CHANGES.md`, `CODERABBIT_FIXES.md`, `FUTURE_WORK.md`, this guide, and the `docs/` handbook series capture historical context and future plans. |
+| Area                            | Highlights                                                                                                                                                                                                                                       |
+| ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Merged PRs**                  | #1 `refactor-cleanup`, #7 `phase1-refactor-pyscript-deps`, #8 `fix/eslint-errors` (base), #10 reverse-conflict resolution, #12 `snyk-upgrade-element-plus-2.9.1`, #14 `snyk-upgrade-element-plus-2.9.5`, #15 `snyk-upgrade-element-plus-2.10.5`. |
+| **Dependency Health**           | `element-plus` 2.11.4, `vue` 3.5.22, `vue-router` 4.5.1, PyScript 2025.5.1/Pyodide 0.26.1.                                                                                                                                                       |
+| **Type Safety**                 | SVG typing and null guards in `Logo.vue`, missing imports and emit typing fixes in `App.vue` and `ImageSelection.vue`, ref typing cleanup in `ImageGallery.vue`.                                                                                 |
+| **Accessibility**               | Replaced global `outline: none` with WCAG-compliant `:focus-visible` styles, improving keyboard navigation.                                                                                                                                      |
+| **Configuration Modernization** | ESLint 9 flat config, comprehensive `.github/workflows/ci.yml`, documented `npm run qa` helper, refreshed Copilot instructions.                                                                                                                  |
+| **Documentation**               | `CONSOLIDATION_CHANGES.md`, `CODERABBIT_FIXES.md`, `FUTURE_WORK.md`, this guide, and the `docs/` handbook series capture historical context and future plans.                                                                                    |
 
 ---
 
 ## Automation Suite Overview
 
 ### 1. Post-Merge Cleanup (`.github/workflows/post-merge-cleanup.yml`)
+
 - **Trigger**: Runs automatically whenever a PR merges into `master`/`main`.
 - **Actions**: Detects consolidation PR metadata, closes PRs #1/#7/#8/#10/#12/#14/#15 with explanatory comments, deletes their branches (`refactor-cleanup`, `phase1-refactor-pyscript-deps`, `fix/eslint-errors`, and the Snyk branches), and posts a final summary.
 - **Benefit**: Keeps the repo free of stale PRs/branches without manual intervention.
 
 ### 2. CI Quality Gate (`.github/workflows/ci.yml`)
+
 - Runs on pushes and pull requests.
 - Executes formatting check (`npm run format:check`), ESLint, TypeScript type check, and production build.
 - Intended to be the definitive gate once local Husky hooks are enabled.
 
 ### 3. Dependency Hygiene (`.github/dependabot.yml`)
+
 - **npm** updates every Monday at 09:00 UTC (max 5 open PRs).
 - **GitHub Actions** updates monthly (max 3 open PRs).
 - Automatically applies `dependencies` + `automated` labels, rebases as needed, and ignores major updates for Vue, Element Plus, and Vite unless manually lifted.
 
 ### 4. Local Unified QA (`npm run qa`)
+
 - Orchestrates ESLint → Vite build → Vitest with clear section headers.
 - Flags: `--with-typecheck` adds `vue-tsc`; `--skip-tests`, `--skip-lint`, and `--skip-build` support documentation-only updates.
 - Use this before invoking the heavier CI pipeline.
@@ -73,6 +77,7 @@ This playbook merges the most useful guidance from the automation setup, automat
    echo "bash scripts/check-pyscript-version.sh" >> .husky/pre-commit
    chmod +x scripts/check-pyscript-version.sh
    ```
+
    - The script still needs its version-parsing logic finalized (tracked in `TODO.md`).
 5. **Confirm tooling works locally:**
    ```bash
@@ -83,13 +88,13 @@ This playbook merges the most useful guidance from the automation setup, automat
 
 ## Validation Snapshot (from consolidation QA)
 
-| Check | Result | Notes |
-| --- | --- | --- |
-| Build | ✅ `npm run build` (≈11.4s, 1566 modules) | Expected chunk-size warnings due to PyScript payloads. |
-| TypeScript | ⚠️ Critical issues fixed; ~26 non-blocking errors remain | Missing third-party types, File System Access API declarations, and legacy `any` usage. |
-| Linting & Formatting | ✅ ESLint 9 flat config + Prettier alignment | Occasional Prettier cache hiccups; rerun with `--cache=false` if needed. |
-| Dependency Audit | ⚠️ 5 moderate dev dependency vulnerabilities | Documented for follow-up hardening; no production impact. |
-| Functionality | ✅ Core Vue workflow + PyScript bridge verified | Accessibility fixes applied; icons renamed to PascalCase components. |
+| Check                | Result                                                   | Notes                                                                                   |
+| -------------------- | -------------------------------------------------------- | --------------------------------------------------------------------------------------- |
+| Build                | ✅ `npm run build` (≈11.4s, 1566 modules)                | Expected chunk-size warnings due to PyScript payloads.                                  |
+| TypeScript           | ⚠️ Critical issues fixed; ~26 non-blocking errors remain | Missing third-party types, File System Access API declarations, and legacy `any` usage. |
+| Linting & Formatting | ✅ ESLint 9 flat config + Prettier alignment             | Occasional Prettier cache hiccups; rerun with `--cache=false` if needed.                |
+| Dependency Audit     | ⚠️ 5 moderate dev dependency vulnerabilities             | Documented for follow-up hardening; no production impact.                               |
+| Functionality        | ✅ Core Vue workflow + PyScript bridge verified          | Accessibility fixes applied; icons renamed to PascalCase components.                    |
 
 ---
 
@@ -104,12 +109,14 @@ The three outstanding reviews on PR #18 were addressed in commits `5999327`, `4f
 5. **If you lack dismiss permissions**, tag the reviewers with a status comment summarizing the above bullet points and request approval.
 
 Template snippet:
+
 ```markdown
 All issues raised in this review have been addressed:
+
 - ✅ Type safety + accessibility fixes (commit 5999327; see CODERABBIT_FIXES.md)
 - ✅ Dependency versions verified (commit 4f8ba7a; see CONSOLIDATION_CHANGES.md)
 - ✅ Documentation & automation updates (commit b682a60; see CONSOLIDATED_TASK_GUIDE.md)
-Please re-review and approve when convenient.
+  Please re-review and approve when convenient.
 ```
 
 ---
@@ -139,11 +146,11 @@ Please re-review and approve when convenient.
 
 For backward compatibility, the historical checklists now redirect here:
 
-| Legacy File | Status |
-| --- | --- |
-| [`AUTOMATION_SETUP.md`](./AUTOMATION_SETUP.md) | Redirect notice pointing to this guide for local automation setup.
-| [`AUTOMATION_SUMMARY.md`](./AUTOMATION_SUMMARY.md) | Redirect notice summarizing the automation coverage now tracked here.
-| [`PR_READINESS.md`](./PR_READINESS.md) | Redirect notice pointing to this guide for pre-PR validation and review prep.
-| [`REVIEW_RESOLUTION.md`](./REVIEW_RESOLUTION.md) | Redirect notice directing reviewers to the resolution playbook in this guide.
+| Legacy File                                        | Status                                                                        |
+| -------------------------------------------------- | ----------------------------------------------------------------------------- |
+| [`AUTOMATION_SETUP.md`](./AUTOMATION_SETUP.md)     | Redirect notice pointing to this guide for local automation setup.            |
+| [`AUTOMATION_SUMMARY.md`](./AUTOMATION_SUMMARY.md) | Redirect notice summarizing the automation coverage now tracked here.         |
+| [`PR_READINESS.md`](./PR_READINESS.md)             | Redirect notice pointing to this guide for pre-PR validation and review prep. |
+| [`REVIEW_RESOLUTION.md`](./REVIEW_RESOLUTION.md)   | Redirect notice directing reviewers to the resolution playbook in this guide. |
 
-_Last updated: 2025-10-29_
+_Last updated: 2024-10-29_

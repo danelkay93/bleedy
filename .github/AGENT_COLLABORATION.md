@@ -6,14 +6,14 @@ This guide provides comprehensive information for AI copilots (GitHub Copilot Ag
 
 ## Agent Capability Matrix
 
-| Agent | Default Commit Tooling | Network Access Profile | Key Nuances |
-| --- | --- | --- | --- |
-| **GitHub Copilot Agent** | `report_progress` + PR automation | GitHub MCP HTTP gateway with GitHub auth | Prefers `report_progress` checkpoints; surface `gh` helpers when configured. |
-| **ChatGPT Codex** | `report_progress` (GitHub-managed) | Limited outbound HTTP; GitHub REST available via MCP | Confirm branch context before each commit; Codex dashboards expect concise status notes. |
-| **Gemini Code Assist** | `apply_patch` + Google git proxies | Google-hosted sandbox with curated allow list | Paste explicit command outputs; document skipped steps that violate policy. |
-| **Claude Code** | `commit` / `open_pr` helpers | Anthropic secure proxy with audited HTTP access | Provide structured diffs and mention safety blocks when they trigger. |
-| **Google Jules** | `submit` workflow with auto-commit | Google-aligned HTTP allow list and strict logging | Provide deterministic QA commands and reproducible steps. |
-| **Other / Unknown Agents** | Varies | Assume restricted | Ask which tools are available before running niche commands. |
+| Agent                      | Default Commit Tooling             | Network Access Profile                               | Key Nuances                                                                              |
+| -------------------------- | ---------------------------------- | ---------------------------------------------------- | ---------------------------------------------------------------------------------------- |
+| **GitHub Copilot Agent**   | `report_progress` + PR automation  | GitHub MCP HTTP gateway with GitHub auth             | Prefers `report_progress` checkpoints; surface `gh` helpers when configured.             |
+| **ChatGPT Codex**          | `report_progress` (GitHub-managed) | Limited outbound HTTP; GitHub REST available via MCP | Confirm branch context before each commit; Codex dashboards expect concise status notes. |
+| **Gemini Code Assist**     | `apply_patch` + Google git proxies | Google-hosted sandbox with curated allow list        | Paste explicit command outputs; document skipped steps that violate policy.              |
+| **Claude Code**            | `commit` / `open_pr` helpers       | Anthropic secure proxy with audited HTTP access      | Provide structured diffs and mention safety blocks when they trigger.                    |
+| **Google Jules**           | `submit` workflow with auto-commit | Google-aligned HTTP allow list and strict logging    | Provide deterministic QA commands and reproducible steps.                                |
+| **Other / Unknown Agents** | Varies                             | Assume restricted                                    | Ask which tools are available before running niche commands.                             |
 
 > **Tip:** When instructions conflict, follow the stricter platform rule (for example, if Gemini disallows a network call that Copilot allows, skip it and note the limitation in your response).
 
@@ -402,14 +402,14 @@ I don't have access to changes made by other agents unless they're in the curren
 
 ### Repository Awareness Checklist
 
-| Task | Command |
-| ---- | ------- |
-| Show current branch | `git branch --show-current` |
-| Inspect local branches | `git branch --sort=-committerdate` |
-| View remote tracking info | `git remote -v` |
-| Summarize recent history | `git log --oneline --decorate --graph -10` |
+| Task                                | Command                                                   |
+| ----------------------------------- | --------------------------------------------------------- |
+| Show current branch                 | `git branch --show-current`                               |
+| Inspect local branches              | `git branch --sort=-committerdate`                        |
+| View remote tracking info           | `git remote -v`                                           |
+| Summarize recent history            | `git log --oneline --decorate --graph -10`                |
 | List open PRs (requires GitHub CLI) | `gh pr list --limit 20 --search "repo:danelkay93/bleedy"` |
-| Check CI status for branch | `gh run list --limit 5 --branch <branch>` |
+| Check CI status for branch          | `gh run list --limit 5 --branch <branch>`                 |
 
 ### Pull Request Standards
 
@@ -441,5 +441,5 @@ Please update this guide in your PR with a clear explanation of the addition.
 
 ---
 
-**Last Updated**: 2025-10-29
+**Last Updated**: 2024-10-29
 **Maintained by**: GitHub Copilot Agent, ChatGPT Codex, Gemini Code Assist, Claude Code, Google Jules, and community contributors
