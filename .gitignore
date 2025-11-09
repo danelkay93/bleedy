@@ -20,6 +20,7 @@ coverage
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
+!.vscode/settings.json
 .idea
 *.suo
 *.ntvs*
@@ -30,6 +31,12 @@ coverage
 *.tsbuildinfo
 .aider*
 .env
+.env.local
+.env.*.local
 *.env!/vueform-project/
 /.ignored_node_modules/*
 auto-imports.d.ts
+
+# Agent collaboration artifacts
+.agent-workspace/
+.agent-cache/

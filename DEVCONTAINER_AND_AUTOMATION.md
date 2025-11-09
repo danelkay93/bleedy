@@ -102,13 +102,28 @@ npm run build
 bash scripts/validate-lockfile.sh
 ```
 
-### Development Container (Future)
+### Development Container
 
-A devcontainer configuration is planned for future implementation to provide:
+A complete devcontainer configuration is available in `.devcontainer/` providing:
 
-- Consistent development environment
-- Pre-configured tools and extensions
-- Automated setup and dependencies
+- **Consistent development environment** - Docker-based reproducible setup
+- **Pre-configured tools** - Node.js 20, Python 3, GitHub CLI, Docker-in-Docker
+- **Automated setup** - Post-creation script installs dependencies and configures git
+- **VS Code integration** - Recommended extensions and settings
+- **Multi-agent support** - Optimized for Claude Code, Copilot, CodeRabbit collaboration
+
+**Quick Start**:
+```bash
+# Open in VS Code Dev Container
+code .
+# Click "Reopen in Container" when prompted
+
+# Or use Docker directly
+docker build -t bleedy-dev -f .devcontainer/Dockerfile .
+docker run -it -v $(pwd):/workspace -p 5173:5173 bleedy-dev
+```
+
+See `.devcontainer/README.md` for complete documentation.
 
 ---
 
