@@ -94,6 +94,22 @@ npm run format
   - Use `npx prettier --check . --cache=false` to verify actual formatting status
   - Use `npx prettier --write . --cache=false` if standard format command seems inconsistent
 
+#### Unified Quality Checks (QA)
+
+```bash
+npm run qa
+```
+
+- **Purpose**: Single command for all validation checks
+- **Runs**: ESLint → Vite build → Vitest
+- **Options**:
+  - `npm run qa -- --with-typecheck` - Includes TypeScript type checking (slower)
+  - `npm run qa -- --skip-tests` - Skips test suite
+  - `npm run qa -- --skip-lint` - Skips ESLint
+  - `npm run qa -- --skip-build` - Skips build
+- **Use this before committing** for comprehensive validation
+- **Designed for multi-agent collaboration** - provides clear, structured output
+
 ### Testing
 
 ```bash

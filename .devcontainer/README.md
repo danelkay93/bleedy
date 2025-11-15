@@ -229,7 +229,7 @@ After container setup:
 - [Multi-Agent Collaboration Guide](../.github/AGENT_COLLABORATION.md)
 - [Accessing PR Reviews](../.github/ACCESSING_PR_REVIEWS.md)
 - [DevOps Guide](../DEVCONTAINER_AND_AUTOMATION.md)
-- [Claude Code Instructions](../.claude/project-instructions.md)
+- [Claude Code Instructions](../.claude/README.md)
 - [Copilot Instructions](../.github/copilot-instructions.md)
 
 ## Performance Tips

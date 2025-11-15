@@ -41,7 +41,7 @@ The following files are maintained for historical reference but are superseded b
 - [DEVCONTAINER_AND_AUTOMATION.md](../DEVCONTAINER_AND_AUTOMATION.md) - **Primary DevOps documentation**
 - [.github/AGENT_COLLABORATION.md](../.github/AGENT_COLLABORATION.md) - Multi-agent collaboration guidelines
 - [.github/copilot-instructions.md](../.github/copilot-instructions.md) - GitHub Copilot configuration
-- [.claude/project-instructions.md](../.claude/project-instructions.md) - Claude Code configuration
+- [.claude/README.md](../.claude/README.md) - Claude Code configuration
 - [automation/README.md](../automation/README.md) - Automation scripts
 - [infrastructure/README.md](../infrastructure/README.md) - IaC details
 - [FUTURE_WORK.md](../FUTURE_WORK.md) - Planned enhancements

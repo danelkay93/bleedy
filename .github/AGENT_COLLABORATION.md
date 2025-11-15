@@ -2,7 +2,21 @@
 
 ## Overview
 
-This document provides guidelines for AI agents working on this repository to ensure smooth handoffs, clear communication, and effective task completion.
+This guide provides comprehensive information for AI agents (GitHub Copilot Agent, ChatGPT Codex, Gemini Code Assist, Claude Code, Google Jules, CodeRabbit, etc.) working on the Bleedy project. It clarifies technical constraints, communication patterns, and best practices for effective collaboration regardless of the host platform.
+
+## Agent Capability Matrix
+
+| Agent                      | Default Commit Tooling             | Network Access Profile                               | Key Nuances                                                                              |
+| -------------------------- | ---------------------------------- | ---------------------------------------------------- | ---------------------------------------------------------------------------------------- |
+| **GitHub Copilot Agent**   | `report_progress` + PR automation  | GitHub MCP HTTP gateway with GitHub auth             | Prefers `report_progress` checkpoints; surface `gh` helpers when configured.             |
+| **ChatGPT Codex**          | `report_progress` (GitHub-managed) | Limited outbound HTTP; GitHub REST available via MCP | Confirm branch context before each commit; Codex dashboards expect concise status notes. |
+| **Gemini Code Assist**     | `apply_patch` + Google git proxies | Google-hosted sandbox with curated allow list        | Paste explicit command outputs; document skipped steps that violate policy.              |
+| **Claude Code**            | Direct git (`commit`, `push`)      | Anthropic secure proxy with audited HTTP access      | Can use git directly; provide structured diffs and mention safety blocks when triggered. |
+| **Google Jules**           | `submit` workflow with auto-commit | Google-aligned HTTP allow list and strict logging    | Provide deterministic QA commands and reproducible steps.                                |
+| **CodeRabbit**             | Automated review comments          | GitHub API access for PR/issue operations            | Cannot commit directly; provides automated reviews and suggestions.                      |
+| **Other / Unknown Agents** | Varies                             | Assume restricted                                    | Ask which tools are available before running niche commands.                             |
+
+> **Tip:** When instructions conflict, follow the stricter platform rule (for example, if Gemini disallows a network call that Copilot allows, skip it and note the limitation in your response).
 
 ## Active Agents
 
@@ -39,25 +53,12 @@ The MCP server is configured in `.mcp/config.json`:
 
 ## Technical Limitations
 
-### URL Access Constraints
+### Network Access
 
-**IMPORTANT**: Most AI agents operate in sandboxed environments with the following limitations:
-
-1. **No HTTP/HTTPS Access**: Agents cannot make HTTP requests to any URLs, including:
-   - github.com URLs (even for the same repository)
-   - External review links
-   - API endpoints
-   - Documentation sites
-
-2. **Repository Access**: Agents have direct file system access to:
-   - The cloned repository at the working directory
-   - All files tracked by git
-   - Generated build artifacts
-
-3. **Workarounds for Reviews**:
-   - Instead of sharing review URLs, paste the actual review comments into PR comments
-   - Reference specific files and line numbers directly
-   - Quote the exact code or suggestion that needs addressing
+- **Limited outbound HTTP/HTTPS access is available** – agents can usually contact public APIs (including GitHub) when authenticated tooling is configured.
+- **Prefer repository-provided tools** – use MCP helpers or curated scripts before resorting to ad-hoc `curl`/`wget` calls.
+- **Mind rate limits** – cache responses when practical and avoid unnecessary polling.
+- **Workarounds for Reviews**: If HTTP access fails, paste the actual review comments into PR comments, reference specific files and line numbers directly, and quote the exact code or suggestion that needs addressing.
 
 ### Git Operations
 
@@ -71,6 +72,8 @@ Agents can:
 - Create changes that are committed via specialized tools
 - View branch status and commit logs
 - Use MCP tools for GitHub operations (if available)
+- Run builds, tests, and linters locally
+- Leverage the `npm run qa` helper to execute lint/build/test in one command
 
 ## Communication Patterns
 
