@@ -111,19 +111,138 @@ A complete devcontainer configuration is available in `.devcontainer/` providing
 - **Automated setup** - Post-creation script installs dependencies and configures git
 - **VS Code integration** - Recommended extensions and settings
 - **Multi-agent support** - Optimized for Claude Code, Copilot, CodeRabbit collaboration
+- **GitHub MCP Server** - Pre-configured for enhanced agent capabilities
 
-**Quick Start**:
+#### Files and Configuration
+
+**`.devcontainer/devcontainer.json`** - Main configuration
+- Base image: Node.js 20 (Debian Bookworm)
+- Pre-configured VS Code settings and extensions
+- Port forwarding: Vite dev (5173) and preview (4173)
+- Volume mounts for persistent npm cache and bash history
+- Multi-agent mode enabled via environment variables
+- Features: GitHub CLI, Docker-in-Docker, Git, common utilities
+
+**`.devcontainer/Dockerfile`** - Container image
+- Node.js 20 base image
+- Pre-installed: GitHub CLI (`gh`), Python 3.11, build tools, utilities
+- Global npm packages (prettier, eslint, typescript, vue-language-server)
+- Git configured for PR refs
+- Python packages (pyyaml, requests, python-dotenv)
+
+**`.devcontainer/postCreateCommand.sh`** - Post-creation setup
+- Installs npm dependencies
+- Configures git for PR access
+- Sets up git aliases
+- Makes scripts executable
+- Runs agent environment setup
+- Verifies build
+- Displays quick start guide
+
+#### Environment Setup Scripts
+
+**`scripts/setup-agent-environment.sh`** - Agent environment configuration
+- Verifies required tools (node, npm, git, python, gh, docker)
+- Configures git for PR access (`refs/pull/*/head`, `refs/pull/*/merge`)
+- Creates helpful git aliases:
+  - `git pr-list` - List all PR refs
+  - `git pr-checkout <number>` - Checkout a PR
+  - `git pr-diff <number> [base]` - Diff against PR
+- Creates `.env.local` from template
+- Tests GitHub CLI authentication
+
+**`scripts/get_pr_reviews.py`** - PR review access
+- Python script to access PR reviews via `gh` CLI
+- Supports PR number or branch name
+- Returns review status, comments, and decisions
+- Formatted output for agent consumption
+
+#### Benefits
+
+**For AI Agents**:
+- Consistent environment for all agents
+- All tools pre-installed (GitHub CLI, Python, etc.)
+- Git configured for PR access programmatically
+- Automated setup via post-creation scripts
+- Clear, agent-specific documentation
+
+**For Human Developers**:
+- One-click setup with Dev Container
+- No configuration drift between team members
+- All recommended extensions installed
+- Multi-agent aware settings
+- Cross-platform (Windows, Mac, Linux)
+
+**For the Project**:
+- Reproducibility - eliminates "works on my machine"
+- Easy onboarding for new contributors
+- CI/CD alignment - local matches CI environment
+- All setup knowledge codified
+- Scalable - easy to add new tools
+
+#### Quick Start
+
+**Using VS Code (Recommended)**:
 ```bash
-# Open in VS Code Dev Container
+# 1. Open in VS Code
 code .
-# Click "Reopen in Container" when prompted
 
-# Or use Docker directly
-docker build -t bleedy-dev -f .devcontainer/Dockerfile .
-docker run -it -v $(pwd):/workspace -p 5173:5173 bleedy-dev
+# 2. Install "Dev Containers" extension if not installed
+
+# 3. Click "Reopen in Container" when prompted
+
+# 4. Wait for setup (~2-5 minutes first time)
 ```
 
-See `.devcontainer/README.md` for complete documentation.
+**Using Docker CLI**:
+```bash
+# Build container
+docker build -t bleedy-devcontainer -f .devcontainer/Dockerfile .
+
+# Run container
+docker run -it -v $(pwd):/workspace -p 5173:5173 -p 4173:4173 bleedy-devcontainer
+
+# Inside container, run setup
+cd /workspace
+bash .devcontainer/postCreateCommand.sh
+```
+
+**For AI Agents**:
+```bash
+# If devcontainer is available, it will be used automatically
+# Otherwise, run the setup script manually:
+bash scripts/setup-agent-environment.sh
+
+# Configure GitHub CLI (if available):
+gh auth login
+
+# Access PR reviews:
+python3 scripts/get_pr_reviews.py <pr_number>
+gh pr view <pr_number>
+
+# Use git aliases:
+git fetch origin
+git pr-list
+git pr-checkout 36
+```
+
+#### Environment Features
+
+- [x] Development container with Node.js 20
+- [x] GitHub CLI (`gh`) installed and configured
+- [x] Python 3 with automation packages
+- [x] Docker-in-Docker support
+- [x] Git configured for PR refs
+- [x] Git aliases for PR operations
+- [x] Environment variable templates (`.env.example`)
+- [x] VS Code settings and extensions (`.vscode/`)
+- [x] Git attributes for consistent line endings
+- [x] Automated post-creation setup
+- [x] PR review access script
+- [x] Agent environment setup script
+- [x] GitHub MCP server configuration (`.mcp/config.json`)
+
+See `.devcontainer/README.md` for complete documentation and troubleshooting.
 
 ---
 

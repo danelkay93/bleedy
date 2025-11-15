@@ -255,6 +255,51 @@ npm run test:unit
 - Doodle.css and paper-css for hand-drawn aesthetics
 - Google Fonts: Cabin Sketch
 
+## GitHub MCP Server Integration
+
+This repository uses GitHub's official Model Context Protocol (MCP) server for enhanced agent capabilities.
+
+### Configuration
+
+The MCP server is configured in `.mcp/config.json`:
+
+```json
+{
+  "mcpServers": {
+    "github": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-github"],
+      "env": {
+        "GITHUB_PERSONAL_ACCESS_TOKEN": "${GITHUB_TOKEN}"
+      }
+    }
+  }
+}
+```
+
+### Native Features via MCP
+
+GitHub Copilot may have access to GitHub MCP tools for:
+- **PR Management**: Create, list, view pull requests
+- **Issue Management**: Create, update, search issues
+- **Repository Operations**: Branch management, file operations
+- **Code Review**: Access and respond to review comments
+
+### Using MCP Tools
+
+If MCP tools are available in your environment:
+
+1. **For PR operations**: Use MCP tools instead of manual git commands where possible
+2. **For issue management**: MCP provides direct API access
+3. **For code reviews**: MCP may allow direct access to review comments
+4. **Check availability**: Not all Copilot environments have MCP enabled
+
+### MCP vs. report_progress
+
+- **Use MCP**: For GitHub API operations (PRs, issues, reviews)
+- **Use report_progress**: For committing and pushing changes
+- **Combine both**: MCP for PR creation, report_progress for commits
+
 ## Agent Collaboration
 
 ### Working with Other AI Agents
@@ -264,7 +309,7 @@ This repository supports collaboration between multiple AI agents (GitHub Copilo
 ### Agent-Specific Documentation
 
 - **GitHub Copilot**: This file (`.github/copilot-instructions.md`)
-- **Claude Code**: `.claude/project-instructions.md`
+- **Claude Code**: `.claude/README.md`
 - **All Agents**: `.github/AGENT_COLLABORATION.md`
 
 ### Key Collaboration Points

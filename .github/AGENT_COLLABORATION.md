@@ -2,421 +2,320 @@
 
 ## Overview
 
-This guide provides comprehensive information for AI agents (GitHub Copilot, Claude Code, ChatGPT Codex, CodeRabbit, etc.) working on the Bleedy project. It clarifies technical constraints, communication patterns, and best practices for effective collaboration.
+This document provides guidelines for AI agents working on this repository to ensure smooth handoffs, clear communication, and effective task completion.
 
-## Table of Contents
+## Active Agents
 
-1. [Technical Limitations](#technical-limitations)
-2. [Communication Patterns](#communication-patterns)
-3. [Workflow Templates](#workflow-templates)
-4. [Best Practices](#best-practices)
-5. [Common Issues and Solutions](#common-issues-and-solutions)
-6. [Task Templates](#task-templates)
+The following AI agents may work on this repository:
+
+- **@copilot** - GitHub Copilot for code changes and PR management
+- **@claudecode** - Claude Code for complex refactoring and systematic tasks
+- **@codex** - OpenAI Codex for code review and fixes
+- **@gemini** - Google Gemini for analysis
+- **@coderabbitai** - CodeRabbit for automated code reviews
+- **@code-factor** - Code quality analysis
+- **@snyk-bot** - Security vulnerability scanning
+- **@dependabot** - Dependency updates
+- **@jules** - Additional AI assistant
+
+**Agent Selection**: Start with unlimited-usage agents (Copilot, CodeRabbit) for most tasks. Escalate to specialized agents (Claude Code) when their unique capabilities are needed.
+
+## GitHub MCP Server
+
+This repository uses GitHub's official Model Context Protocol (MCP) server for enhanced agent capabilities.
+
+### Configuration
+
+The MCP server is configured in `.mcp/config.json`:
+- Provides standardized GitHub operations (PR management, issue creation, etc.)
+- Requires `GITHUB_TOKEN` environment variable
+- Available to agents that support MCP (check your agent's documentation)
+
+### Using MCP vs. Direct Git
+
+- **Use MCP**: For PR operations, issue management, GitHub API access
+- **Use Direct Git**: For local commits, branch operations, file changes
+- **Refer to agent-specific docs**: Each agent may have different MCP capabilities
 
 ## Technical Limitations
 
-### Environment Constraints
+### URL Access Constraints
 
-All AI agents operate in sandboxed environments with specific limitations:
+**IMPORTANT**: Most AI agents operate in sandboxed environments with the following limitations:
 
-#### Network Access
+1. **No HTTP/HTTPS Access**: Agents cannot make HTTP requests to any URLs, including:
+   - github.com URLs (even for the same repository)
+   - External review links
+   - API endpoints
+   - Documentation sites
 
-- **External URLs**: Cannot access external HTTP/HTTPS URLs (e.g., github.com, external documentation)
-- **Internal Repository API**: Should be able to access internal repository API paths, but the exact path format may vary by environment
-  - Example attempted paths: `/api/repos/owner/repo/pulls`, `/repos/owner/repo/pulls`
-  - If API access fails with "Invalid path format", request information directly from users
-- **Workaround**: When API access is unavailable, paste review comments or PR content directly into issue/PR comments
-- **Note**: Some agents may have GitHub MCP tools for repository operations (Claude Code uses git directly, Copilot uses `report_progress` and may have MCP tools)
+2. **Repository Access**: Agents have direct file system access to:
+   - The cloned repository at the working directory
+   - All files tracked by git
+   - Generated build artifacts
 
-#### Git Operations
+3. **Workarounds for Reviews**:
+   - Instead of sharing review URLs, paste the actual review comments into PR comments
+   - Reference specific files and line numbers directly
+   - Quote the exact code or suggestion that needs addressing
 
-- **Cannot push directly using `git push`** - Must use provided tools like `report_progress`
-- **Cannot force push** - No `git reset --hard` or `git rebase` with force push
-- **Cannot pull branches** - Cannot resolve merge conflicts directly
-- **Cannot clone repositories** - Work with provided repository clone
+### Git Operations
 
-#### File System
+Agents typically cannot:
+- Directly execute `git merge` across branches
+- Force push or rebase without appropriate tools
+- Access other branches beyond their assigned branch
 
-- **Limited to repository directory** - Cannot access files outside the cloned repository
-- **Cannot access `.github/agents/` directory** - This contains instructions for other agents
-
-### What Agents CAN Do
-
-- ✅ Read and modify files in the repository
-- ✅ Run commands via bash/shell tools
-- ✅ Use `report_progress` to commit and push changes (Copilot, Codex)
-- ✅ Use git commands directly for commit and push (Claude Code)
-- ✅ Access GitHub API via MCP tools (if available)
-- ✅ Create and modify issues/PRs (via tools, not direct git)
-- ✅ Run builds, tests, and linters locally
-- ✅ Use specialized tools for task management (TodoWrite in Claude Code)
+Agents can:
+- Read git history and diffs
+- Create changes that are committed via specialized tools
+- View branch status and commit logs
+- Use MCP tools for GitHub operations (if available)
 
 ## Communication Patterns
 
-### Agent-to-Agent Handoff
+### 1. Agent-to-Agent Handoffs
 
-When handing off work to another agent:
+When handing off work to another agent, include:
 
 ```markdown
-@[agent-name]
+@agent-name
 
-**Context**: [Brief description of what you've done]
+**Context**: [Brief description of what was done]
 
-**Current State**:
+**Remaining Work**:
+- [ ] Task 1
+- [ ] Task 2
 
-- ✅ Completed: [List completed tasks]
-- ⚠️ In Progress: [Partially completed work]
-- ❌ Blocked: [Issues preventing completion]
-
-**Next Steps**:
-
-1. [Specific action needed]
-2. [Expected outcome]
+**Important Notes**:
+- Constraint or consideration 1
+- Constraint or consideration 2
 
 **Files Modified**:
+- path/to/file1.ts (reason)
+- path/to/file2.py (reason)
 
-- `path/to/file1` - [Description of changes]
-- `path/to/file2` - [Description of changes]
-
-**Testing Notes**:
-
-- [How to verify the changes]
-- [Known issues or edge cases]
-
-**References**:
-
-- Issue #[number]
-- PR #[number]
-- Related discussion: [paste relevant comments]
+**Testing Status**: [What has been tested, what needs testing]
 ```
 
-### Review Request
+### 2. Requesting Reviews
 
-When requesting review from another agent:
+When requesting a review from another agent:
 
 ```markdown
-@[agent-name] review
+@agent-name
 
-**Changes Summary**: [High-level description]
+Please review the following changes:
 
-**Review Focus**:
+**File**: path/to/file.ts
+**Lines**: 10-25
+**Change**: [Description]
+**Concern**: [What to check]
 
-- [ ] Code quality and best practices
-- [ ] Test coverage
-- [ ] Documentation completeness
-- [ ] Security considerations
-
-**Specific Questions**:
-
-1. [Question about specific implementation]
-2. [Concern about approach]
-
-**Testing**: [How changes were validated]
+**Expected**: [What should happen]
+**Actual**: [What currently happens, if applicable]
 ```
 
-### Completion Report
+### 3. Reporting Completion
 
-When finishing a task:
+When completing a task:
 
 ```markdown
-**Task Complete**: [Task description]
+**Completed**: [Brief description]
 
-**Summary**:
+**Commit**: abc1234
 
-- ✅ [Achievement 1]
-- ✅ [Achievement 2]
-- ✅ [Achievement 3]
+**Changes**:
+- ✅ Item 1
+- ✅ Item 2
 
-**Changes Made**:
+**Testing**: [Results of testing]
 
-- `file1.ts` - [Brief description]
-- `file2.vue` - [Brief description]
-
-**Testing**:
-
-- ✅ Build passes: `npm run build`
-- ✅ Lint passes: `npm run lint`
-- ✅ Manual testing: [Description]
-
-**Commit**: [commit SHA]
-
-**Next Steps**: [Optional follow-up work]
+**Next Steps**: [Optional - what should be done next]
 ```
 
-## Workflow Templates
+## Collaboration Workflows
 
-### Task Assignment Workflow
+### Workflow 1: Code Review and Fix
 
-1. **User assigns task** to agent via `@[agent]` mention
-2. **Agent acknowledges** and outlines plan
-3. **Agent reports progress** regularly using `report_progress`
-4. **Agent requests review** if needed
-5. **Agent completes** with summary
+1. **CodeRabbit** identifies issues and leaves review comments
+2. **Copilot** or other agent reads the review comments (pasted in PR)
+3. Agent makes fixes and commits
+4. Agent mentions original reviewer: "@coderabbitai - Fixed in commit abc1234"
 
-### Multi-Agent Collaboration
+### Workflow 2: Feature Development
 
 1. **Primary agent** creates initial implementation
-2. **Primary agent** uses handoff template to pass work
-3. **Secondary agent** acknowledges and continues
-4. **Secondary agent** reports completion
-5. **Either agent** can request review from others
+2. **Primary agent** mentions other agent for review
+3. User pastes any external review comments into PR
+4. **Secondary agent** addresses feedback
+5. Final testing and merge
 
-### Code Review Workflow
+### Workflow 3: Security and Dependencies
 
-1. **Author** uses review request template
-2. **Reviewer** examines changes using available tools
-3. **Reviewer** provides feedback in structured format
-4. **Author** addresses feedback
-5. **Reviewer** approves or requests further changes
+1. **Snyk** or **Dependabot** identifies security issues
+2. User creates issue or PR comment with details
+3. **Copilot** or other agent implements fixes
+4. Automated scans validate the fix
 
 ## Best Practices
 
 ### For All Agents
 
-1. **Always read existing documentation** before starting work
-2. **Use provided tools** (don't try to bypass limitations)
-3. **Report progress frequently** using `report_progress`
-4. **Include context** in all communications
-5. **Paste full content** when referencing external links
-6. **Test changes locally** before pushing
-7. **Keep commits focused** and well-documented
+1. **Always Check Current State First**
+   ```bash
+   git status
+   git log --oneline -10
+   npm run build  # or appropriate build command
+   ```
 
-### Context Preservation
+2. **Test Before Committing**
+   - Run linters: `npm run lint`
+   - Run tests: `npm test` (if tests exist)
+   - Build: `npm run build`
+   - Verify no regressions
 
-When working on tasks:
+3. **Make Minimal Changes**
+   - Change only what's necessary
+   - Don't refactor unrelated code
+   - Don't fix unrelated issues
 
-- Include relevant file paths in discussions
-- Quote specific code sections when discussing changes
-- Reference line numbers when applicable
-- Paste error messages in full
-- Share command outputs that provide context
+4. **Document Changes**
+   - Update README if needed
+   - Update inline comments for complex logic
+   - Note breaking changes clearly
 
-### Handling Limitations
+5. **Use Structured Commits**
+   - Clear, descriptive commit messages
+   - Reference issue numbers
+   - Group related changes
 
-**When you cannot access a GitHub URL:**
+### For Code Reviews
 
-- Ask the user to paste the content
-- Explain the limitation clearly
-- Document the workaround in your response
+1. **Be Specific**
+   - Quote exact code snippets
+   - Provide line numbers
+   - Suggest specific alternatives
 
-**When you cannot push changes:**
+2. **Provide Context**
+   - Explain WHY a change is needed
+   - Reference documentation or standards
+   - Note potential impacts
 
-- Use `report_progress` tool exclusively
-- Never suggest manual git push commands
-- Explain that commits will be handled automatically
-
-**When you cannot access a file:**
-
-- Check if the file is in `.github/agents/` (off-limits)
-- Verify the path is correct
-- Ask the user if the file exists
+3. **Be Actionable**
+   - Clear request vs. suggestion
+   - Priority (must-fix vs. nice-to-have)
+   - Acceptance criteria
 
 ## Common Issues and Solutions
 
-### Issue: "I cannot access the review comments at [GitHub URL]"
+### Issue: Agent Can't Access Review URL
 
-**Solution**: This is expected due to sandbox limitations. Ask the user:
+**Problem**: Agent asked to review https://github.com/user/repo/pull/123#review-456
 
+**Solution**:
 ```markdown
-I cannot access external URLs from my sandboxed environment. Could you please paste the specific review comments here? This will allow me to address them directly.
+Instead of the URL, paste the review content:
+
+**File**: src/components/Example.vue
+**Line**: 45
+**Comment**: "This function should handle null values"
+**Suggestion**:
+\`\`\`typescript
+if (value === null) return defaultValue;
+\`\`\`
 ```
 
-### Issue: "Git push failed"
+### Issue: Conflicting Agent Changes
 
-**Solution**: Never use `git push` directly. Always use `report_progress`:
+**Problem**: Two agents made changes to the same file
 
-```markdown
-I cannot push changes directly using git commands. I'll use the `report_progress` tool to commit and push these changes.
-```
+**Solution**:
+1. User decides which changes to keep
+2. User manually merges if needed
+3. User pastes the final desired state in a comment
+4. One agent implements the resolution
 
-### Issue: "Cannot resolve merge conflicts"
+### Issue: Test Failures After Changes
 
-**Solution**: Merge conflicts must be resolved by the user:
+**Problem**: CI/CD fails after agent commits
 
-```markdown
-I cannot resolve merge conflicts directly as I don't have the ability to pull branches from GitHub. Could you please:
-
-1. Pull the latest changes from master
-2. Resolve the conflicts locally
-3. Push the resolved branch
-
-Then I can continue with the implementation.
-```
-
-### Issue: "Cannot find another agent's changes"
-
-**Solution**: Request the specific file contents:
-
-```markdown
-I don't have access to changes made by other agents unless they're in the current branch. Could you please share:
-
-1. The specific files that were modified
-2. The commit SHA or PR number
-3. The content of the changes if available
-```
+**Solution**:
+1. Agent checks local test results first
+2. If tests pass locally but fail in CI, investigate environment differences
+3. Document any known failures in PR description
+4. Don't commit if tests fail locally
 
 ## Task Templates
 
-### Bug Fix Task
+### Template: Bug Fix
 
 ```markdown
-**Bug**: [Description of the bug]
+**Bug**: [Description]
+**File**: path/to/file
+**Line**: [Line number if known]
+**Expected**: [What should happen]
+**Actual**: [What currently happens]
+**Fix**: [Proposed solution]
 
-**Reproduction Steps**:
-
-1. [Step 1]
-2. [Step 2]
-3. [Step 3]
-
-**Expected Behavior**: [What should happen]
-
-**Actual Behavior**: [What actually happens]
-
-**Root Cause**: [Analysis of the issue]
-
-**Fix**: [Description of the solution]
-
-**Testing**: [How to verify the fix]
-
-**Files Modified**:
-
-- `path/to/file` - [Description]
+**Testing**:
+- [ ] Unit tests pass
+- [ ] Manual testing completed
+- [ ] No regressions
 ```
 
-### Feature Implementation Task
+### Template: Feature Addition
 
 ```markdown
-**Feature**: [Feature description]
+**Feature**: [Description]
+**Files Affected**:
+- path/to/file1 (new)
+- path/to/file2 (modified)
 
-**Requirements**:
+**Implementation**:
+- [ ] Core functionality
+- [ ] Error handling
+- [ ] Documentation
+- [ ] Tests (if applicable)
 
-- [Requirement 1]
-- [Requirement 2]
-- [Requirement 3]
-
-**Implementation Plan**:
-
-1. [Step 1]
-2. [Step 2]
-3. [Step 3]
-
-**Technical Approach**: [High-level design]
-
-**Testing Strategy**: [How to validate]
-
-**Documentation Updates**: [Required doc changes]
+**Testing**:
+- [ ] Feature works as expected
+- [ ] Edge cases handled
+- [ ] No breaking changes
 ```
 
-### Refactoring Task
+### Template: Refactoring
 
 ```markdown
-**Refactoring**: [What needs to be refactored]
+**Refactoring**: [Description]
+**Reason**: [Why this change]
+**Scope**: [What's included]
 
-**Motivation**: [Why this refactoring is needed]
+**Changes**:
+- [ ] Extract function/component
+- [ ] Rename for clarity
+- [ ] Simplify logic
 
-**Approach**:
-
-- [Approach detail 1]
-- [Approach detail 2]
-
-**Impact Assessment**:
-
-- Breaking changes: [Yes/No, with details]
-- Performance impact: [Analysis]
-- Test coverage: [Current and target]
-
-**Validation**: [How to verify nothing broke]
+**Testing**:
+- [ ] All tests pass
+- [ ] Functionality unchanged
+- [ ] Performance impact: [none/positive/negative]
 ```
 
-## Tool-Specific Notes
+## Agent-Specific Documentation
 
-### Claude Code
+Each agent has its own configuration and instruction files:
 
-- **Configuration**: Uses `.claude/project-instructions.md` for project-specific instructions
-- **Capabilities**:
-  - Direct file operations (Read, Write, Edit tools)
-  - Bash commands with full shell access
-  - Git operations (commit, push, PR creation via gh CLI)
-  - Task management via TodoWrite tool
-  - Web search and fetch capabilities
-- **Strengths**:
-  - Multi-step refactoring and implementation tasks
-  - Strong planning and task decomposition via TodoWrite
-  - Direct git integration with retry logic
-  - Comprehensive file editing with exact string matching
-  - Systematic investigation and debugging
-- **Limitations**:
-  - **Usage limits and cost** - Use judiciously for tasks that need its capabilities
-  - Cannot access external HTTP/HTTPS URLs directly (uses WebFetch tool)
-  - Cannot run interactive commands (like `git rebase -i`)
-  - All operations use tools (no direct system access)
-- **Optimal Use Cases** (when other agents can't handle it):
-  - Complex multi-file refactoring
-  - Feature implementation requiring systematic planning
-  - Deep debugging that needs investigation across multiple files
-  - CI/CD workflow development with git/bash complexity
-- **When NOT to use**: Simple fixes, quick edits, tasks Copilot can handle
-- **Attribution**: Commits include "Generated with Claude Code" footer
+- **Claude Code**: `.claude/README.md` - References main docs, Claude Code specifics
+- **GitHub Copilot**: `.github/copilot-instructions.md` - Copilot-specific configuration
+- **All Agents**: This file - Universal collaboration guide
 
-### GitHub Copilot Agent
+When starting work:
 
-- **Configuration**: Uses `.github/copilot-instructions.md` for project-specific instructions
-- **Capabilities**:
-  - GitHub MCP tools for repository operations
-  - Can read issues, PRs, and comments via API
-  - Uses `report_progress` for committing changes
-  - Real-time IDE integration
-- **Strengths**:
-  - **No usage limits** - Use freely for most tasks
-  - Fast inline suggestions
-  - Excellent for quick fixes and simple features
-  - Good context awareness in IDE
-- **Limitations**:
-  - Cannot access external URLs (HTTP/HTTPS)
-  - Less systematic for complex multi-file refactoring
-  - Less powerful for deep investigation tasks
-- **Optimal Use Cases**:
-  - Quick code completions and fixes
-  - Simple feature implementation
-  - Chat-based problem solving
-  - Most day-to-day development tasks
-- **When to escalate**: Complex refactoring, deep debugging, systematic multi-step tasks
-
-### ChatGPT Codex Connector
-
-- Operates through GitHub integration
-- Can create commits and interact with GitHub
-- Provides task tracking via Codex dashboard
-- May have different tool availability
-
-### CodeRabbit
-
-- **Capabilities**:
-  - Automated code reviews
-  - Can be triggered with `@coderabbitai review full`
-  - Security vulnerability detection
-  - Code quality assessment
-- **Strengths**:
-  - **Automated and unlimited** - Use for all PRs
-  - Fast analysis
-  - Consistent quality checks
-  - Good at spotting common issues
-- **Limitations**:
-  - Less context-aware than manual review
-  - May miss architectural issues
-  - Cannot implement fixes directly
-- **Optimal Use Cases**:
-  - Automated PR reviews (use on every PR)
-  - Security vulnerability detection
-  - Code quality and best practices verification
-  - Pre-merge checks
-
-### Other Agents
-
-- May have varying capabilities
-- Always check available tools before starting
-- Document any unique limitations discovered
-- Update this guide with new findings
+1. Read your agent-specific documentation first
+2. Refer to this collaboration guide for multi-agent workflows
+3. Follow the templates and patterns documented here
+4. Update documentation when discovering new patterns
 
 ## Repository-Specific Guidelines
 
@@ -432,7 +331,7 @@ I don't have access to changes made by other agents unless they're in the curren
 1. Run linter: `npm run lint`
 2. Build the project: `npm run build`
 3. Test manually if UI changes
-4. Use `report_progress` to commit changes
+4. Commit changes using your agent's standard method
 5. Verify committed files are appropriate
 
 ### Pull Request Standards
@@ -442,65 +341,41 @@ I don't have access to changes made by other agents unless they're in the curren
 - Update documentation if needed
 - Ensure all CI checks pass
 
-## Getting Help
+## Escalation
 
-If you encounter issues not covered in this guide:
+If an agent encounters issues beyond its capabilities:
 
-1. **Check existing documentation** in the repository
-2. **Ask the user** for clarification or assistance
-3. **Document the issue** for future reference
-4. **Update this guide** if you find a solution
+1. **Document the blocker** clearly in a PR comment
+2. **Tag the user** to request intervention
+3. **Suggest alternatives** if possible
+4. **Preserve work done** so it's not lost
 
-## Contributing to This Guide
+Example:
+```markdown
+@danelkay93
 
-This guide is a living document. If you discover:
+I've encountered a limitation that prevents me from completing this task:
 
-- New limitations or capabilities
-- Better workarounds for common issues
-- Improved communication patterns
-- Tool-specific tips
+**Issue**: [Description]
+**Attempted**: [What I tried]
+**Blocker**: [Specific limitation]
 
-Please update this guide in your PR with a clear explanation of the addition.
+**Options**:
+1. [Alternative approach]
+2. [Manual intervention needed]
+3. [Different agent might help]
 
-## Agent-Specific Documentation
+**Work Completed**:
+- ✅ Part A (commit abc1234)
+- ⏸️ Part B (blocked)
+```
 
-Each agent has its own configuration and instruction files:
+## Updates to This Document
 
-- **Claude Code**: `.claude/project-instructions.md` - Comprehensive project guide with Claude Code specific features
-- **GitHub Copilot**: `.github/copilot-instructions.md` - Copilot-specific configuration and guidelines
-- **All Agents**: This file (`.github/AGENT_COLLABORATION.md`) - Universal collaboration guide
+This document should be updated when:
+- New agents are added to the project
+- Workflow patterns change
+- Common issues are identified
+- Technical limitations change
 
-When working on the project, agents should:
-
-1. Read their agent-specific documentation first
-2. Refer to this collaboration guide for multi-agent workflows
-3. Follow the templates and patterns documented here
-4. Update documentation when discovering new patterns or issues
-
-## Choosing the Right Agent for the Task
-
-Each agent has unique strengths and trade-offs. Consider capabilities, usage limits, and costs when selecting:
-
-| Task Type                  | Recommended Agent      | Why This Agent                 | Trade-offs                             |
-| -------------------------- | ---------------------- | ------------------------------ | -------------------------------------- |
-| Quick code fixes           | GitHub Copilot         | Fast, unlimited usage          | Less systematic for complex tasks      |
-| Inline completions         | GitHub Copilot         | Real-time IDE integration      | Not suitable for large refactors       |
-| Code review                | CodeRabbit             | Automated, unlimited           | Less context-aware than human review   |
-| Multi-file refactoring     | Claude Code            | Strong file ops, task planning | Usage limits, higher cost              |
-| Complex debugging          | Claude Code            | Systematic investigation       | Use when other agents can't solve it   |
-| Feature implementation     | Claude Code or Copilot | Depends on complexity          | Claude for complex, Copilot for simple |
-| Documentation updates      | Any agent              | All capable                    | Use Copilot first (no usage limits)    |
-| CI/CD workflow development | Claude Code            | Direct git/bash access         | Consider if Copilot can handle first   |
-| Security analysis          | CodeRabbit             | Specialized focus              | Automated, not deep investigation      |
-
-**General Strategy:**
-
-- **Start with unlimited agents** (Copilot, CodeRabbit) for most tasks
-- **Escalate to Claude Code** when tasks require systematic multi-step work or advanced capabilities
-- **Consider cost vs. value** - use Claude Code when its capabilities justify the usage cost
-- **Leverage strengths** - each agent has optimal use cases where it excels
-
----
-
-**Last Updated**: 2025-10-21
-**Maintained by**: Claude Code, GitHub Copilot, ChatGPT Codex, and community contributors
+Last Updated: 2025-11-15

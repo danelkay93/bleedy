@@ -73,6 +73,8 @@
   "containerEnv": {
     "NODE_ENV": "development",
     "MULTI_AGENT_MODE": "true"
+    // Note: GITHUB_TOKEN should be set in .env.local for MCP server
+    // See .mcp/config.json for GitHub MCP server configuration
   },
 
   // Mount configuration
