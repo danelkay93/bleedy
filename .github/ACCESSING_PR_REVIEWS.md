@@ -39,6 +39,7 @@ Since direct API access has limitations, the most reliable approach is to reques
 ```markdown
 I cannot access PR reviews programmatically due to environment limitations.
 Could you please provide:
+
 1. The review status (Approved / Changes Requested / Pending)
 2. Any review comments from @copilot, @coderabbitai, or @codex
 3. Whether I should proceed with the merge
@@ -213,6 +214,7 @@ When PR review access is established, update:
 ## Conclusion
 
 Current environment **does not support** programmatic PR review access due to:
+
 - Missing `gh` CLI
 - Unclear internal API path format
 - No git PR refs configured
@@ -221,6 +223,6 @@ Current environment **does not support** programmatic PR review access due to:
 
 ---
 
-**Last Updated**: 2025-10-21
+**Last Updated**: 2025-11-15
 **Created by**: Claude Code
 **Status**: Environment limitation documented, workarounds provided
