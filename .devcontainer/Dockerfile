@@ -64,7 +64,8 @@ RUN git config --system --add fetch.prune true \
 RUN pip3 install --no-cache-dir --break-system-packages \
     pyyaml \
     requests \
-    python-dotenv
+    python-dotenv \
+    plumbum
 
 # Create command history directory
 RUN SNIPPET="export PROMPT_COMMAND='history -a' && export HISTFILE=/commandhistory/.bash_history" \
