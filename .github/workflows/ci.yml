@@ -1,4 +1,7 @@
-name: CI Checks and Build
+name: Lightweight CI - Quick Checks
+
+# This workflow provides fast preliminary checks before the comprehensive Docker CI runs
+# Primary CI is now handled by docker-compose.yml workflow
 
 on:
   push:
@@ -8,112 +11,36 @@ on:
     types: [opened, synchronize, reopened]
 
 jobs:
-  validate-and-build:
-    name: Validate and Build
+  quick-validation:
+    name: Quick Validation
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20.x' # Matches @tsconfig/node20
-          cache: 'npm'
+      - name: Validate lock file
+        run: bash scripts/validate-lockfile.sh
 
-      - name: Install dependencies with retry
+      - name: Check for common issues
         run: |
-          MAX_ATTEMPTS=3
-          ATTEMPT=0
-          SUCCESS=false
-          
-          while [ $ATTEMPT -lt $MAX_ATTEMPTS ]; do
-            ATTEMPT=$((ATTEMPT + 1))
-            echo "Attempt $ATTEMPT of $MAX_ATTEMPTS..."
-            
-            if npm ci; then
-              SUCCESS=true
-              echo "✅ npm ci succeeded on attempt $ATTEMPT"
-              break
-            else
-              if [ $ATTEMPT -lt $MAX_ATTEMPTS ]; then
-                echo "::warning::npm ci failed on attempt $ATTEMPT, retrying in 30 seconds..."
-                rm -rf node_modules
-                npm cache clean --force
-                sleep 30
-              else
-                echo "::error::npm ci failed after $MAX_ATTEMPTS attempts"
-              fi
-            fi
-          done
-          
-          if [ "$SUCCESS" = false ]; then
-            exit 1
+          echo "Running quick validation checks..."
+
+          # Check for TODO/FIXME comments in committed code
+          if git diff --cached --name-only | xargs grep -n "TODO\|FIXME" 2>/dev/null; then
+            echo "::warning::Found TODO/FIXME comments in changes"
           fi
 
-      - name: Check formatting
-        run: npm run format:check
+          # Check for large files
+          if git diff --cached --name-only | xargs du -h 2>/dev/null | awk '$1 ~ /M$/ && $1 > 1'; then
+            echo "::warning::Found large files in changes"
+          fi
 
-      - name: Lint code
-        run: npm run lint -- --no-fix # Ensure lint fails on error, not trying to fix in CI
+          echo "✅ Quick validation complete"
 
-      - name: Type check
-        run: npm run type-check
-
-      - name: Build project
-        run: npm run build
-
-  security-audit:
-    name: Security Audit
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20.x'
-          cache: 'npm'
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Run npm audit
-        id: audit
+      - name: Report status
         run: |
-          echo "Running npm audit..."
-          npm audit --json > audit-results.json || true
-          
-          # Parse results
-          CRITICAL=$(jq '.metadata.vulnerabilities.critical // 0' audit-results.json)
-          HIGH=$(jq '.metadata.vulnerabilities.high // 0' audit-results.json)
-          MODERATE=$(jq '.metadata.vulnerabilities.moderate // 0' audit-results.json)
-          LOW=$(jq '.metadata.vulnerabilities.low // 0' audit-results.json)
-          
-          echo "critical=$CRITICAL" >> $GITHUB_OUTPUT
-          echo "high=$HIGH" >> $GITHUB_OUTPUT
-          echo "moderate=$MODERATE" >> $GITHUB_OUTPUT
-          echo "low=$LOW" >> $GITHUB_OUTPUT
-          
-          echo "### Security Audit Results" >> $GITHUB_STEP_SUMMARY
-          echo "- Critical: $CRITICAL" >> $GITHUB_STEP_SUMMARY
-          echo "- High: $HIGH" >> $GITHUB_STEP_SUMMARY
-          echo "- Moderate: $MODERATE" >> $GITHUB_STEP_SUMMARY
-          echo "- Low: $LOW" >> $GITHUB_STEP_SUMMARY
-
-      - name: Check for critical vulnerabilities
-        if: steps.audit.outputs.critical > 0 || steps.audit.outputs.high > 0
-        run: |
-          echo "::error::Found ${{ steps.audit.outputs.critical }} critical and ${{ steps.audit.outputs.high }} high severity vulnerabilities"
-          echo "Please review and address these security issues."
-          echo "Run 'npm audit' locally for more details."
-          exit 1
-
-      - name: Upload audit results
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: npm-audit-results
-          path: audit-results.json
-          retention-days: 30
+          echo "## Quick Validation Summary" >> $GITHUB_STEP_SUMMARY
+          echo "✅ Lock file validation passed" >> $GITHUB_STEP_SUMMARY
+          echo "✅ Basic checks passed" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Note:** Comprehensive CI checks run in the Docker CI workflow" >> $GITHUB_STEP_SUMMARY

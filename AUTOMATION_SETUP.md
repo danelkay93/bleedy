@@ -91,6 +91,7 @@ This document explains the automated workflows and configurations set up for the
 **Status**: Husky v9.1.7 is installed but hooks are not yet configured.
 
 **Current State**:
+
 - Husky is installed in devDependencies
 - `prepare` script is configured in package.json
 - `.huskyrc.json` exists (legacy v4 format, not used by Husky v9)
