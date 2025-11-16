@@ -4,6 +4,21 @@ Get PR reviews programmatically using GitHub CLI
 
 This script demonstrates how to access PR review information using gh CLI,
 which is the recommended approach for agents working within the repository.
+
+Exit Codes:
+    0 - PR is approved (success)
+    1 - PR is pending review or other state (no decision yet)
+    2 - PR has changes requested (action required)
+
+The exit codes are designed for automation that needs to distinguish between
+different PR states. For simple success/failure checks, treat any non-zero
+exit code as failure. For more sophisticated workflows, use the specific codes:
+- 0: Safe to merge (approved)
+- 2: Must address feedback (changes requested)  
+- 1: Waiting or unknown state (pending/other)
+
+This follows conventions used by tools like `diff` and `grep` where different
+non-zero exit codes indicate different types of "failure" or states.
 """
 
 import subprocess
@@ -155,13 +170,17 @@ def main():
     print(format_review_summary(pr_details))
 
     # Return exit code based on review decision
+    # Exit codes allow automation to distinguish between different PR states:
+    #   0 = APPROVED (safe to merge)
+    #   2 = CHANGES_REQUESTED (must address feedback)
+    #   1 = PENDING or other (waiting or unknown state)
     decision = pr_details.get('reviewDecision', '')
     if decision == 'APPROVED':
-        sys.exit(0)
+        sys.exit(0)  # Success - PR approved
     elif decision == 'CHANGES_REQUESTED':
-        sys.exit(2)
+        sys.exit(2)  # Action required - changes requested
     else:
-        sys.exit(1)  # PENDING or other
+        sys.exit(1)  # Waiting - pending review or unknown state
 
 
 if __name__ == "__main__":
