@@ -60,12 +60,10 @@ RUN git config --system --add fetch.prune true \
     && git config --system --add core.autocrlf input \
     && git config --system --add pull.rebase false
 
-# Install uv for fast Python package management
-RUN curl -LsSf https://astral.sh/uv/install.sh | sh \
-    && echo 'export PATH="/root/.local/bin:$PATH"' >> /root/.bashrc
+# Install uv for fast Python package management (system-wide)
+RUN curl -LsSf https://astral.sh/uv/install.sh | sh -s -- --install-dir /usr/local/bin
 
 # Set up Python environment with uv
-ENV PATH="/root/.local/bin:$PATH"
 RUN uv pip install --system --no-cache-dir \
     pyyaml \
     requests \
