@@ -14,7 +14,7 @@ The exit codes are designed for automation that needs to distinguish between
 different PR states. For simple success/failure checks, treat any non-zero
 exit code as failure. For more sophisticated workflows, use the specific codes:
 - 0: Safe to merge (approved)
-- 2: Must address feedback (changes requested)  
+- 2: Must address feedback (changes requested)
 - 1: Waiting or unknown state (pending/other)
 
 This follows conventions used by tools like `diff` and `grep` where different
