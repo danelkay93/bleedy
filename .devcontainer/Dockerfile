@@ -60,8 +60,13 @@ RUN git config --system --add fetch.prune true \
     && git config --system --add core.autocrlf input \
     && git config --system --add pull.rebase false
 
-# Set up Python environment
-RUN pip3 install --no-cache-dir --break-system-packages \
+# Install uv for fast Python package management
+RUN curl -LsSf https://astral.sh/uv/install.sh | sh \
+    && echo 'export PATH="/root/.local/bin:$PATH"' >> /root/.bashrc
+
+# Set up Python environment with uv
+ENV PATH="/root/.local/bin:$PATH"
+RUN uv pip install --system --no-cache-dir \
     pyyaml \
     requests \
     python-dotenv
