@@ -5,7 +5,7 @@ Claude Code operates as one agent among equals in this repository.
 ## Quick Start
 
 See main documentation:
-- [Agent Collaboration]../.github/AGENT_COLLABORATION.md) - Multi-agent guidelines
+- [Agent Collaboration](../.github/AGENT_COLLABORATION.md) - Multi-agent guidelines
 - [Development Environment](../DEVCONTAINER_AND_AUTOMATION.md) - DevOps and automation
 - [Copilot Instructions](../.github/copilot-instructions.md) - Copilot configuration
 
