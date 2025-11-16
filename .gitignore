@@ -40,3 +40,10 @@ auto-imports.d.ts
 # Agent collaboration artifacts
 .agent-workspace/
 .agent-cache/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
