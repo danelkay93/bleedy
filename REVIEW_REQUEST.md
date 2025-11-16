@@ -149,7 +149,7 @@ $ npm run format:check
 ### Lock File Validation ✅
 
 ```bash
-$ bash scripts/validate-lockfile.sh
+$ python3 scripts/validate-lockfile.py
 === Lock File Validation ===
 ✅ package-lock.json exists
 ✅ package.json exists

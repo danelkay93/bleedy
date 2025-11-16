@@ -23,8 +23,8 @@ jobs:
       - name: Validate package-lock.json
         run: |
           echo "Validating lock file before installing dependencies..."
-          if [ -f "scripts/validate-lockfile.sh" ]; then
-            bash scripts/validate-lockfile.sh
+          if [ -f "scripts/validate-lockfile.py" ]; then
+            python3 scripts/validate-lockfile.py
           else
             echo "Lock file validation script not found, performing basic check..."
             if [ ! -f "package-lock.json" ]; then

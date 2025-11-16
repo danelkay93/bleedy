@@ -99,7 +99,7 @@ npm run type-check
 npm run build
 
 # Validate lock file
-bash scripts/validate-lockfile.sh
+python3 scripts/validate-lockfile.py
 ```
 
 ### Development Container
@@ -305,7 +305,7 @@ The Docker CI workflow is the **single source of truth** for comprehensive CI ch
 
 ### Lock File Management
 
-**Script**: `scripts/validate-lockfile.sh`
+**Script**: `scripts/validate-lockfile.py`
 
 Validates that `package-lock.json` is in sync with `package.json`.
 
@@ -320,7 +320,7 @@ Validates that `package-lock.json` is in sync with `package.json`.
 
 ```bash
 # Validate manually
-bash scripts/validate-lockfile.sh
+python3 scripts/validate-lockfile.py
 
 # Fix out-of-sync lock file
 rm package-lock.json
@@ -707,7 +707,7 @@ chmod +x .husky/pre-push
 
 - **Automatic**: Workflow fixes and commits changes
 - **Manual prevention**: Always commit lock file with package.json
-- **Verification**: Run `bash scripts/validate-lockfile.sh`
+- **Verification**: Run `python3 scripts/validate-lockfile.py`
 
 #### Deployment Failures
 

@@ -8,12 +8,11 @@ This script manages:
 - PR-based staging environment tracking
 """
 
-import os
 import sys
 import json
 import logging
 from datetime import datetime, timedelta
-from typing import List, Dict, Optional
+from typing import List, Dict
 import subprocess
 
 # Configure logging
