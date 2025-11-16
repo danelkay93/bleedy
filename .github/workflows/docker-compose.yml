@@ -130,7 +130,7 @@ jobs:
           echo "- Low: $LOW" >> $GITHUB_STEP_SUMMARY
 
       - name: Check for critical vulnerabilities
-        if: steps.audit.outputs.critical > 0 || steps.audit.outputs.high > 0
+        if: fromJson(steps.audit.outputs.critical) > 0 || fromJson(steps.audit.outputs.high) > 0
         run: |
           echo "::error::Found ${{ steps.audit.outputs.critical }} critical and ${{ steps.audit.outputs.high }} high severity vulnerabilities"
           echo "Please review and address these security issues."
