@@ -94,6 +94,22 @@ npm run format
   - Use `npx prettier --check . --cache=false` to verify actual formatting status
   - Use `npx prettier --write . --cache=false` if standard format command seems inconsistent
 
+#### Unified Quality Checks (QA)
+
+```bash
+npm run qa
+```
+
+- **Purpose**: Single command for all validation checks
+- **Runs**: ESLint → Vite build → Vitest
+- **Options**:
+  - `npm run qa -- --with-typecheck` - Includes TypeScript type checking (slower)
+  - `npm run qa -- --skip-tests` - Skips test suite
+  - `npm run qa -- --skip-lint` - Skips ESLint
+  - `npm run qa -- --skip-build` - Skips build
+- **Use this before committing** for comprehensive validation
+- **Designed for multi-agent collaboration** - provides clear, structured output
+
 ### Testing
 
 ```bash
@@ -255,11 +271,62 @@ npm run test:unit
 - Doodle.css and paper-css for hand-drawn aesthetics
 - Google Fonts: Cabin Sketch
 
+## GitHub MCP Server Integration
+
+This repository uses GitHub's official Model Context Protocol (MCP) server for enhanced agent capabilities.
+
+### Configuration
+
+The MCP server is configured in `.mcp/config.json`:
+
+```json
+{
+  "mcpServers": {
+    "github": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-github"],
+      "env": {
+        "GITHUB_PERSONAL_ACCESS_TOKEN": "${GITHUB_TOKEN}"
+      }
+    }
+  }
+}
+```
+
+### Native Features via MCP
+
+GitHub Copilot may have access to GitHub MCP tools for:
+- **PR Management**: Create, list, view pull requests
+- **Issue Management**: Create, update, search issues
+- **Repository Operations**: Branch management, file operations
+- **Code Review**: Access and respond to review comments
+
+### Using MCP Tools
+
+If MCP tools are available in your environment:
+
+1. **For PR operations**: Use MCP tools instead of manual git commands where possible
+2. **For issue management**: MCP provides direct API access
+3. **For code reviews**: MCP may allow direct access to review comments
+4. **Check availability**: Not all Copilot environments have MCP enabled
+
+### MCP vs. report_progress
+
+- **Use MCP**: For GitHub API operations (PRs, issues, reviews)
+- **Use report_progress**: For committing and pushing changes
+- **Combine both**: MCP for PR creation, report_progress for commits
+
 ## Agent Collaboration
 
 ### Working with Other AI Agents
 
-This repository supports collaboration between multiple AI agents (GitHub Copilot, ChatGPT Codex, CodeRabbit, etc.). For comprehensive collaboration guidelines, see `.github/AGENT_COLLABORATION.md`.
+This repository supports collaboration between multiple AI agents (GitHub Copilot, Claude Code, ChatGPT Codex, CodeRabbit, etc.). For comprehensive collaboration guidelines, see `.github/AGENT_COLLABORATION.md`.
+
+### Agent-Specific Documentation
+
+- **GitHub Copilot**: This file (`.github/copilot-instructions.md`)
+- **Claude Code**: `.claude/README.md`
+- **All Agents**: `.github/AGENT_COLLABORATION.md`
 
 ### Key Collaboration Points
 
@@ -307,6 +374,14 @@ When multiple agents work on the same task:
 3. **Secondary agent** acknowledges and continues
 4. **Either agent** can request reviews from others
 5. **Final agent** completes with comprehensive summary
+
+**Collaborating with Claude Code**:
+
+- Claude Code excels at multi-file refactoring and systematic implementation tasks
+- Uses TodoWrite for task tracking (you'll see structured todo lists in issues/PRs)
+- Has direct git access and can create commits/PRs independently
+- Best for complex features requiring multiple steps
+- Coordinates via the same handoff templates in `.github/AGENT_COLLABORATION.md`
 
 See `.github/AGENT_COLLABORATION.md` for detailed workflow templates and examples.
 

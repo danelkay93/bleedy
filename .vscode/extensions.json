@@ -1,3 +1,38 @@
 {
-  "recommendations": ["Vue.volar", "dbaeumer.vscode-eslint", "esbenp.prettier-vscode"]
+  "recommendations": [
+    // Vue development
+    "Vue.volar",
+
+    // Code quality
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode",
+
+    // Python
+    "ms-python.python",
+    "ms-python.vscode-pylance",
+    "ms-python.black-formatter",
+
+    // GitHub and AI
+    "GitHub.copilot",
+    "GitHub.copilot-chat",
+    "GitHub.vscode-pull-request-github",
+
+    // Git
+    "eamodio.gitlens",
+
+    // Configuration files
+    "redhat.vscode-yaml",
+    "tamasfe.even-better-toml",
+
+    // Docker
+    "ms-azuretools.vscode-docker",
+
+    // Markdown
+    "yzhang.markdown-all-in-one",
+    "DavidAnson.vscode-markdownlint"
+  ],
+  "unwantedRecommendations": [
+    // Old Vue extension (conflicts with Volar)
+    "octref.vetur"
+  ]
 }

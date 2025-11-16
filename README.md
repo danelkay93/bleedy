@@ -44,6 +44,43 @@ npm run test:unit
 npm run lint
 ```
 
+### Unified Quality Checks for Agents
+
+```sh
+npm run qa
+```
+
+- Runs ESLint, builds the project, and executes the Vitest suite in one command
+- Accepts additional options (for example `npm run qa -- --with-typecheck`) to include slower checks when needed
+- Designed to simplify common validation workflows for multi-agent collaboration
+
+## Consolidation & Automation Playbook
+
+- Review the [Consolidated Task Guide](./CONSOLIDATED_TASK_GUIDE.md) for a single-source summary of the seven-PR merge, automation setup, review resolution steps, and post-merge expectations.
+- Pair it with the quick commands in [docs/AGENT_TOOLKIT.md](./docs/AGENT_TOOLKIT.md) when coordinating across multiple agents.
+- Consult [`.github/AGENT_COLLABORATION.md`](./.github/AGENT_COLLABORATION.md) for cross-platform agent guidance covering GitHub Copilot Agent, ChatGPT Codex, Gemini Code Assist, Claude Code, and Google Jules workflows.
+
+## Multi-Agent Development
+
+This project uses multiple AI agents, each with different strengths and trade-offs:
+
+- **GitHub Copilot**: Primary agent for most tasks (unlimited usage)
+  - Quick fixes, inline suggestions, simple features, day-to-day development
+- **CodeRabbit**: Automated code reviews (unlimited, use on all PRs)
+  - Security analysis, code quality checks, best practices verification
+- **Claude Code**: Complex tasks requiring advanced capabilities (usage limits, higher cost)
+  - Multi-file refactoring, deep debugging, systematic feature implementation
+- **ChatGPT Codex**: GitHub-integrated task automation
+
+**Strategy:** Start with Copilot for most work, use CodeRabbit for all reviews, escalate to Claude Code only when tasks require its advanced capabilities.
+
+For comprehensive agent collaboration guidelines, see [AGENT_COLLABORATION.md](./.github/AGENT_COLLABORATION.md).
+
+### Agent-Specific Documentation
+
+- **Claude Code**: [.claude/README.md](./.claude/README.md)
+- **GitHub Copilot**: [.github/copilot-instructions.md](./.github/copilot-instructions.md)
+
 ## CI/CD Pipeline
 
 This project uses GitHub Actions for continuous integration and deployment. For detailed information about our CI/CD pipelines, including:

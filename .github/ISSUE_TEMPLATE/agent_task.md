@@ -83,12 +83,27 @@ assignees: ''
 
 ## Agent Assignment
 
-**Preferred Agent**: @[agent-name] <!-- e.g., @copilot, @codex -->
+**Preferred Agent**: @[agent-name] <!-- e.g., @copilot, @claude, @codex -->
 
 **Estimated Complexity**: <!-- Low / Medium / High / Unknown -->
 
 **Priority**: <!-- Low / Medium / High / Critical -->
 
+**Task Type Recommendations** (consider usage limits and costs):
+- Quick fixes → GitHub Copilot (unlimited, use first)
+- Simple features → GitHub Copilot (unlimited, use first)
+- Code review → CodeRabbit (automated, unlimited)
+- Documentation → GitHub Copilot first, Claude Code if complex
+- Multi-file refactoring → Claude Code (when Copilot can't handle)
+- Complex debugging → Claude Code (when Copilot can't solve)
+- Feature implementation → Copilot first, escalate to Claude Code if needed
+
+**General Strategy:** Start with Copilot (unlimited), escalate to Claude Code (limited/costly) only when needed.
+
+See `.github/AGENT_COLLABORATION.md` for detailed agent capabilities and trade-offs.
+
 ---
 
 **For the assigned agent**: Please acknowledge this task and outline your implementation plan before starting work. Use the templates in `.github/AGENT_COLLABORATION.md` for status updates.
+
+**For Claude Code**: Use TodoWrite to track progress and keep this issue updated with your task list.
