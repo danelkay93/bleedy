@@ -4,10 +4,24 @@ This directory contains comprehensive documentation for the Bleedy project.
 
 ## Available Guides
 
+### [Consolidated Task Guide](../CONSOLIDATED_TASK_GUIDE.md)
+
+Unified summary of the seven-PR consolidation, automation suite, review resolution steps, and post-merge checklist.
+
+**Contents:**
+
+- Consolidation outcomes and validation snapshot
+- Automation workflows and local Husky setup
+- Review dismissal templates and post-merge checklist
+
+**Target audience:** Maintainers and collaborators continuing the consolidation workstream
+
 ### [CI/CD Guide](./CI_CD_GUIDE.md)
+
 Comprehensive guide to understanding, maintaining, and troubleshooting the CI/CD pipelines.
 
 **Contents:**
+
 - Workflow descriptions and configurations
 - Best practices for package management
 - Security audit procedures
@@ -18,9 +32,11 @@ Comprehensive guide to understanding, maintaining, and troubleshooting the CI/CD
 **Target audience:** All developers, DevOps engineers, maintainers
 
 ### [CI/CD Quick Reference](./CI_CD_QUICK_REFERENCE.md)
+
 Quick reference for common CI/CD tasks and commands.
 
 **Contents:**
+
 - Daily operation commands
 - Workflow management
 - Common troubleshooting steps
@@ -29,18 +45,33 @@ Quick reference for common CI/CD tasks and commands.
 
 **Target audience:** Developers working with the project daily
 
+### [Agent Toolkit Quickstart](./AGENT_TOOLKIT.md)
+
+Condensed command and collaboration reference for AI and human contributors, aligned with GitHub Copilot Agent, ChatGPT Codex, Gemini Code Assist, Claude Code, and Google Jules conventions.
+
+**Contents:**
+
+- Frequently used validation commands (including the `npm run qa` helper)
+- Branch and PR awareness tips
+- Collaboration and troubleshooting checklists
+
+**Target audience:** Multi-agent collaborators and reviewers
+
 ## Quick Links
 
 ### For New Developers
+
 1. Start with the main [README](../README.md)
 2. Review the [CI/CD Guide](./CI_CD_GUIDE.md) - sections: Overview, Workflows, Best Practices
 3. Bookmark the [Quick Reference](./CI_CD_QUICK_REFERENCE.md)
 
 ### For Debugging CI Issues
+
 1. Check the [Troubleshooting section](./CI_CD_GUIDE.md#troubleshooting) in CI/CD Guide
 2. Use the [Quick Reference](./CI_CD_QUICK_REFERENCE.md) for commands
 
 ### For Maintenance
+
 1. Follow the [Maintenance section](./CI_CD_GUIDE.md#maintenance) in CI/CD Guide
 2. Review workflow files in `.github/workflows/`
 
@@ -82,4 +113,4 @@ If you find documentation issues:
 
 ---
 
-**Last Updated:** 2025-10-16
+**Last Updated:** 2024-10-29

@@ -2,7 +2,20 @@
 
 ## Overview
 
-This guide provides comprehensive information for AI agents (GitHub Copilot, ChatGPT Codex, CodeRabbit, etc.) working on the Bleedy project. It clarifies technical constraints, communication patterns, and best practices for effective collaboration.
+This guide provides comprehensive information for AI copilots (GitHub Copilot Agent, ChatGPT Codex, Gemini Code Assist, Claude Code, Google Jules, CodeRabbit, etc.) working on the Bleedy project. It clarifies technical constraints, communication patterns, and best practices for effective collaboration regardless of the host platform.
+
+## Agent Capability Matrix
+
+| Agent                      | Default Commit Tooling             | Network Access Profile                               | Key Nuances                                                                              |
+| -------------------------- | ---------------------------------- | ---------------------------------------------------- | ---------------------------------------------------------------------------------------- |
+| **GitHub Copilot Agent**   | `report_progress` + PR automation  | GitHub MCP HTTP gateway with GitHub auth             | Prefers `report_progress` checkpoints; surface `gh` helpers when configured.             |
+| **ChatGPT Codex**          | `report_progress` (GitHub-managed) | Limited outbound HTTP; GitHub REST available via MCP | Confirm branch context before each commit; Codex dashboards expect concise status notes. |
+| **Gemini Code Assist**     | `apply_patch` + Google git proxies | Google-hosted sandbox with curated allow list        | Paste explicit command outputs; document skipped steps that violate policy.              |
+| **Claude Code**            | `commit` / `open_pr` helpers       | Anthropic secure proxy with audited HTTP access      | Provide structured diffs and mention safety blocks when they trigger.                    |
+| **Google Jules**           | `submit` workflow with auto-commit | Google-aligned HTTP allow list and strict logging    | Provide deterministic QA commands and reproducible steps.                                |
+| **Other / Unknown Agents** | Varies                             | Assume restricted                                    | Ask which tools are available before running niche commands.                             |
+
+> **Tip:** When instructions conflict, follow the stricter platform rule (for example, if Gemini disallows a network call that Copilot allows, skip it and note the limitation in your response).
 
 ## Table of Contents
 
@@ -21,9 +34,9 @@ All AI agents operate in sandboxed environments with specific limitations:
 
 #### Network Access
 
-- **Cannot access external HTTP/HTTPS URLs** - This includes GitHub.com URLs, even for this repository
-- **Workaround**: Paste review comments or specific content directly into PR/issue comments
-- **Note**: Some agents may have internal APIs for GitHub operations (use MCP tools when available)
+- **Limited outbound HTTP/HTTPS access is available** – agents can usually contact public APIs (including GitHub) when authenticated tooling is configured.
+- **Prefer repository-provided tools** – use MCP helpers or curated scripts before resorting to ad-hoc `curl`/`wget` calls.
+- **Mind rate limits** – cache responses when practical and avoid unnecessary polling.
 
 #### Git Operations
 
@@ -42,9 +55,10 @@ All AI agents operate in sandboxed environments with specific limitations:
 - ✅ Read and modify files in the repository
 - ✅ Run commands via bash/shell tools
 - ✅ Use `report_progress` to commit and push changes
-- ✅ Access GitHub API via MCP tools (if available)
+- ✅ Access GitHub API via MCP tools or authenticated CLI clients when available
 - ✅ Create and modify issues/PRs (via tools, not direct git)
 - ✅ Run builds, tests, and linters locally
+- ✅ Leverage the `npm run qa` helper to execute lint/build/test in one command
 
 ## Communication Patterns
 
@@ -210,7 +224,7 @@ When working on tasks:
 
 ### Issue: "I cannot access the review comments at [GitHub URL]"
 
-**Solution**: This is expected due to sandbox limitations. Ask the user:
+**Solution**: Some environments restrict outbound HTTP/HTTPS access. If you receive a denial, ask the user:
 
 ```markdown
 I cannot access external URLs from my sandboxed environment. Could you please paste the specific review comments here? This will allow me to address them directly.
@@ -327,48 +341,75 @@ I don't have access to changes made by other agents unless they're in the curren
 
 ### GitHub Copilot Agent
 
-- Has access to GitHub MCP tools for repository operations
-- Can read issues, PRs, and comments via API
-- Uses `report_progress` for committing changes
-- Cannot access external URLs (HTTP/HTTPS)
+- Uses GitHub MCP to expose `report_progress`, git history lookups, and limited GitHub REST calls.
+- Prefers incremental commits—summarize staged changes before invoking `report_progress`.
+- Can run authenticated `gh` commands when configured; announce if the CLI is unavailable.
 
-### ChatGPT Codex Connector
+### ChatGPT Codex
 
-- Operates through GitHub integration
-- Can create commits and interact with GitHub
-- Provides task tracking via Codex dashboard
-- May have different tool availability
+- Operates through GitHub's Codex integration with opinionated status dashboards.
+- `report_progress` is available, but Codex expects concise summaries (≤5 bullet points) per commit.
+- Outbound HTTP is constrained to GitHub domains—ask users to paste external artifacts.
 
-### CodeRabbit
+### Gemini Code Assist
 
-- Provides automated code reviews
-- Can be triggered with `@coderabbitai review full`
-- Focuses on code quality and best practices
-- Can suggest improvements and identify issues
+- Relies on `apply_patch` and Google-managed git proxies instead of direct `git commit`.
+- Command execution is audited; paste exact outputs (trimmed for relevance) in your response body.
+- Flag skipped commands explicitly when policy prevents execution.
+
+### Claude Code
+
+- Provides `commit` and `open_pr` helpers that require a final diff summary.
+- Anthropic's proxy logs all outbound HTTP—note when a call may trigger safety review.
+- If a safety filter blocks an action, include the filter message verbatim and propose a compliant alternative.
+
+### Google Jules
+
+- Automates commits through a `submit` workflow; group related changes into one submission unless the user asks otherwise.
+- Emphasizes deterministic QA: list the exact commands you ran and any you intentionally skipped.
+- Jules integrates with Google issue trackers—reference issue IDs when available.
+
+### CodeRabbit (Review Agent)
+
+- Provides automated code reviews and can be triggered with `@coderabbitai review full` in PR threads.
+- Focuses on code quality, performance, and best practices—respond inline to each thread it opens.
 
 ### Other Agents
 
-- May have varying capabilities
-- Always check available tools before starting
-- Document any unique limitations discovered
-- Update this guide with new findings
+- Capabilities vary; confirm available tools with `help`/`tools` commands before starting.
+- Document unique limitations discovered during a session for future contributors.
+- Update this guide via PR when you discover durable differences.
 
 ## Repository-Specific Guidelines
 
 ### Before Making Changes
 
 1. Run `npm install` (patches are applied automatically)
-2. Verify current state: `npm run build && npm run lint`
-3. Review existing code style and patterns
-4. Check for related issues or PRs
+2. Confirm branch context with `git status -sb` and `git branch --show-current`
+3. Review recent activity via `git log --oneline --decorate --graph -5`
+4. Check for related issues or PRs using available tooling (for example `gh pr list --limit 20` when authenticated)
+5. Review existing code style and patterns
 
 ### After Making Changes
 
-1. Run linter: `npm run lint`
-2. Build the project: `npm run build`
-3. Test manually if UI changes
-4. Use `report_progress` to commit changes
-5. Verify committed files are appropriate
+1. Run the unified QA helper: `npm run qa`
+   - Add `--with-typecheck` when TypeScript validation is required
+   - Use `--skip-tests` or related flags for documentation-only updates
+2. Test manually if UI changes
+3. Use `report_progress` to commit changes
+4. Verify committed files are appropriate
+5. Capture branch status in handoff notes (`git status -sb`)
+
+### Repository Awareness Checklist
+
+| Task                                | Command                                                   |
+| ----------------------------------- | --------------------------------------------------------- |
+| Show current branch                 | `git branch --show-current`                               |
+| Inspect local branches              | `git branch --sort=-committerdate`                        |
+| View remote tracking info           | `git remote -v`                                           |
+| Summarize recent history            | `git log --oneline --decorate --graph -10`                |
+| List open PRs (requires GitHub CLI) | `gh pr list --limit 20 --search "repo:danelkay93/bleedy"` |
+| Check CI status for branch          | `gh run list --limit 5 --branch <branch>`                 |
 
 ### Pull Request Standards
 
@@ -382,6 +423,7 @@ I don't have access to changes made by other agents unless they're in the curren
 If you encounter issues not covered in this guide:
 
 1. **Check existing documentation** in the repository
+   - Start with the [Agent Toolkit Quickstart](../docs/AGENT_TOOLKIT.md) for command references
 2. **Ask the user** for clarification or assistance
 3. **Document the issue** for future reference
 4. **Update this guide** if you find a solution
@@ -399,5 +441,5 @@ Please update this guide in your PR with a clear explanation of the addition.
 
 ---
 
-**Last Updated**: 2025-10-18
-**Maintained by**: GitHub Copilot, ChatGPT Codex, and community contributors
+**Last Updated**: 2024-10-29
+**Maintained by**: GitHub Copilot Agent, ChatGPT Codex, Gemini Code Assist, Claude Code, Google Jules, and community contributors

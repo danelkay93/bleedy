@@ -1,5 +1,7 @@
 # Copilot Instructions for Bleedy
 
+> Multi-agent context: For cross-platform conventions covering ChatGPT Codex, Gemini Code Assist, Claude Code, and Google Jules, see [`.github/AGENT_COLLABORATION.md`](./AGENT_COLLABORATION.md) and the [Agent Toolkit Quickstart](../docs/AGENT_TOOLKIT.md).
+
 ## Project Overview
 
 **Bleedy** is a web application for adding bleed margins to images, built with Vue 3, Vite, TypeScript, and PyScript. It allows users to upload images and automatically add professional bleed margins using Python image processing in the browser.
@@ -81,6 +83,16 @@ npm run lint
 - **Status**: Working with ESLint 9.x flat config (ES modules format)
 - Configuration in `eslint.config.js` uses modern ES modules format
 - Automatically ignores `dist/`, `dist-ssr/`, and `node_modules/` folders
+
+#### Unified QA Helper
+
+```bash
+npm run qa
+```
+
+- Executes ESLint, Vite build, and Vitest in sequence with helpful logging
+- Pass `--with-typecheck` to include the slower Vue TypeScript checks when they are required
+- Additional flags like `--skip-tests` are available for documentation-only updates
 
 #### Prettier
 
@@ -263,9 +275,9 @@ This repository supports collaboration between multiple AI agents (GitHub Copilo
 
 ### Key Collaboration Points
 
-**Technical Limitations**:
+**Technical Considerations**:
 
-- AI agents cannot access external HTTP/HTTPS URLs (including github.com links)
+- Outbound HTTP/HTTPS access is typically available but subject to rate limits and tool configuration
 - Cannot push directly using `git push` - must use `report_progress` tool
 - Cannot resolve merge conflicts - user must handle these
 - Cannot access files in `.github/agents/` directory

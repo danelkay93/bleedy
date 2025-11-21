@@ -8,6 +8,29 @@ on:
     types: [opened, synchronize, reopened]
 
 jobs:
+  quick-validation:
+    name: Quick Validation
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Validate lock file
+        run: bash scripts/validate-lockfile.sh
+
+      - name: Check for common issues
+        run: |
+          echo "Running quick validation checks..."
+
+          # Check for TODO/FIXME comments in committed code
+          if git diff HEAD^..HEAD --name-only | xargs grep -n "TODO\|FIXME" 2>/dev/null; then
+            echo "::warning::Found TODO/FIXME comments in changes"
+          fi
+
+          # Check for large files
+          if git diff HEAD^..HEAD --name-only | xargs du -h 2>/dev/null | awk '$1 ~ /M$/ && $1 > 1'; then
+            echo "::warning::Found large files in changes"
+          fi
   validate-and-build:
     name: Validate and Build
     runs-on: ubuntu-latest

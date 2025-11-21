@@ -14,6 +14,8 @@
     "lint": "eslint . --fix",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
+    "qa": "node ./scripts/agent-check.mjs",
+    "qa:with-typecheck": "node ./scripts/agent-check.mjs --with-typecheck",
     "prepare": "husky install || true"
   },
   "dependencies": {
