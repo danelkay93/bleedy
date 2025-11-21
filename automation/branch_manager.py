@@ -8,7 +8,6 @@ This script manages:
 - PR-based staging environment tracking
 """
 
-import os
 import sys
 import json
 import logging
