@@ -39,7 +39,7 @@ jobs:
 
       - name: Close consolidated PRs
         if: steps.check_consolidation.outputs.is_consolidation == 'true'
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
@@ -87,7 +87,7 @@ jobs:
 
       - name: Delete consolidated branches
         if: steps.check_consolidation.outputs.is_consolidation == 'true'
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
@@ -119,7 +119,7 @@ jobs:
 
       - name: Create cleanup summary
         if: steps.check_consolidation.outputs.is_consolidation == 'true'
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
