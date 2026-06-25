@@ -47,7 +47,7 @@ jobs:
             const repo = context.repo.repo;
 
             // List of PR numbers to close (from consolidation)
-            const prsToClose = [1, 7, 8, 10, 12, 14, 15];
+            const prsToClose = [21, 22, 23, 26, 27, 33, 47, 48, 49, 58, 59, 61];
 
             // Add comment and close each PR
             for (const prNumber of prsToClose) {
@@ -96,12 +96,18 @@ jobs:
 
             // List of branches to delete (from consolidation)
             const branchesToDelete = [
-              'refactor-cleanup',
-              'phase1-refactor-pyscript-deps',
-              'fix/eslint-errors',
-              'snyk-upgrade-element-plus-2.9.1',
-              'snyk-upgrade-element-plus-2.9.5',
-              'snyk-upgrade-element-plus-2.10.5'
+              'dependabot/github_actions/actions/checkout-5',
+              'dependabot/github_actions/actions/github-script-8',
+              'dependabot/github_actions/SonarSource/sonarcloud-github-action-5.0.0',
+              'dependabot/npm_and_yarn/stylelint-config-tailwindcss-1.0.0',
+              'dependabot/npm_and_yarn/stylelint-16.25.0',
+              'dependabot/npm_and_yarn/stylelint-config-standard-scss-16.0.0',
+              'snyk-upgrade-997724ebaa8354215e0f1444e84e1091',
+              'snyk-upgrade-a01fcc7508cf43b549b2b3a7f68019b9',
+              'snyk-upgrade-6bfe0b91441641e9de12ca06feeaf286',
+              'snyk-upgrade-648741fa4973bf876b028704589b7e43',
+              'dependabot/npm_and_yarn/production-dependencies-3dbe9a8e6a',
+              'dependabot/npm_and_yarn/development-dependencies-af72681a40'
             ];
 
             for (const branch of branchesToDelete) {
